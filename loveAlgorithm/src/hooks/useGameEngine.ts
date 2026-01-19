@@ -29,7 +29,11 @@ export const useGameEngine = () => {
   const [currentScenarioItem, setCurrentScenarioItem] = useState<ScenarioItem | null>(null);
   const [processedImages, setProcessedImages] = useState<{
     backgroundPath?: string;
-    characterImagePath?: string;
+    characterImagePaths?: {
+      1?: string;
+      2?: string;
+      3?: string;
+    };
     characterActionImagePath?: string;
     characterReImagePath?: string;
   }>({});
@@ -37,7 +41,11 @@ export const useGameEngine = () => {
   // 이전 시나리오 아이템의 특정 필드들만 저장 (이어지게 하기 위해)
   // 불러오기 시 storePreviousValues로 초기화
   const previousValuesRef = useRef<{
-    character_image_id?: string;
+    character_image_id?: {
+      1?: string;
+      2?: string;
+      3?: string;
+    };
     background_image_id?: string;
     background_sound_id?: string;
   }>(storePreviousValues);
@@ -67,7 +75,6 @@ export const useGameEngine = () => {
         character: characterName,
         text: scriptText,
         background: currentScenarioItem.background_image_id ? getBackgroundImagePath(currentScenarioItem.background_image_id) : undefined,
-        characterImage: currentScenarioItem.character_image_id ? getCharacterImagePath(currentScenarioItem.character_image_id) : undefined,
         bgm: currentScenarioItem.background_sound_id,
         sfx: currentScenarioItem.effect_sound_id,
         choices: currentScenarioItem.options,
@@ -102,7 +109,6 @@ export const useGameEngine = () => {
       character: characterName,
       text: scriptText,
       background: rawItem.background_image_id ? getBackgroundImagePath(rawItem.background_image_id) : undefined,
-      characterImage: rawItem.character_image_id ? getCharacterImagePath(rawItem.character_image_id) : undefined,
       bgm: rawItem.background_sound_id,
       sfx: rawItem.effect_sound_id,
       choices: rawItem.options,
@@ -220,14 +226,51 @@ export const useGameEngine = () => {
       if (rawItem) {
         // character_image_id, background_image_id, background_sound_id만 이전 값으로 채우기
         const prev = previousValuesRef.current;
-        const character_image_id = rawItem.character_image_id ?? prev.character_image_id;
+        
+        // 위치별 character_image_id 병합
+        const rawCharImageId = rawItem.character_image_id;
+        const prevCharImageId = prev.character_image_id || {};
+        
+        let mergedCharImageId: {
+          1?: string;
+          2?: string;
+          3?: string;
+          all?: string;
+        } | undefined;
+        
+        if (rawCharImageId) {
+          // all이 있으면 1, 2, 3 모두에 적용
+          if (rawCharImageId.all) {
+            mergedCharImageId = {
+              1: rawCharImageId.all,
+              2: rawCharImageId.all,
+              3: rawCharImageId.all,
+              all: rawCharImageId.all,
+            };
+          } else {
+            // 각 위치별로 이전 값과 병합
+            mergedCharImageId = {
+              1: rawCharImageId[1] ?? prevCharImageId[1],
+              2: rawCharImageId[2] ?? prevCharImageId[2],
+              3: rawCharImageId[3] ?? prevCharImageId[3],
+            };
+          }
+        } else if (prevCharImageId && (prevCharImageId[1] || prevCharImageId[2] || prevCharImageId[3])) {
+          // 현재 아이템에 character_image_id가 없으면 이전 값 사용
+          mergedCharImageId = {
+            1: prevCharImageId[1],
+            2: prevCharImageId[2],
+            3: prevCharImageId[3],
+          };
+        }
+        
         const background_image_id = rawItem.background_image_id ?? prev.background_image_id;
         const background_sound_id = rawItem.background_sound_id ?? prev.background_sound_id;
         
         // 병합된 아이템 생성
         const mergedItem: ScenarioItem = {
           ...rawItem,
-          character_image_id,
+          character_image_id: mergedCharImageId,
           background_image_id,
           background_sound_id,
         };
@@ -262,8 +305,30 @@ export const useGameEngine = () => {
         setProcessedImages(processed);
         
         // 현재 아이템의 값으로 이전 값 업데이트 (다음 아이템을 위해)
+        // all이 있으면 1, 2, 3 각각에 저장
+        const updatedCharImageId: {
+          1?: string;
+          2?: string;
+          3?: string;
+        } = {};
+        
+        if (mergedCharImageId) {
+          if (mergedCharImageId.all) {
+            // all이 있으면 1, 2, 3 모두에 저장
+            updatedCharImageId[1] = mergedCharImageId.all;
+            updatedCharImageId[2] = mergedCharImageId.all;
+            updatedCharImageId[3] = mergedCharImageId.all;
+          } else {
+            // 각 위치별로 저장
+            if (mergedCharImageId[1] !== undefined) updatedCharImageId[1] = mergedCharImageId[1];
+            if (mergedCharImageId[2] !== undefined) updatedCharImageId[2] = mergedCharImageId[2];
+            if (mergedCharImageId[3] !== undefined) updatedCharImageId[3] = mergedCharImageId[3];
+          }
+        }
+        
+        // 이전 값 업데이트 (null이 아닌 값만 유지)
         const updatedPreviousValues = {
-          character_image_id: character_image_id ?? prev.character_image_id,
+          character_image_id: Object.keys(updatedCharImageId).length > 0 ? updatedCharImageId : prev.character_image_id,
           background_image_id: background_image_id ?? prev.background_image_id,
           background_sound_id: background_sound_id ?? prev.background_sound_id,
         };

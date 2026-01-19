@@ -18,7 +18,7 @@ const Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2000;
+  z-index: 4000;
   backdrop-filter: blur(4px);
 `;
 

@@ -12,6 +12,31 @@ import { ImageOverlay } from '../ui/ImageOverlay';
 import { useGameEngine } from '../../hooks/useGameEngine';
 import { useGameHotkeys } from '../../hooks/useHotkeys';
 import { useGameStore } from '../../store/gameStore';
+import styled from 'styled-components';
+
+const TransitionOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`;
+
+const TransitionText = styled.div`
+  color: #fff;
+  font-size: 24px;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  text-align: center;
+  padding: 20px;
+  max-width: 80%;
+  line-height: 1.6;
+`;
 
 export const GameScreen = () => {
   const { currentDialogue, currentScenarioItem, processedImages, proceedToNext, selectChoice, isTyping, handleGameResult } = useGameEngine();
@@ -49,10 +74,11 @@ export const GameScreen = () => {
 
   // 이미지 경로 결정 (processedImages 우선, 없으면 dialogue에서)
   const backgroundPath = processedImages.backgroundPath || currentDialogue?.background;
-  const characterImagePath = processedImages.characterActionImagePath || 
-                              processedImages.characterReImagePath || 
-                              processedImages.characterImagePath || 
-                              currentDialogue?.characterImage;
+  const characterImagePaths = processedImages.characterImagePaths;
+  
+  // 액션/반응 이미지가 있으면 우선 사용 (하위 호환성)
+  const characterActionImagePath = processedImages.characterActionImagePath;
+  const characterReImagePath = processedImages.characterReImagePath;
 
   const hasChoices = currentDialogue?.choices && currentDialogue.choices.length > 0;
   const isKakaoTalk = currentScenarioItem?.type?.startsWith('카톡') ?? false;
@@ -82,11 +108,44 @@ export const GameScreen = () => {
         where={currentScenarioItem?.where} 
         when={currentScenarioItem?.when} 
       />
-      <CharacterDisplay 
-        characterImage={characterImagePath} 
-        characterName={currentDialogue?.character}
-        notCharacter={currentScenarioItem?.not_character}
-      />
+      {/* 위치별 캐릭터 표시 */}
+      {characterImagePaths && (
+        <>
+          {characterImagePaths[1] && (
+            <CharacterDisplay 
+              characterImage={characterImagePaths[1]} 
+              characterName={currentDialogue?.character}
+              notCharacter={currentScenarioItem?.not_character}
+              location={1}
+            />
+          )}
+          {characterImagePaths[2] && (
+            <CharacterDisplay 
+              characterImage={characterImagePaths[2]} 
+              characterName={currentDialogue?.character}
+              notCharacter={currentScenarioItem?.not_character}
+              location={2}
+            />
+          )}
+          {characterImagePaths[3] && (
+            <CharacterDisplay 
+              characterImage={characterImagePaths[3]} 
+              characterName={currentDialogue?.character}
+              notCharacter={currentScenarioItem?.not_character}
+              location={3}
+            />
+          )}
+        </>
+      )}
+      {/* 하위 호환성: 액션/반응 이미지가 있으면 가운데에 표시 */}
+      {(characterActionImagePath || characterReImagePath) && !characterImagePaths && (
+        <CharacterDisplay 
+          characterImage={characterActionImagePath || characterReImagePath} 
+          characterName={currentDialogue?.character}
+          notCharacter={currentScenarioItem?.not_character}
+          location={2}
+        />
+      )}
       {!isKakaoTalk && !hasKakaoTalkHistory && !isTransition && !isGame && (
         <DialogueBox 
           dialogue={currentDialogue} 
@@ -123,6 +182,11 @@ export const GameScreen = () => {
       )}
       {overlayImagePath && (
         <ImageOverlay imagePath={overlayImagePath} />
+      )}
+      {isTransition && currentDialogue && (
+        <TransitionOverlay onClick={proceedToNext}>
+          <TransitionText>{currentDialogue.text}</TransitionText>
+        </TransitionOverlay>
       )}
       <ControlPanel
         onSave={handleSave}

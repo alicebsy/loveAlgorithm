@@ -12,6 +12,13 @@ export const gameEvents: Record<string, GameEvent> = {
     event: 1,
     scenario: [
       {
+        script: 'init()',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene1_0',
+        index: 0,
+      },
+      {
         script: '📧 [합격 메일]이 도착했습니다.', // [시스템] 제거
         type: 'narration', // 시스템 메시지는 내레이션 처리
         background_image_id: backgroundImageId.dohoon_room,
@@ -76,13 +83,7 @@ export const gameEvents: Record<string, GameEvent> = {
         id: 'chapter1_scene1_9',
         index: 9,
       },
-      {
-        script: '',
-        type: '전환',
-        character_image_id: characterImageId.nobody,
-        id: 'chapter1_scene1_10',
-        index: 10,
-      },
+
     ],
   },
 
@@ -94,6 +95,13 @@ export const gameEvents: Record<string, GameEvent> = {
     next_scene_id: 'chapter1_scene3',
     event: 2,
     scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene2_0',
+        index: 10,
+      },
       {
         script: '11시 집합인데 긴장해서 10시에 와버렸다. TimeLimit 설정을 너무 넉넉하게 잡았나.', // [도훈의 독백]
         character_id: characterId.hero,
@@ -119,7 +127,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '저기요! 학생증 떨어뜨리셨어요!', // [지수]
         character_id: characterId.jisoo,
-        character_image_id: characterImageId.jisoo_hello,
+        character_image_id: { 2: characterImageId.jisoo_hello },
         type: 'text',
         id: 'chapter1_scene2_4',
         index: 4,
@@ -133,7 +141,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '여기요, 이도훈 님? 어! 혹시 몰입캠프 오셨어요?', // [지수]
         character_id: characterId.jisoo,
-        character_image_id: characterImageId.jisoo_smile,
+        character_image_id: { 2: characterImageId.jisoo_smile },
         type: 'text',
         id: 'chapter1_scene2_6',
         index: 6,
@@ -148,7 +156,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '와 대박! 저돈데! 전 1분반 한지수예요. 반갑습니당!', // [지수]
         character_id: characterId.jisoo,
-        character_image_id: characterImageId.jisoo_smile,
+        character_image_id: { 2: characterImageId.jisoo_smile },
         type: 'text',
         id: 'chapter1_scene2_8',
         index: 8,
@@ -170,7 +178,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '아, 오빠네! 저 스물하나예요. 말 놔도 되죠? 오빠 안녕!', // [지수]
         character_id: characterId.jisoo,
-        character_image_id: characterImageId.jisoo_hello,
+        character_image_id: { 2: characterImageId.jisoo_hello },
         type: 'text',
         id: 'chapter1_scene2_11',
         index: 11,
@@ -200,7 +208,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(깔깔 웃으며) 뭐야, 오빠 왜 이렇게 당황해? 귀엽게 ㅋㅋㅋ', // [지수]
         character_id: characterId.jisoo,
-        character_image_id: characterImageId.jisoo_smile,
+        character_image_id: { 2: characterImageId.jisoo_smile },
         type: 'text',
         id: 'chapter1_scene2_15',
         index: 15,
@@ -223,7 +231,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(도훈을 지나쳐 뛰어가며) 어!! 안녕하세요~! 몰입캠프시죠? 여기예요 여기!', // [지수]
         character_id: characterId.jisoo,
-        character_image_id: characterImageId.jisoo_hello,
+        character_image_id: { 2: characterImageId.jisoo_hello },
         type: 'text',
         id: 'chapter1_scene2_18',
         index: 18,
@@ -257,13 +265,6 @@ export const gameEvents: Record<string, GameEvent> = {
         id: 'chapter1_scene2_22',
         index: 22,
       },
-      {
-        script: '',
-        type: '전환',
-        character_image_id: characterImageId.nobody,
-        id: 'chapter1_scene2_23',
-        index: 23,
-      }
     ],
   },
   // ----------------------------------------------------------------
@@ -275,9 +276,16 @@ export const gameEvents: Record<string, GameEvent> = {
     event: 3,
     scenario: [
       {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene3_0',
+        index: 23,
+      },
+      {
         script: '오후 2시 20분. 강의실에 사람들이 많이 있다.',
         character_id: characterId.hero,
-        character_image_id: characterImageId.nobody,
+        character_image_id: { 2: characterImageId.nobody },
         type: 'think',
         background_image_id: backgroundImageId.classroom_dohee,
         background_sound_id: backgroundSoundId.typing_noise,
@@ -309,7 +317,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(뒤에서 소근소근) 야, 동휘야. 저기 앞자리 여자분 혼자 계시는데 말 걸어볼까? 예쁘실 것 같은데.',
         character_id: characterId.myeongseong,
-        character_image_id: characterImageId.dohee_access_denied,
+        character_image_id: { 2: characterImageId.dohee_access_denied },
         type: 'text',
         background_image_id: backgroundImageId.classroom,
         id: 'chapter1_scene3_5',
@@ -325,7 +333,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '자~ 이제 1주차 짝꿍 배정하겠습니다!',
         character_id: characterId.manager,
-        character_image_id: characterImageId.manager,
+        character_image_id: { 2: characterImageId.manager },
         background_image_id: backgroundImageId.classroom_back,
         type: 'text',
         id: 'chapter1_scene3_7',
@@ -348,7 +356,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(다크서클 가득한 눈으로) ...안녕하세요. 저희 안드로이드 스튜디오 쓰죠?',
         character_id: characterId.hanjin,
-        character_image_id: characterImageId.hanjin,
+        character_image_id: { 2: characterImageId.hanjin },
         type: 'text',
         id: 'chapter1_scene3_10',
         index: 10,
@@ -374,13 +382,6 @@ export const gameEvents: Record<string, GameEvent> = {
         id: 'chapter1_scene3_13',
         index: 13,
       },
-      {
-        script: '',
-        type: '전환',
-        character_image_id: characterImageId.nobody,
-        id: 'chapter1_scene3_14',
-        index: 14,
-      }
     ],
   },
 
@@ -393,9 +394,16 @@ export const gameEvents: Record<string, GameEvent> = {
     event: 4,
     scenario: [
       {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene4_intro_0',
+        index: 14,
+      },
+      {
         script: '여러분! 코딩하느라 힘드시죠? 오늘 회식입니다! 다들 나오세요!',
         character_id: characterId.manager,
-        character_image_id: characterImageId.manager,
+        character_image_id: { 2: characterImageId.manager },
         type: 'text',
         background_image_id: backgroundImageId.classroom_back,
         background_sound_id: backgroundSoundId.party_noise,
@@ -405,7 +413,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '아... 귀찮은데. `Skip` 버튼 없나. 그냥 대충 먹고 가야겠다.',
         character_id: characterId.hero,
-        character_image_id: characterImageId.nobody,
+        character_image_id: { 2: characterImageId.nobody },
         type: 'think',
         id: 'chapter1_scene4_intro_2',
         index: 2,
@@ -413,7 +421,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '',
         type: '전환',
-        character_image_id: characterImageId.nobody,
+        character_image_id: { all: characterImageId.nobody },
         id: 'chapter1_scene4_intro_3',
         index: 3,
       },
@@ -462,7 +470,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '...망했다. 어제 그 \'솔의 눈\' 그녀다.',
         character_id: characterId.hero,
-        character_image_id: characterImageId.dohee_access_denied,
+        character_image_id: { 2: characterImageId.dohee_access_denied },
         type: 'think',
         id: 'chapter1_scene4_intro_10',
         index: 10,
@@ -470,7 +478,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '모자 벗으니까... 꽤 예쁘네. 아니, 예쁜 정도가 아닌데?',
         character_id: characterId.hero,
-        character_image_id: characterImageId.dohee_basic,
+        character_image_id: { 2: characterImageId.dohee_basic },
         type: 'think',
         id: 'chapter1_scene4_intro_11',
         index: 11,
@@ -498,7 +506,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '도희 님! 술 잘 못하시죠? 여기 초코우유 사 왔어요!',
         character_id: characterId.myeongseong,
-        character_image_id: characterImageId.dohee_boring,
+        character_image_id: { 2: characterImageId.dohee_boring },
         type: 'text',
         id: 'chapter1_scene4_intro_15',
         index: 15,
@@ -560,7 +568,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '',
         type: '전환',
-        character_image_id: characterImageId.nobody,
+        character_image_id: { all: characterImageId.nobody },
         id: 'chapter1_scene4_intro_24',
         index: 24,
       },
@@ -575,7 +583,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '...너 도훈이라고 했나?',
         character_id: characterId.dohee,
-        character_image_id: characterImageId.dohee_basic,
+        character_image_id: { 2: characterImageId.dohee_basic },
         type: 'text',
         id: 'chapter1_scene4_intro_26',
         index: 26,
@@ -611,14 +619,14 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '',
         type: '전환',
-        character_image_id: characterImageId.nobody,
+        character_image_id: { all: characterImageId.nobody },
         id: 'chapter1_scene4_intro_31',
         index: 31,
       },
       {
         script: '도희가 계산대 앞에 섰다.',
         character_id: characterId.hero,
-        character_image_id: characterImageId.dohee_basic,
+        character_image_id: { 2: characterImageId.dohee_basic },
         background_image_id: backgroundImageId.convenience_store_inside,
         type: 'think',
         id: 'chapter1_scene4_intro_32',
@@ -672,7 +680,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(무심하게 솔의 눈을 집어 건넨다) 이거 드시던데요.',
         character_id: characterId.hero,
-        character_image_id: characterImageId.dohee_basic,
+        character_image_id: { 2: characterImageId.dohee_basic },
         type: 'text',
         id: 'scene4_sol_1',
         index: 1,
@@ -680,7 +688,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '...어? 뭐야. 너 뭘 좀 아는구나?',
         character_id: characterId.dohee,
-        character_image_id: characterImageId.dohee_smile,
+        character_image_id: { 2: characterImageId.dohee_smile },
         type: 'text',
         id: 'scene4_sol_2',
         index: 2,
@@ -720,7 +728,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '술 깨는 데엔 이게 최고죠.',
         character_id: characterId.hero,
-        character_image_id: characterImageId.dohee_basic,
+        character_image_id: { 2: characterImageId.dohee_basic },
         type: 'text',
         id: 'scene4_drink_1',
         index: 1,
@@ -759,7 +767,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(미간을 찌푸리며) ...아. 너도 똑같구나.',
         character_id: characterId.dohee,
-        character_image_id: characterImageId.dohee_annoyed,
+        character_image_id: { 2: characterImageId.dohee_annoyed },
         type: 'text',
         effect_sound_id: effectSoundId.disappointed,
         id: 'scene4_milk_2',
@@ -792,7 +800,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(두 사람은 편의점 앞 플라스틱 테이블에 잠시 걸터앉는다. 캔 따는 소리가 경쾌하게 들린다.)',
         type: 'narration',
-        character_image_id: characterImageId.dohee_side_smile,
+        character_image_id: { 2: characterImageId.dohee_side_smile },
         background_image_id: backgroundImageId.convenience_store_outside,
         effect_sound_id: effectSoundId.can_open,
         id: 'scene4_table_1',
@@ -917,13 +925,13 @@ export const gameEvents: Record<string, GameEvent> = {
   // ----------------------------------------------------------------
   'chapter1_scene4_outro': {
     chapter_id: chapterId.chapter1,
-    next_scene_id: null, // 여기서 다시 갈림
+    next_scene_id: '', // 여기서 다시 갈림
     event: 4,
     scenario: [
       {
         script: '편의점에 갔다가 다시 자리로 돌아왔다',
         character_id: characterId.hero,
-        character_image_id: characterImageId.nobody,
+        character_image_id: { 2: characterImageId.nobody },
         type: 'think',
         background_image_id: backgroundImageId.restaurant_inside,
         id: 'scene4_outro_1',
@@ -932,7 +940,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '자, 1차 끝났습니다! 집 갈 사람은 가고, 2차 갈 사람들은 생생맥주로 이동~!',
         character_id: characterId.manager,
-        character_image_id: characterImageId.manager,
+        character_image_id: { 2: characterImageId.manager },
         type: 'text',
         id: 'scene4_outro_2',
         index: 2,
@@ -940,13 +948,13 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(도훈을 쳐다보며) 너는? 갈 거야?',
         character_id: characterId.dohee,
-        character_image_id: characterImageId.dohee_basic,
+        character_image_id: { 2: characterImageId.dohee_basic },
         type: 'text',
         options: [
           {
             id: 'opt_go_party',
             text: '간다.',
-            score_list: [{ character_id: characterId.dohee, score: 1 }],
+            score_list: [{ id: 'score_dohee_party', character_id: characterId.dohee, score: 1 }],
             nextSceneId: 'chapter1_scene5_party', // 2차 회식 씬으로
           },
           {
@@ -987,14 +995,14 @@ export const gameEvents: Record<string, GameEvent> = {
         index: 2,
       },
       {
-        script: '우리 다 같이 술 게임이나 할까요? 개발자니까 이진 탐색 업앤다운 어때요?',
+        script: '우리 다 같이 술 게임이나 할까요? 같은 그림 찾기 어때요?',
         character_id: characterId.wonyoung,
         type: 'text',
         id: 'scene5_party_3',
         index: 3,
       },
       {
-        script: '🎮 미니게임 [술자리 로직 배틀]이 시작됩니다!',
+        script: '🎮 미니게임 [카드 게임 - 같은 그림 찾기]이 시작됩니다!',
         type: '시스템',
         id: 'scene5_party_4',
         index: 4,
@@ -1035,7 +1043,7 @@ export const gameEvents: Record<string, GameEvent> = {
         index: 0,
       },
       {
-        script: '술게임을 잘해서 나 대신에 고도희가 많이 마셨다.',
+        script: '술게임을 잘해버린 탓에 고도희가 많이 마셨다.',
         type: 'think',
         id: 'scene5_party_win_1',
         index: 1,
@@ -1043,7 +1051,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(얼굴이 발그레하다) 으... 나 좀 취한 것 같아. 머리 아파.',
         character_id: characterId.dohee,
-        character_image_id: characterImageId.dohee_embarrassed,
+        character_image_id: { 2: characterImageId.dohee_drunken },
         type: 'text',
         background_image_id: backgroundImageId.second_restaurant_inside,
         background_sound_id: backgroundSoundId.party_noise,
@@ -1092,7 +1100,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '으윽... 세상이 돈다. System.exit(0)...',
         character_id: characterId.hero,
-        character_image_id: characterImageId.nobody,
+        character_image_id: { 2: characterImageId.nobody },
         type: 'think',
         background_image_id: backgroundImageId.second_restaurant_inside,
         background_sound_id: backgroundSoundId.comical_fail,
@@ -1102,6 +1110,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '',
         type: '전환',
+        character_image_id: { all: characterImageId.nobody },
         id: 'ending_scene1_2',
         index: 2,
       },
@@ -1148,7 +1157,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '',
         type: '전환',
-        character_image_id: characterImageId.nobody,
+        character_image_id: { all: characterImageId.nobody },
         id: 'scene5_dorm_3',
         index: 3,
       },
@@ -1212,7 +1221,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '',
         type: '전환',
-        character_image_id: characterImageId.nobody,
+        character_image_id: { all: characterImageId.nobody },
         id: 'scene5_dorm_10',
         index: 12,
       }
@@ -1239,7 +1248,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(머리를 쥐어뜯으며) 으아아앙... 왜 안 되냐고... 나한테 왜 이래 ㅠㅠ',
         character_id: characterId.jisoo,
-        character_image_id: characterImageId.jisoo_hard,
+        character_image_id: { 2: characterImageId.jisoo_hard },
         type: 'text',
         id: 'scene5_debug_2',
         index: 2,
@@ -1254,7 +1263,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '어! 도훈 오빠다! ㅠㅠ 오빠 잘 만났다. 나 좀 살려줘!!',
         character_id: characterId.jisoo,
-        character_image_id: characterImageId.jisoo_begging,
+        character_image_id: { 2: characterImageId.jisoo_begging },
         type: 'text',
         id: 'scene5_debug_4',
         index: 4,
@@ -1317,7 +1326,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '어? 어?? 빨간 줄 다 없어졌다!!',
         character_id: characterId.jisoo,
-        character_image_id: characterImageId.jisoo_smile,
+        character_image_id: { 2: characterImageId.jisoo_smile },
         type: 'text',
         id: 'scene5_debug_13',
         index: 13,
@@ -1353,14 +1362,14 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '그날 이후, 4일차, 5일차, 6일차... 지수는 틈만 나면 "오빠!" 하고 찾아오기 시작했다.',
         type: 'narration',
-        character_image_id: characterImageId.jisoo_hello,
+        character_image_id: { 2: characterImageId.jisoo_hello },
         id: 'scene5_debug_18',
         index: 18,
       },
       {
         script: '그리고 그 모습을, 도희가 멀리서 조용히 지켜보고 있었다.',
         type: 'narration',
-        character_image_id: characterImageId.dohee_basic,
+        character_image_id: { 2: characterImageId.dohee_basic },
         id: 'scene5_debug_19',
         index: 19,
       },
@@ -1374,7 +1383,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '',
         type: '전환',
-        character_image_id: characterImageId.nobody,
+        character_image_id: { all: characterImageId.nobody },
         id: 'scene5_debug_21',
         index: 21,
       }
@@ -1392,7 +1401,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '자, 대망의 1주차 금픽 발표가 있겠습니다!',
         character_id: characterId.manager,
-        character_image_id: characterImageId.manager,
+        character_image_id: { 2: characterImageId.manager },
         type: 'text',
         background_image_id: backgroundImageId.classroom_back,
         id: 'scene6_commit_0',
@@ -1408,7 +1417,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '',
         type: '전환',
-        character_image_id: characterImageId.nobody,
+        character_image_id: { all: characterImageId.nobody },
         id: 'scene6_commit_2',
         index: 2,
       },
@@ -1422,7 +1431,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '도훈 오빠! 축하해! 우리 조 오빠 덕분에 금픽 됐어~',
         character_id: characterId.jisoo,
-        character_image_id: characterImageId.jisoo_smile,
+        character_image_id: { 2: characterImageId.jisoo_smile },
         type: 'text',
         id: 'scene6_commit_4',
         index: 4,
@@ -1464,7 +1473,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(그때, 뒤에서 팔짱을 낀 도희가 다가온다)',
         type: 'narration',
-        character_image_id: characterImageId.dohee_annoyed,
+        character_image_id: { 2: characterImageId.dohee_annoyed },
         id: 'scene6_commit_10',
         index: 10,
       },
@@ -1512,7 +1521,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '그게 문제라고. 이 삭막한 공대에서, 밤새우는 여자애 코드 봐주는 거?',
         character_id: characterId.dohee,
-        character_image_id: characterImageId.dohee_annoyed,
+        character_image_id: { 2: characterImageId.dohee_annoyed },
         type: 'text',
         id: 'scene6_commit_17',
         index: 17,
@@ -1527,7 +1536,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '...뭐, 실력은 인정하지만.',
         character_id: characterId.dohee,
-        character_image_id: characterImageId.dohee_basic,
+        character_image_id: { 2: characterImageId.dohee_basic },
         type: 'text',
         id: 'scene6_commit_19',
         index: 19,
@@ -1542,19 +1551,19 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '(피식 웃으며 주머니에서 [솔의 눈]을 꺼내 도훈의 가슴팍에 툭 친다)',
         type: 'narration',
-        character_image_id: characterImageId.dohee_smile,
+        character_image_id: { 2: characterImageId.dohee_smile },
         id: 'scene6_commit_21',
         index: 21,
       },
       {
-        script: '사과할 거면 말로만 하지 말고, 이거나 마셔.',
+        script: '사과하지 말고, 이거나 마셔.',
         character_id: characterId.dohee,
         type: 'text',
         id: 'scene6_commit_22',
         index: 22,
       },
       {
-        script: '내 귀 딱지 앉게 만든 값이니까.',
+        script: '지수 더 이상 헷갈리게 하지 말고',
         character_id: characterId.dohee,
         type: 'text',
         id: 'scene6_commit_23',
@@ -1576,13 +1585,14 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '착각하지 마. 그냥 남아서 주는 거니까.',
         character_id: characterId.dohee,
-        character_image_id: characterImageId.dohee_smile,
+        character_image_id: { 2: characterImageId.dohee_smile },
         type: 'text',
         id: 'scene6_commit_26',
         index: 26,
       },
       {
         script: '(도희는 뒤도 안 돌아보고 쿨하게 걸어간다)',
+        character_image_id: { 2: characterImageId.nobody },
         type: 'narration',
         id: 'scene6_commit_27',
         index: 27,
@@ -1622,16 +1632,34 @@ export const gameEvents: Record<string, GameEvent> = {
 import type { Scene, Dialogue } from '../types/game.types';
 
 export const convertEventToScene = (event: GameEvent): Scene => {
-  const dialogues: Dialogue[] = event.scenario.map((item) => ({
-    id: item.id,
-    character: item.character_id,
-    text: item.script,
-    background: item.background_image_id,
-    characterImage: item.character_image_id,
-    bgm: item.background_sound_id,
-    sfx: item.effect_sound_id,
-    choices: item.options,
-  }));
+  const dialogues: Dialogue[] = event.scenario.map((item) => {
+    // character_image_id가 객체 형태이므로 Dialogue의 characterImage는 undefined로 설정
+    // (하위 호환성을 위한 변환이므로 실제로는 사용되지 않음)
+    let characterImage: string | undefined = undefined;
+    if (item.character_image_id) {
+      // 객체 형태인 경우 첫 번째 값 사용 (하위 호환성)
+      if (item.character_image_id[2]) {
+        characterImage = item.character_image_id[2];
+      } else if (item.character_image_id[1]) {
+        characterImage = item.character_image_id[1];
+      } else if (item.character_image_id[3]) {
+        characterImage = item.character_image_id[3];
+      } else if (item.character_image_id.all) {
+        characterImage = item.character_image_id.all;
+      }
+    }
+    
+    return {
+      id: item.id,
+      character: item.character_id,
+      text: item.script,
+      background: item.background_image_id,
+      characterImage,
+      bgm: item.background_sound_id,
+      sfx: item.effect_sound_id,
+      choices: item.options,
+    };
+  });
 
   return {
     id: event.next_scene_id,

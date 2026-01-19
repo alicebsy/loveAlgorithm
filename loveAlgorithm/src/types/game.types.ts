@@ -47,7 +47,12 @@ export interface ScenarioItem {
   character_id?: string;
   where?: string;
   when?: string;
-  character_image_id?: string;
+  character_image_id?: {
+    1?: string;
+    2?: string;
+    3?: string;
+    all?: string;
+  };
   background_image_id?: string;
   background_sound_id?: string;
   effect_sound_id?: string;
@@ -74,7 +79,11 @@ export interface GameState {
   affections?: Record<string, number>; // 캐릭터별 호감도
   miniGameScores?: Record<string, number>; // 게임별 최고 점수
   previousValues?: { // 이전 시나리오 아이템의 값 (저장/불러오기용)
-    character_image_id?: string;
+    character_image_id?: {
+      1?: string;
+      2?: string;
+      3?: string;
+    };
     background_image_id?: string;
     background_sound_id?: string;
   };

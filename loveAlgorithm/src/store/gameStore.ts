@@ -64,12 +64,20 @@ interface GameStore {
 
   // Previous Values (for save/load)
   previousValues: {
-    character_image_id?: string;
+    character_image_id?: {
+      1?: string;
+      2?: string;
+      3?: string;
+    };
     background_image_id?: string;
     background_sound_id?: string;
   };
   setPreviousValues: (values: {
-    character_image_id?: string;
+    character_image_id?: {
+      1?: string;
+      2?: string;
+      3?: string;
+    };
     background_image_id?: string;
     background_sound_id?: string;
   }) => void;

@@ -4,19 +4,42 @@ interface CharacterDisplayProps {
   characterImage?: string;
   characterName?: string;
   notCharacter?: boolean;
+  location?: 1 | 2 | 3;
 }
 
-const CharacterContainer = styled.div`
+const CharacterContainer = styled.div<{ $location: 1 | 2 | 3 }>`
   position: fixed;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
   z-index: 1;
   display: flex;
-  justify-content: center;
   align-items: flex-end;
   max-width: 80%;
   max-height: 100vh;
+
+  ${(props) => {
+    if (props.$location === 1) {
+      // 왼쪽
+      return `
+        left: 15%;
+        transform: translateX(-50%);
+        justify-content: center;
+      `;
+    } else if (props.$location === 3) {
+      // 오른쪽
+      return `
+        right: 15%;
+        transform: translateX(50%);
+        justify-content: center;
+      `;
+    } else {
+      // 가운데 (기본값)
+      return `
+        left: 50%;
+        transform: translateX(-50%);
+        justify-content: center;
+      `;
+    }
+  }}
 `;
 
 const CharacterImage = styled.img<{ $visible: boolean }>`
@@ -28,14 +51,14 @@ const CharacterImage = styled.img<{ $visible: boolean }>`
   transition: opacity 0.3s ease-in-out;
 `;
 
-export const CharacterDisplay = ({ characterImage, characterName, notCharacter }: CharacterDisplayProps) => {
+export const CharacterDisplay = ({ characterImage, characterName, notCharacter, location = 2 }: CharacterDisplayProps) => {
   // nobody이거나 notCharacter이거나 이미지가 없으면 표시하지 않음
   if (notCharacter || !characterImage || characterImage.includes('nobody') || characterName === 'nobody') {
     return null;
   }
 
   return (
-    <CharacterContainer>
+    <CharacterContainer $location={location}>
       <CharacterImage src={characterImage} alt={characterName || 'Character'} $visible={!!characterImage} />
     </CharacterContainer>
   );

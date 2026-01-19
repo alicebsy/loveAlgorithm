@@ -14,7 +14,7 @@ const PanelContainer = styled.div`
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 2100;
+  z-index: 3000;
   display: flex;
   gap: 8px;
   flex-wrap: wrap;

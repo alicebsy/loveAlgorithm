@@ -40,13 +40,21 @@ export const processScenarioItem = (
   settings: { bgmVolume: number; sfxVolume: number }
 ): {
   backgroundPath?: string;
-  characterImagePath?: string;
+  characterImagePaths?: {
+    1?: string;
+    2?: string;
+    3?: string;
+  };
   characterActionImagePath?: string;
   characterReImagePath?: string;
 } => {
   const result: {
     backgroundPath?: string;
-    characterImagePath?: string;
+    characterImagePaths?: {
+      1?: string;
+      2?: string;
+      3?: string;
+    };
     characterActionImagePath?: string;
     characterReImagePath?: string;
   } = {};
@@ -56,9 +64,36 @@ export const processScenarioItem = (
     result.backgroundPath = getBackgroundImagePath(item.background_image_id);
   }
 
-  // 캐릭터 이미지 (파일 이름을 경로로 변환)
+  // 캐릭터 이미지 (위치별로 파일 이름을 경로로 변환)
   if (item.character_image_id) {
-    result.characterImagePath = getCharacterImagePath(item.character_image_id);
+    const characterImagePaths: {
+      1?: string;
+      2?: string;
+      3?: string;
+    } = {};
+    
+    // all이 있으면 1, 2, 3 모두에 적용
+    if (item.character_image_id.all) {
+      const imagePath = getCharacterImagePath(item.character_image_id.all);
+      characterImagePaths[1] = imagePath;
+      characterImagePaths[2] = imagePath;
+      characterImagePaths[3] = imagePath;
+    } else {
+      // 각 위치별로 변환
+      if (item.character_image_id[1]) {
+        characterImagePaths[1] = getCharacterImagePath(item.character_image_id[1]);
+      }
+      if (item.character_image_id[2]) {
+        characterImagePaths[2] = getCharacterImagePath(item.character_image_id[2]);
+      }
+      if (item.character_image_id[3]) {
+        characterImagePaths[3] = getCharacterImagePath(item.character_image_id[3]);
+      }
+    }
+    
+    if (Object.keys(characterImagePaths).length > 0) {
+      result.characterImagePaths = characterImagePaths;
+    }
   }
 
   // 캐릭터 액션 이미지 (파일 이름을 경로로 변환)

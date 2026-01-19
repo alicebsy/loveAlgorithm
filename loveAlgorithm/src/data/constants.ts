@@ -46,6 +46,7 @@ export const characterImageId = {
   dohee_side_smile: 'dohee_side_smile.png',
   dohee_access_denied: 'dohee_access_denied.png',
   dohee_boring: 'dohee_boring.png',
+  dohee_drunken: 'dohee_drunken.png',
   dohee_joy: 'dohee_joy',
 } as const;
 

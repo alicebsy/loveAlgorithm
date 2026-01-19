@@ -14,7 +14,7 @@ const OverlayContainer = styled.div`
   justify-content: center;
   align-items: flex-start;
   padding-top: 80px;
-  z-index: 2000;
+  z-index: 1500;
   pointer-events: none;
 `;
 
@@ -26,6 +26,7 @@ const OverlayImage = styled.img`
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
   background: rgba(255, 255, 255, 0.95);
   padding: 8px;
+  pointer-events: none;
 `;
 
 export const ImageOverlay = ({ imagePath }: ImageOverlayProps) => {
