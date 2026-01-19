@@ -14,14 +14,14 @@ const Container = styled.div`
   flex-direction: column;
   gap: 8px;
   color: #fff;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
 `;
 
 const Location = styled.div`
   background: rgba(0, 0, 0, 0.6);
   padding: 8px 16px;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 17px;
   border-left: 3px solid #ffd700;
 `;
 
@@ -29,7 +29,7 @@ const Time = styled.div`
   background: rgba(0, 0, 0, 0.6);
   padding: 8px 16px;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 17px;
   border-left: 3px solid #4caf50;
 `;
 
@@ -43,4 +43,5 @@ export const LocationTimeDisplay = ({ where, when }: LocationTimeDisplayProps) =
     </Container>
   );
 };
+
 

@@ -9,15 +9,15 @@ interface SystemDisplayProps {
 
 const SystemOverlay = styled.div`
   position: fixed;
-  bottom: 0;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
-  max-width: 1000px;
-  height: 200px;
+  width: 67%;
+  max-width: 1200px;
+  height: 210px;
   z-index: 1000;
   pointer-events: none;
-  font-family: 'Consolas', 'Courier New', monospace;
+  font-family: '강원교육모두Bold', monospace;
   animation: fadeIn 0.3s ease-in-out;
 
   @keyframes fadeIn {
@@ -65,7 +65,7 @@ const ConsoleHeader = styled.div`
 
 const ConsoleTitle = styled.div`
   color: #cccccc;
-  font-size: 12px;
+  font-size: 20px;
   font-weight: 500;
 `;
 
@@ -74,7 +74,7 @@ const ConsoleBody = styled.div`
   flex: 1;
   overflow-y: auto;
   color: #cccccc;
-  font-size: 14px;
+  font-size: 24px;
   line-height: 1.6;
   
   /* 스크롤바 스타일링 */

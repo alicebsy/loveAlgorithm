@@ -33,32 +33,32 @@ const ModalContainer = styled.div`
 
 const Title = styled.h2`
   color: #fff;
-  font-size: 24px;
+  font-size: 29px;
   margin-bottom: 20px;
   text-align: center;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
 `;
 
 const Message = styled.div`
   color: #fff;
-  font-size: 16px;
+  font-size: 19px;
   line-height: 1.8;
   margin-bottom: 32px;
   white-space: pre-line;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
 `;
 
 const Button = styled.button`
   padding: 12px 32px;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 19px;
   cursor: pointer;
   transition: all 0.2s;
   border: 2px solid rgba(76, 175, 80, 0.9);
   background: rgba(76, 175, 80, 0.8);
   color: #fff;
   width: 100%;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
   
   &:hover {
     background: rgba(76, 175, 80, 1);
@@ -81,4 +81,5 @@ export const InfoModal = ({ title, message, onClose }: InfoModalProps) => {
     </Overlay>
   );
 };
+
 

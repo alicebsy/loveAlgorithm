@@ -35,11 +35,11 @@ const ModalContainer = styled.div`
 
 const Message = styled.div`
   color: #fff;
-  font-size: 18px;
+  font-size: 22px;
   line-height: 1.6;
   margin-bottom: 32px;
   text-align: center;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
 `;
 
 const ButtonGroup = styled.div`
@@ -51,11 +51,11 @@ const ButtonGroup = styled.div`
 const Button = styled.button<{ $variant?: 'primary' | 'secondary' }>`
   padding: 12px 32px;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 19px;
   cursor: pointer;
   transition: all 0.2s;
   border: 2px solid;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
   
   ${(props) =>
     props.$variant === 'primary'
@@ -108,4 +108,5 @@ export const ConfirmModal = ({
     </Overlay>
   );
 };
+
 

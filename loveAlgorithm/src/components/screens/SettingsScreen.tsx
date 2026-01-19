@@ -18,9 +18,9 @@ const ScreenContainer = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 32px;
+  font-size: 38px;
   margin-bottom: 40px;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
 `;
 
 const SettingsContainer = styled.div`
@@ -38,7 +38,7 @@ const SettingItem = styled.div`
 `;
 
 const SettingLabel = styled.label`
-  font-size: 18px;
+  font-size: 22px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -118,7 +118,7 @@ const ToggleSwitch = styled.label`
 `;
 
 const ValueDisplay = styled.span`
-  font-size: 16px;
+  font-size: 19px;
   color: rgba(255, 255, 255, 0.7);
   min-width: 50px;
   text-align: right;
@@ -130,7 +130,7 @@ const Button = styled.button`
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 6px;
   color: #fff;
-  font-size: 16px;
+  font-size: 19px;
   cursor: pointer;
   transition: all 0.2s;
   margin-top: 20px;
@@ -230,4 +230,5 @@ export const SettingsScreen = () => {
     </ScreenContainer>
   );
 };
+
 

@@ -38,19 +38,19 @@ const GameHeader = styled.div`
   max-width: 800px;
   margin-bottom: 20px;
   color: #fff;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
   gap: 8px;
 `;
 
 const Timer = styled.div<{ $isLow: boolean }>`
-  font-size: 24px;
+  font-size: 29px;
   font-weight: bold;
   color: ${(props) => (props.$isLow ? '#ff4444' : '#fff')};
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 `;
 
 const Matches = styled.div`
-  font-size: 18px;
+  font-size: 22px;
   color: #fff;
 `;
 
@@ -305,4 +305,5 @@ export const CardGame = ({ onWin, onLose, timeLimit = 60 }: CardGameProps) => {
     </GameContainer>
   );
 };
+
 

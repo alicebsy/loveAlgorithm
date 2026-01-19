@@ -37,11 +37,11 @@ const ChoiceButton = styled.button`
   border-radius: 12px;
   padding: 18px 32px;
   color: #333;
-  font-size: 18px;
+  font-size: 22px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
   width: 100%;
   max-width: 500px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -82,4 +82,5 @@ export const ChoiceModal = ({ choices, onSelect }: ChoiceModalProps) => {
     </Overlay>
   );
 };
+
 

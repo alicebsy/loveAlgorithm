@@ -20,9 +20,9 @@ const ScreenContainer = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 32px;
+  font-size: 38px;
   margin-bottom: 40px;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
 `;
 
 const SlotGrid = styled.div`
@@ -58,7 +58,7 @@ const SlotCard = styled.div<{ $isEmpty: boolean }>`
 `;
 
 const SlotPreview = styled.div`
-  font-size: 14px;
+  font-size: 17px;
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 10px;
   overflow: hidden;
@@ -72,7 +72,7 @@ const SlotInfo = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.5);
 `;
 
@@ -87,7 +87,7 @@ const Button = styled.button`
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 6px;
   color: #fff;
-  font-size: 16px;
+  font-size: 19px;
   cursor: pointer;
   transition: all 0.2s;
   
@@ -100,7 +100,7 @@ const Button = styled.button`
 const EmptySlotText = styled.div`
   text-align: center;
   color: rgba(255, 255, 255, 0.3);
-  font-size: 14px;
+  font-size: 17px;
   margin-top: 40px;
 `;
 
@@ -174,4 +174,5 @@ export const SaveLoadScreen = () => {
     </ScreenContainer>
   );
 };
+
 

@@ -30,11 +30,11 @@ const RegisterBox = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 36px;
+  font-size: 43px;
   margin-bottom: 30px;
   text-align: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
 `;
 
 const FormGroup = styled.div`
@@ -44,7 +44,7 @@ const FormGroup = styled.div`
 const Label = styled.label`
   display: block;
   margin-bottom: 8px;
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
 `;
@@ -56,7 +56,7 @@ const Input = styled.input`
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   color: #fff;
-  font-size: 16px;
+  font-size: 19px;
   transition: all 0.3s;
   box-sizing: border-box;
 
@@ -78,7 +78,7 @@ const Button = styled.button`
   border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 8px;
   color: #fff;
-  font-size: 16px;
+  font-size: 19px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
@@ -113,7 +113,7 @@ const SecondaryButton = styled(Button)`
 
 const ErrorMessage = styled.div`
   color: #ff6b6b;
-  font-size: 14px;
+  font-size: 17px;
   margin-top: 10px;
   text-align: center;
   min-height: 20px;
@@ -121,14 +121,14 @@ const ErrorMessage = styled.div`
 
 const SuccessMessage = styled.div`
   color: #51cf66;
-  font-size: 14px;
+  font-size: 17px;
   margin-top: 10px;
   text-align: center;
   min-height: 20px;
 `;
 
 const PasswordHint = styled.div`
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
   margin-top: 4px;
 `;
@@ -286,4 +286,5 @@ export const RegisterScreen = () => {
     </ScreenContainer>
   );
 };
+
 

@@ -22,7 +22,7 @@ export const characterImageId = {
   manager: '성준.png',
   donghwi: '아무개.png',
   myeongseong: '아무개.png',
-  hanjin: '아무개.png',
+  hanjin: '한진.png',
   wonyoung: '아무개.png',
   seoyeon_basic: 'seoyeon_basic',
   seoyeon_side: 'seoyeon_side',

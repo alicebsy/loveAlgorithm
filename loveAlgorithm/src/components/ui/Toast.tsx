@@ -53,7 +53,7 @@ const ToastContainer = styled.div<{ $type: string; $isClosing: boolean }>`
   max-width: 400px;
   animation: ${(props) => (props.$isClosing ? slideOut : slideIn)} 0.3s ease-out;
   backdrop-filter: blur(10px);
-  font-size: 14px;
+  font-size: 17px;
   line-height: 1.5;
 `;
 

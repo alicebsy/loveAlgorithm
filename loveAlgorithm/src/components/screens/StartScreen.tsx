@@ -20,10 +20,10 @@ const ScreenContainer = styled.div`
 `;
 
 const Title = styled.h1`
-  font-size: 48px;
+  font-size: 58px;
   margin-bottom: 60px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
 `;
 
 const MenuContainer = styled.div`
@@ -39,7 +39,7 @@ const MenuButton = styled.button`
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;
   color: #fff;
-  font-size: 18px;
+  font-size: 22px;
   cursor: pointer;
   transition: all 0.3s;
   backdrop-filter: blur(10px);
@@ -59,7 +59,7 @@ const VersionInfo = styled.div`
   position: absolute;
   bottom: 20px;
   right: 20px;
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
 `;
 
@@ -80,7 +80,7 @@ const LogoutButton = styled.button`
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 6px;
   color: #fff;
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   transition: all 0.3s;
 
@@ -139,4 +139,5 @@ export const StartScreen = () => {
     </ScreenContainer>
   );
 };
+
 

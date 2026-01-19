@@ -27,7 +27,7 @@ const Button = styled.button`
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 4px;
   color: #fff;
-  font-size: 14px;
+  font-size: 17px;
   cursor: pointer;
   transition: all 0.2s;
   
@@ -51,7 +51,7 @@ const SkipButton = styled(Button)<{ $active: boolean }>`
 `;
 
 const HotkeyHint = styled.span`
-  font-size: 11px;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.5);
   margin-left: 4px;
 `;

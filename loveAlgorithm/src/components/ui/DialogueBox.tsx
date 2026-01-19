@@ -15,12 +15,12 @@ interface DialogueBoxProps {
 
 const DialogueContainer = styled.div`
   position: fixed;
-  bottom: 0;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%;
-  max-width: 1000px;
-  height: 200px;
+  width: 67%;
+  max-width: 1200px;
+  height: 210px;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(4px);
   border-radius: 20px 20px 0 0;
@@ -31,7 +31,7 @@ const DialogueContainer = styled.div`
   flex-direction: column;
   gap: 8px;
   color: #333;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-family: '강원교육모두Bold', sans-serif;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
   margin-bottom: 4px;
   overflow: visible;
@@ -39,17 +39,19 @@ const DialogueContainer = styled.div`
 
 const SpeakerBubble = styled.div<{ $type?: ScenarioType }>`
   position: absolute;
-  top: -50px;
+  top: -25px;
   left: 20px;
   background: #f5f5f5;
   border-radius: 12px;
-  padding: 8px 12px;
+  padding: 4px 8px;
   display: flex;
   align-items: center;
   gap: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   white-space: nowrap;
+  min-height: 40px;
+  height: 40px;
 `;
 
 const SpeakerIcon = styled.div`
@@ -64,8 +66,9 @@ const SpeakerIcon = styled.div`
 `;
 
 const SpeakerName = styled.span<{ $type?: ScenarioType }>`
-  font-size: 14px;
+  font-size: 24px;
   font-weight: 600;
+  padding-top: 3px;
   color: #333;
 `;
 
@@ -77,26 +80,27 @@ const DialogueTextContainer = styled.div`
 `;
 
 const TextIcon = styled.div`
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: #e0e0e0;
+  background: #888;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 2px;
+  margin-top: 6px;
   
   &::before {
     content: '⋯';
-    color: #999;
-    font-size: 12px;
+    color: #333;
+    font-size: 14px;
     line-height: 1;
+    font-weight: bold;
   }
 `;
 
 const DialogueText = styled.div<{ $isTyping: boolean; $type?: ScenarioType }>`
-  font-size: 18px;
+  font-size: 30px;
   line-height: 1.6;
   min-height: 60px;
   white-space: pre-wrap;
@@ -110,6 +114,10 @@ const DialogueText = styled.div<{ $isTyping: boolean; $type?: ScenarioType }>`
     return '#556b2f'; // 올리브 그린
   }};
   flex: 1;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
   ${(props) =>
     props.$isTyping
       ? `
@@ -132,8 +140,8 @@ const NameInputField = styled.input`
   padding: 12px 16px;
   border: 2px solid #4a90e2;
   border-radius: 8px;
-  font-size: 18px;
-  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  font-size: 22px;
+  font-family: '강원교육모두Bold', sans-serif;
   outline: none;
   background: #fff;
   color: #333;
@@ -161,7 +169,7 @@ const NextIndicator = styled.div`
   position: absolute;
   bottom: 24px;
   right: 24px;
-  font-size: 12px;
+  font-size: 14px;
   color: #999;
   animation: bounce 1s infinite;
   
@@ -296,9 +304,9 @@ export const DialogueBox = ({ dialogue, scenarioType, isTyping, onNext, onChoice
       <DialogueContainer onClick={handleClick} style={{ cursor: hasChoices ? 'default' : 'pointer' }}>
         <SpeakerBubble $type={scenarioType}>
           <SpeakerIcon />
-          {speakerName && speakerName.trim() !== '' && (
-            <SpeakerName $type={scenarioType}>{speakerName}</SpeakerName>
-          )}
+          <SpeakerName $type={scenarioType} style={{ visibility: speakerName && speakerName.trim() !== '' ? 'visible' : 'hidden' }}>
+            {speakerName || '\u00A0'}
+          </SpeakerName>
         </SpeakerBubble>
         <DialogueTextContainer>
           <TextIcon />

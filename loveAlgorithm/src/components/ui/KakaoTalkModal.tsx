@@ -62,7 +62,7 @@ const StatusBar = styled.div`
   align-items: center;
   padding: 8px 16px;
   background: #ABC0D1;
-  font-size: 12px;
+  font-size: 17px;
   color: #000;
   font-weight: 600;
 `;
@@ -79,7 +79,7 @@ const Header = styled.div`
 const BackButton = styled.button`
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 24px;
   cursor: pointer;
   color: #000;
   padding: 0;
@@ -91,7 +91,7 @@ const BackButton = styled.button`
 `;
 
 const ChatTitle = styled.div`
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
   color: #000;
   flex: 1;
@@ -106,7 +106,7 @@ const IconButton = styled.button`
   background: none;
   border: none;
   color: #000;
-  font-size: 18px;
+  font-size: 22px;
   cursor: pointer;
   padding: 0;
   width: 24px;
@@ -146,12 +146,12 @@ const ProfileImage = styled.div`
   justify-content: center;
   color: #fff;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 17px;
   flex-shrink: 0;
 `;
 
 const SenderName = styled.div`
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 600;
   color: #000;
 `;
@@ -161,7 +161,7 @@ const MessageBubble = styled.div<{ $isMine: boolean; $hasProfile: boolean }>`
   border-radius: 12px;
   padding: 10px 14px;
   max-width: 80%;
-  font-size: 15px;
+  font-size: 18px;
   color: #000;
   word-wrap: break-word;
   white-space: pre-wrap;
@@ -208,7 +208,7 @@ const Flag = styled.img`
 `;
 
 const MinigameTitle = styled.div`
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
   color: #000;
   text-align: center;
@@ -234,7 +234,7 @@ const TeamViewButton = styled.button<{ $disabled: boolean }>`
   border: none;
   border-radius: 8px;
   padding: 12px 24px;
-  font-size: 16px;
+  font-size: 19px;
   width: 100%;
   transition: background 0.2s;
   
@@ -279,13 +279,13 @@ const TeamInfoText = styled.div`
 `;
 
 const TeamInfoLabel = styled.div`
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
   color: #000;
 `;
 
 const TeamInfoNumber = styled.div`
-  font-size: 36px;
+  font-size: 43px;
   font-weight: 700;
   color: #4da6ff;
 `;
@@ -300,7 +300,7 @@ const TeamInfoBottom = styled.div`
 `;
 
 const TeamInfoResult = styled.div`
-  font-size: 15px;
+  font-size: 18px;
   color: #000;
   text-align: center;
   margin-bottom: 8px;
@@ -321,7 +321,7 @@ const InputField = styled.div`
   padding: 7px 14px;
   background: #f5f5f5;
   border-radius: 20px;
-  font-size: 15px;
+  font-size: 18px;
   color: #999;
 `;
 
@@ -329,7 +329,7 @@ const InputIcon = styled.button`
   background: none;
   border: none;
   color: #888;
-  font-size: 20px;
+  font-size: 24px;
   cursor: pointer;
   padding: 0;
   width: 32px;
