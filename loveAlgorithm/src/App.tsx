@@ -1,5 +1,7 @@
 import { useGameStore } from './store/gameStore';
 import { StartScreen } from './components/screens/StartScreen';
+import { LoginScreen } from './components/screens/LoginScreen';
+import { RegisterScreen } from './components/screens/RegisterScreen';
 import { GameScreen } from './components/screens/GameScreen';
 import { SaveLoadScreen } from './components/screens/SaveLoadScreen';
 import { SettingsScreen } from './components/screens/SettingsScreen';
@@ -17,10 +19,14 @@ const theme = {
 
 function App() {
   const { currentScreen } = useGameStore();
-  const { isScriptLoading, scriptError } = useScriptLoader();
+  useScriptLoader(); // 스크립트 로딩 (에러 처리용)
 
   const renderScreen = () => {
     switch (currentScreen) {
+      case 'login':
+        return <LoginScreen />;
+      case 'register':
+        return <RegisterScreen />;
       case 'start':
         return <StartScreen />;
       case 'game':
@@ -30,7 +36,7 @@ function App() {
       case 'settings':
         return <SettingsScreen />;
       default:
-        return <StartScreen />;
+        return <LoginScreen />;
     }
   };
 

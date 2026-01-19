@@ -36,6 +36,7 @@ export const characterImageId = {
   jisoo_hello: 'jisoo_hello.png',
   jisoo_hard: 'jisoo_hard.png',
   jisoo_begging: 'jisoo_begging.png',
+  jisoo_lookingup: 'jisoo_lookingup.png',
   dohee_basic: 'dohee_basic',
   dohee_smile: 'dohee_smile',
   dohee_embarrassed: 'dohee_embarrassed.png',
@@ -48,6 +49,7 @@ export const characterImageId = {
   dohee_boring: 'dohee_boring.png',
   dohee_drunken: 'dohee_drunken.png',
   dohee_joy: 'dohee_joy',
+  
 } as const;
 
 export const backgroundImageId = {
@@ -64,6 +66,7 @@ export const backgroundImageId = {
   convenience_store_inside: 'convenience_store_inside.png',
   convenience_store_outside: 'convenience_store_outside.png',
   second_restaurant_inside: 'second_restaurant_inside.png',
+  night_street: 'night_street.png',
   mobile_screen: 'mobile_screen',
   kaimaru_front: 'kaimaru_front.png',
   classroom: 'classroom.png',
@@ -74,7 +77,6 @@ export const backgroundImageId = {
   convenience_store_front: 'convenience_store_front.png',
   auditorium: 'auditorium.png',
   dorm_room: 'dorm_room.png',
-  night_street: 'night_street.png',
 } as const;
 
 export const backgroundSoundId = {

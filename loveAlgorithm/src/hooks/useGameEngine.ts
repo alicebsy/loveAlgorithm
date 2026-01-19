@@ -22,6 +22,8 @@ export const useGameEngine = () => {
     heroName,
     addKakaoTalkMessage,
     clearKakaoTalkHistory,
+    addSystemMessage,
+    clearSystemHistory,
     previousValues: storePreviousValues,
     setPreviousValues,
   } = useGameStore();
@@ -297,6 +299,16 @@ export const useGameEngine = () => {
           clearKakaoTalkHistory();
         }
         
+        // 시스템 메시지 히스토리 관리
+        if (mergedItem.type === '시스템') {
+          // script에서 '이도훈'을 실제 이름으로 치환
+          let scriptText = mergedItem.script;
+          if (scriptText.includes('이도훈')) {
+            scriptText = scriptText.replace(/이도훈/g, heroName);
+          }
+          addSystemMessage(scriptText);
+        }
+        
         // 이미지 경로 변환 (동기 처리)
         const processed = processScenarioItem(mergedItem, {
           bgmVolume: settings.bgmVolume,
@@ -346,7 +358,7 @@ export const useGameEngine = () => {
         }
       }
     }
-  }, [gameState.currentSceneId, gameState.currentDialogueIndex, settings.bgmVolume, settings.sfxVolume, goToScene, addKakaoTalkMessage, clearKakaoTalkHistory, heroName, setPreviousValues]);
+  }, [gameState.currentSceneId, gameState.currentDialogueIndex, settings.bgmVolume, settings.sfxVolume, goToScene, addKakaoTalkMessage, clearKakaoTalkHistory, addSystemMessage, heroName, setPreviousValues]);
 
   // 텍스트 타이핑 효과
   useEffect(() => {

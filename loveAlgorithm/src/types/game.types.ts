@@ -104,7 +104,7 @@ export interface Settings {
   textSpeed: number; // 0-100
 }
 
-export type ScreenType = 'start' | 'game' | 'saveLoad' | 'settings';
+export type ScreenType = 'login' | 'register' | 'start' | 'game' | 'saveLoad' | 'settings';
 
 // API 응답 타입
 export interface ApiResponse<T> {

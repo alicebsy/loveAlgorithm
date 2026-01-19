@@ -32,13 +32,14 @@ const GameContainer = styled.div`
 
 const GameHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
   width: 100%;
   max-width: 800px;
   margin-bottom: 20px;
   color: #fff;
   font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+  gap: 8px;
 `;
 
 const Timer = styled.div<{ $isLow: boolean }>`

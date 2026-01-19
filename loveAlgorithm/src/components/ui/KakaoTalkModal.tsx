@@ -170,7 +170,7 @@ const MessageBubble = styled.div<{ $isMine: boolean; $hasProfile: boolean }>`
 const MessageImage = styled.div<{ $align?: 'left' | 'right' }>`
   margin: 4px 0;
   max-width: 80%;
-  align-self: ${(props) => (props.$align === 'right' ? 'flex-end' : 'flex-start')};
+  align-self: ${(props) => (props.$align === 'right' ? 'flex-end' : 'flex-start')}; 
 `;
 
 const ImageContent = styled.img`

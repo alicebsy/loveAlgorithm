@@ -9,6 +9,7 @@ import { ModalManager } from '../ui/ModalManager';
 import { KakaoTalkModal } from '../ui/KakaoTalkModal';
 import { MiniGameModal } from '../ui/MiniGameModal';
 import { ImageOverlay } from '../ui/ImageOverlay';
+import { SystemDisplay } from '../ui/SystemDisplay';
 import { useGameEngine } from '../../hooks/useGameEngine';
 import { useGameHotkeys } from '../../hooks/useHotkeys';
 import { useGameStore } from '../../store/gameStore';
@@ -40,7 +41,7 @@ const TransitionText = styled.div`
 
 export const GameScreen = () => {
   const { currentDialogue, currentScenarioItem, processedImages, proceedToNext, selectChoice, isTyping, handleGameResult } = useGameEngine();
-  const { setCurrentScreen, saveGame, skipMode, setSkipMode, showToast, showConfirmModal, settings, heroName, setHeroName, kakaoTalkHistory } = useGameStore();
+  const { setCurrentScreen, saveGame, skipMode, setSkipMode, showToast, showConfirmModal, settings, heroName, setHeroName, kakaoTalkHistory, systemHistory } = useGameStore();
 
   const handleSave = () => {
     const slotId = `save_${Date.now()}`;
@@ -84,6 +85,7 @@ export const GameScreen = () => {
   const isKakaoTalk = currentScenarioItem?.type?.startsWith('카톡') ?? false;
   const hasKakaoTalkHistory = kakaoTalkHistory.length > 0;
   const isTransition = currentScenarioItem?.type === '전환';
+  const isSystem = currentScenarioItem?.type === '시스템';
   const isGame = currentScenarioItem?.type === 'game';
   const gameConfig = currentScenarioItem?.game;
   const overlayImagePath = currentScenarioItem?.overlay_image_id 
@@ -146,7 +148,7 @@ export const GameScreen = () => {
           location={2}
         />
       )}
-      {!isKakaoTalk && !hasKakaoTalkHistory && !isTransition && !isGame && (
+      {!isKakaoTalk && !hasKakaoTalkHistory && !isTransition && !isSystem && !isGame && (
         <DialogueBox 
           dialogue={currentDialogue} 
           scenarioType={currentScenarioItem?.type}
@@ -187,6 +189,12 @@ export const GameScreen = () => {
         <TransitionOverlay onClick={proceedToNext}>
           <TransitionText>{currentDialogue.text}</TransitionText>
         </TransitionOverlay>
+      )}
+      {isSystem && (
+        <SystemDisplay 
+          messages={systemHistory} 
+          onNext={proceedToNext}
+        />
       )}
       <ControlPanel
         onSave={handleSave}

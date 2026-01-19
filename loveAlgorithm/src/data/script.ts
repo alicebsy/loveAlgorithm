@@ -119,7 +119,7 @@ export const gameEvents: Record<string, GameEvent> = {
         index: 2,
       },
       {
-        script: '그때, 뒤에서 누군가 도훈을 부른다', // (해설 - 괄호 안의 지문)
+        script: '그때, 뒤에서 누군가 나를 부른다', // (해설 - 괄호 안의 지문)
         type: 'narration',
         id: 'chapter1_scene2_3',
         index: 3,
@@ -259,12 +259,18 @@ export const gameEvents: Record<string, GameEvent> = {
         index: 21,
       },
       {
-        script: '그래, 나랑은 다른 세상 사람이다. 기대하지 말자. Expectation = Null.',
+        script: '그래, 나랑은 다른 세상 사람이다. 기대하지 말자.',
         character_id: characterId.hero,
         type: 'think',
         id: 'chapter1_scene2_22',
         index: 22,
       },
+      {
+        script: 'Expectation = Null',
+        type: '시스템',
+        id: 'chapter1_scene2_23',
+        index: 23,
+      }
     ],
   },
   // ----------------------------------------------------------------
@@ -280,7 +286,7 @@ export const gameEvents: Record<string, GameEvent> = {
         type: '전환',
         character_image_id: { all: characterImageId.nobody },
         id: 'chapter1_scene3_0',
-        index: 23,
+        index: 0,
       },
       {
         script: '오후 2시 20분. 강의실에 사람들이 많이 있다.',
@@ -709,8 +715,8 @@ export const gameEvents: Record<string, GameEvent> = {
         index: 4,
       },
       {
-        script: '🌲 [호감도 대폭 상승] 도희가 당신을 "말이 통하는 사람"으로 인식합니다.',
-        type: 'narration',
+        script: '[호감도 대폭 상승] 도희가 당신을 "말이 통하는 사람"으로 인식합니다.',
+        type: '시스템',
         id: 'scene4_sol_5',
         index: 5,
       },
@@ -1008,8 +1014,8 @@ export const gameEvents: Record<string, GameEvent> = {
         index: 4,
       },
       {
-        script: '(성공 시: 술을 적게 마심 / 실패 시: 벌주 원샷)',
-        type: 'narration',
+        script: '성공 시: 술을 적게 마심 / 실패 시: 벌주 원샷',
+        type: '시스템',
         id: 'scene5_party_5',
         index: 5,
       },
@@ -1098,12 +1104,18 @@ export const gameEvents: Record<string, GameEvent> = {
     event: 99,
     scenario: [
       {
-        script: '으윽... 세상이 돈다. System.exit(0)...',
+        script: '으윽... 세상이 돈다. ',
         character_id: characterId.hero,
         character_image_id: { 2: characterImageId.nobody },
         type: 'think',
         background_image_id: backgroundImageId.second_restaurant_inside,
         background_sound_id: backgroundSoundId.comical_fail,
+        id: 'ending_scene1_0',
+        index: 0,
+      },
+      {
+        script: 'System.exit(0)',
+        type: '시스템',
         id: 'ending_scene1_1',
         index: 1,
       },
@@ -1239,6 +1251,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '어제 술 마신 게 아직도 안 깨네. 물이나 마시러 가자.',
         character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.nobody },
         type: 'think',
         background_image_id: backgroundImageId.krafton_passageway_day,
         background_sound_id: backgroundSoundId.morning_ambience,
@@ -1326,7 +1339,7 @@ export const gameEvents: Record<string, GameEvent> = {
       {
         script: '어? 어?? 빨간 줄 다 없어졌다!!',
         character_id: characterId.jisoo,
-        character_image_id: { 2: characterImageId.jisoo_smile },
+        character_image_id: { 2: characterImageId.jisoo_lookingup },
         type: 'text',
         id: 'scene5_debug_13',
         index: 13,

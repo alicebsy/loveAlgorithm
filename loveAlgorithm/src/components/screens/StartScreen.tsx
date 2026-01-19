@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useGameStore } from '../../store/gameStore';
 import { InfoModal } from '../ui/InfoModal';
+import { logout } from '../../services/api';
 
 const ScreenContainer = styled.div`
   position: fixed;
@@ -62,9 +63,42 @@ const VersionInfo = styled.div`
   color: rgba(255, 255, 255, 0.6);
 `;
 
+const UserInfo = styled.div`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+`;
+
+const LogoutButton = styled.button`
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+`;
+
 export const StartScreen = () => {
-  const { setCurrentScreen, resetGame } = useGameStore();
+  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, user } = useGameStore();
   const [showControls, setShowControls] = useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    setIsAuthenticated(false);
+    setCurrentScreen('login');
+  };
 
   const handleStart = () => {
     resetGame(); // 게임 상태를 초기화
@@ -81,6 +115,12 @@ export const StartScreen = () => {
 
   return (
     <ScreenContainer>
+      {isAuthenticated && (
+        <UserInfo>
+          <span>{user?.nickname || '게스트'}님</span>
+          <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+        </UserInfo>
+      )}
       <Title>Project: Love Algorithm</Title>
       <MenuContainer>
         <MenuButton onClick={handleStart}>시작하기</MenuButton>
