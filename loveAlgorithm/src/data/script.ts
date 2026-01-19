@@ -12,7 +12,7 @@ export const gameEvents: Record<string, GameEvent> = {
     event: 1,
     scenario: [
       {
-        script: 'init()',
+        script: 'week1: init()',
         type: '전환',
         character_image_id: { all: characterImageId.nobody },
         id: 'chapter1_scene1_0',

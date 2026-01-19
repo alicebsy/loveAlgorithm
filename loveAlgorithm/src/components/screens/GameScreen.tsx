@@ -31,7 +31,7 @@ const TransitionOverlay = styled.div`
 
 const TransitionText = styled.div`
   color: #fff;
-  font-size: 24px;
+  font-size: 100px;
   font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
   text-align: center;
   padding: 20px;
