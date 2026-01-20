@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import type { GameConfig } from '../../types/game.types';
 import { CardGame } from './CardGame';
+import { SpaghettiCodeGame } from './SpaghettiCodeGame';
 
 interface MiniGameModalProps {
   gameConfig: GameConfig;
@@ -100,11 +100,13 @@ export const MiniGameModal = ({ gameConfig, onWin, onLose }: MiniGameModalProps)
     return <CardGame onWin={onWin} onLose={onLose} timeLimit={60} />;
   }
 
-  // 기존 테스트용 게임 (drinking_game 등)
-  const [gameResult, setGameResult] = useState<'win' | 'lose' | null>(null);
+  // 스파게티 코드 리팩토링 게임인 경우 SpaghettiCodeGame 컴포넌트 사용
+  if (gameConfig.game_id === 'refactor_game') {
+    return <SpaghettiCodeGame onWin={onWin} onLose={onLose} timeLimit={60} />;
+  }
 
+  // 기존 테스트용 게임 (drinking_game 등)
   const handleGameResult = (result: 'win' | 'lose') => {
-    setGameResult(result);
     if (result === 'win') {
       onWin();
     } else {
