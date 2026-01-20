@@ -15,6 +15,7 @@ export const characterId = {
   myeongseong: '명성',
   donghwi: '동휘',
   wonyoung: '원영',
+  sera: '세라',
 } as const;
 
 export const characterImageId = {
@@ -37,7 +38,9 @@ export const characterImageId = {
   jisoo_hard: 'jisoo_hard.png',
   jisoo_begging: 'jisoo_begging.png',
   jisoo_lookingup: 'jisoo_lookingup.png',
+  jisoo_삐짐: "jisoo_삐짐.png",
   dohee_basic: 'dohee_basic',
+  dohee_happy: 'dohee_happy.png',
   dohee_smile: 'dohee_smile',
   dohee_embarrassed: 'dohee_embarrassed.png',
   dohee_satisfied: 'dohee_satisfied.png',
@@ -49,7 +52,20 @@ export const characterImageId = {
   dohee_boring: 'dohee_boring.png',
   dohee_drunken: 'dohee_drunken.png',
   dohee_joy: 'dohee_joy',
-  
+  sera_basic: 'sera_basic.png',
+  sera_거만_crossedarm: 'sera_거만_crossedarm.png',
+  sera_칭찬부끄: 'sera_칭찬부끄.png',
+  sera_annoy_sitting: 'sera_annoy_sitting.png',
+  sera_shy_basic: 'sera_basic.png',
+  sera_shy_front: 'sera_shy_front.png',
+  sera_lean_chin: 'sera_lean_chin.png',
+  sera_lookingme_monitor: 'sera_lookingme_monitor.png',
+  sera_staring_monitor: 'sera_staring_monitor.png',
+  sera_pond: 'sera_pond.png',
+  sera_surprised: 'sera_surprised.png',
+  sera_shy_facecover: 'sera_shy_facecover.png',
+  sera_annoy_shy: 'sera_annoy_shy.png',
+
 } as const;
 
 export const backgroundImageId = {
@@ -77,6 +93,10 @@ export const backgroundImageId = {
   convenience_store_front: 'convenience_store_front.png',
   auditorium: 'auditorium.png',
   dorm_room: 'dorm_room.png',
+  jisoo_room: 'jisoo_room.png',
+  lab: 'classroom.png',
+  duck_pond: 'krafton_passageway_night.png',
+  kaist_pond: 'kaist_pond.png',
 } as const;
 
 export const backgroundSoundId = {
@@ -91,6 +111,7 @@ export const backgroundSoundId = {
   serious3: 'serious3',
   typing_noise: 'typing_noise',
   party_noise: 'party_noise',
+  keyboard_typing: 'keyboard',
 } as const;
 
 export const effectSoundId = {
