@@ -1,35 +1,38 @@
 package com.madcamp.love_algorithm.controller;
 
 import com.madcamp.love_algorithm.dto.*;
-import com.madcamp.love_algorithm.dto.AuthRequestDto;
-import com.madcamp.love_algorithm.dto.AuthResponseDto;
 import com.madcamp.love_algorithm.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor // @Autowired 대신 생성자 주입 방식 사용 (권장)
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthService authService;
 
-    // 회원가입 API
-    @PostMapping("/signup")
-    public ResponseEntity<AuthResponseDto> signup(@RequestBody AuthRequestDto request) {
-        return ResponseEntity.ok(authService.register(request));
+    // 프론트의 register()에 대응: POST /api/auth/register
+    @PostMapping("/register")
+    public ApiResponse<Boolean> signup(@RequestBody AuthRequestDto request) {
+        authService.register(request);
+        return ApiResponse.success(true);
     }
 
-    // 로그인 API
+    // 프론트의 login()에 대응: POST /api/auth/login
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto request) {
-        return ResponseEntity.ok(authService.login(request));
-    }
+    public ApiResponse<Map<String, String>> login(@RequestBody AuthRequestDto request) {
+        AuthResponseDto originalResponse = authService.login(request);
 
-    // 새 게임 시작 (유저 캐릭터 생성)
-    @PostMapping("/create-user")
-    public ResponseEntity<AuthResponseDto> createUser(@RequestBody CreateUserRequestDto request) {
-        return ResponseEntity.ok(authService.createCharacter(request));
+        // 프론트엔드가 token과 refreshToken 두 개를 기다리므로 맞춰줌
+        Map<String, String> data = new HashMap<>();
+        data.put("token", originalResponse.getToken());
+        data.put("refreshToken", "dummy-refresh-token");
+
+        return ApiResponse.success(data);
     }
 }

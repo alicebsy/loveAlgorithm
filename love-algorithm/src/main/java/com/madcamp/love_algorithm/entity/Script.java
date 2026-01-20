@@ -46,4 +46,8 @@ public class Script {
     @Column(name = "effect_sound_id")
     private String effectSoundId; // (New) 띠링, 충격음 등
 
+    // Script.java 에 추가 (필요한 경우만)
+    @Column(name = "overlay_image_id")
+    private String overlayImageId;
+
 }
