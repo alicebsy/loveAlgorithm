@@ -62,9 +62,10 @@ const StatusBar = styled.div`
   align-items: center;
   padding: 8px 16px;
   background: #ABC0D1;
-  font-size: 17px;
+  font-size: 13px;
   color: #000;
   font-weight: 600;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 `;
 
 const Header = styled.div`
@@ -79,7 +80,7 @@ const Header = styled.div`
 const BackButton = styled.button`
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 19px;
   cursor: pointer;
   color: #000;
   padding: 0;
@@ -91,10 +92,11 @@ const BackButton = styled.button`
 `;
 
 const ChatTitle = styled.div`
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   color: #000;
   flex: 1;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 `;
 
 const HeaderRight = styled.div`
@@ -106,7 +108,7 @@ const IconButton = styled.button`
   background: none;
   border: none;
   color: #000;
-  font-size: 22px;
+  font-size: 17px;
   cursor: pointer;
   padding: 0;
   width: 24px;
@@ -146,14 +148,16 @@ const ProfileImage = styled.div`
   justify-content: center;
   color: #fff;
   font-weight: 600;
-  font-size: 17px;
+  font-size: 13px;
   flex-shrink: 0;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 `;
 
 const SenderName = styled.div`
-  font-size: 17px;
+  font-size: 13px;
   font-weight: 600;
   color: #000;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 `;
 
 const MessageBubble = styled.div<{ $isMine: boolean; $hasProfile: boolean }>`
@@ -161,10 +165,11 @@ const MessageBubble = styled.div<{ $isMine: boolean; $hasProfile: boolean }>`
   border-radius: 12px;
   padding: 10px 14px;
   max-width: 80%;
-  font-size: 18px;
+  font-size: 14px;
   color: #000;
   word-wrap: break-word;
   white-space: pre-wrap;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 `;
 
 const MessageImage = styled.div<{ $align?: 'left' | 'right' }>`
@@ -208,11 +213,12 @@ const Flag = styled.img`
 `;
 
 const MinigameTitle = styled.div`
-  font-size: 22px;
+  font-size: 17px;
   font-weight: 700;
   color: #000;
   text-align: center;
   padding: 0 24px;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 `;
 
 const MinigameDescription = styled.div`
@@ -234,9 +240,10 @@ const TeamViewButton = styled.button<{ $disabled: boolean }>`
   border: none;
   border-radius: 8px;
   padding: 12px 24px;
-  font-size: 19px;
+  font-size: 15px;
   width: 100%;
   transition: background 0.2s;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
   
   &:hover {
     background: #e8e9ea;
@@ -279,15 +286,17 @@ const TeamInfoText = styled.div`
 `;
 
 const TeamInfoLabel = styled.div`
-  font-size: 22px;
+  font-size: 17px;
   font-weight: 700;
   color: #000;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 `;
 
 const TeamInfoNumber = styled.div`
-  font-size: 43px;
+  font-size: 34px;
   font-weight: 700;
   color: #4da6ff;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 `;
 
 
@@ -300,10 +309,11 @@ const TeamInfoBottom = styled.div`
 `;
 
 const TeamInfoResult = styled.div`
-  font-size: 18px;
+  font-size: 14px;
   color: #000;
   text-align: center;
   margin-bottom: 8px;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 `;
 
 const InputArea = styled.div`
@@ -321,15 +331,16 @@ const InputField = styled.div`
   padding: 7px 14px;
   background: #f5f5f5;
   border-radius: 20px;
-  font-size: 18px;
+  font-size: 14px;
   color: #999;
+  font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
 `;
 
 const InputIcon = styled.button`
   background: none;
   border: none;
   color: #888;
-  font-size: 24px;
+  font-size: 19px;
   cursor: pointer;
   padding: 0;
   width: 32px;

@@ -88,13 +88,14 @@ const TextIcon = styled.div`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 6px;
+  margin-top: 3px;
   
   &::before {
     content: '⋯';
     color: #333;
-    font-size: 14px;
+    font-size: 30px;
     line-height: 1;
+    margin-top: 10px;
     font-weight: bold;
   }
 `;
@@ -105,7 +106,7 @@ const DialogueText = styled.div<{ $isTyping: boolean; $type?: ScenarioType }>`
   min-height: 60px;
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-style: ${(props) => (props.$type === 'think' ? 'italic' : 'normal')};
+  font-style: ${(props) => (props.$type === 'think' ? 'normal' : 'normal')};
   color: ${(props) => {
     if (props.$type === 'think') return '#6b6bff';
     if (props.$type === 'narration') return '#555';

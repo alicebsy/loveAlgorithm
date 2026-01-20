@@ -17,8 +17,8 @@ import {
 import { gameEvents, convertEventToScene } from '../data/script';
 
 // API 모드 설정
-const API_MODE = (import.meta.env.VITE_API_MODE as 'mock' | 'backend') || 'mock';
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api';
+const API_MODE = (import.meta.env.VITE_API_MODE as 'mock' | 'backend') || 'backend';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://10.249.19.19:8081/api';
 
 // HTTP 클라이언트 래퍼 (인증 토큰 포함)
 const apiClient = async <T>(
@@ -37,7 +37,12 @@ const apiClient = async <T>(
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  // API_BASE_URL 끝에 슬래시가 없고, endpoint가 /로 시작하도록 보장
+  const url = API_BASE_URL.endsWith('/') 
+    ? `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint.slice(1) : endpoint}`
+    : `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+  
+  const response = await fetch(url, {
     ...options,
     headers,
   });
@@ -487,7 +492,10 @@ export const checkBackendConnection = async (): Promise<boolean> => {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/health`, {
+    const healthUrl = API_BASE_URL.endsWith('/') 
+      ? `${API_BASE_URL}health`
+      : `${API_BASE_URL}/health`;
+    const response = await fetch(healthUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
