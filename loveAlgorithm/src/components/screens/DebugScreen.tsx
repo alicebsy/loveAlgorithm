@@ -42,7 +42,7 @@ export const DebugScreen = () => {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (token) headers['Authorization'] = `Bearer ${token}`;
       
-      const response = await fetch('http://lovealgorithmgame.site:8081/api/script', { headers });
+      const response = await fetch('http://15.165.158.127:8081/api/script', { headers });
       const data = await response.json();
       setScriptData(data.data || data);
     } catch (e: any) {
@@ -82,7 +82,7 @@ export const DebugScreen = () => {
         'Authorization': `Bearer ${token}`
       };
       
-      const response = await fetch('http://lovealgorithmgame.site:8081/api/user/current', { headers });
+      const response = await fetch('http://15.165.158.127:8081/api/user/current', { headers });
       const data = await response.json();
       setUserData(data.data || data);
     } catch (e: any) {
@@ -139,13 +139,13 @@ export const DebugScreen = () => {
         <h2>3. 빠른 확인 명령어</h2>
         <p>브라우저 콘솔(F12)에서 다음 명령어를 실행하세요:</p>
         <CodeBlock>{`// 스크립트 확인
-fetch('http://lovealgorithmgame.site:8081/api/script')
+fetch('http://15.165.158.127:8081/api/script')
   .then(r => r.json())
   .then(d => console.log('Scene 개수:', Object.keys(d.data || d).length));
 
 // 사용자 확인 (토큰 필요)
 const token = localStorage.getItem('auth_token');
-fetch('http://lovealgorithmgame.site:8081/api/user/current', {
+fetch('http://15.165.158.127:8081/api/user/current', {
   headers: { 'Authorization': \`Bearer \${token}\` }
 })
   .then(r => r.json())

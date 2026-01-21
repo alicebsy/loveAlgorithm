@@ -312,9 +312,15 @@ export const LoginScreen = () => {
       
       setError('');
       setLoading(true);
+      console.log('🚀 구글 로그인 시작:', { 
+        tokenLength: tokenResponse.access_token?.length,
+        timestamp: new Date().toISOString()
+      });
       try {
         // 구글에서 받은 access_token을 백엔드로 전송
+        console.log('📤 백엔드로 토큰 전송 시작...');
         const result = await loginWithGoogle(tokenResponse.access_token);
+        console.log('📥 백엔드 응답 받음:', result);
         
         if (result.success) {
           setIsAuthenticated(true);

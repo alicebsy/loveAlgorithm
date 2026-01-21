@@ -1,7 +1,7 @@
 import type { ApiResponse, AffectionResponse, MiniGameScoresResponse, GameState } from '../types/game.types';
 
 // 환경 변수에서 API URL 가져오기 (배포 시 설정 필요)
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://lovealgorithmgame.site:8081/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://15.165.158.127:8081/api';
 
 const apiClient = async <T>(endpoint: string, options: RequestInit = {}, requireAuth: boolean = true): Promise<ApiResponse<T>> => {
   const token = localStorage.getItem('auth_token');
@@ -27,12 +27,19 @@ const apiClient = async <T>(endpoint: string, options: RequestInit = {}, require
   const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
   
   try {
+    // 타임아웃 설정 (10초)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    
     // redirect: 'follow'로 변경하여 실제 응답 상태 코드 확인
     const response = await fetch(url, { 
       ...options, 
       headers,
+      signal: controller.signal,
       redirect: 'follow' // 리다이렉트를 따라가서 실제 응답 확인
     });
+    
+    clearTimeout(timeoutId);
     
     console.log(`📡 응답 상태: ${response.status} ${response.statusText}`);
     console.log(`📡 응답 URL: ${response.url}`);
@@ -105,8 +112,14 @@ const apiClient = async <T>(endpoint: string, options: RequestInit = {}, require
         throw new Error('인증이 만료되었습니다. 다시 로그인해주세요.');
       }
       
-      console.error('❌ 백엔드 서버에 연결할 수 없습니다. lovealgorithmgame.site:8081이 실행 중인지 확인하세요.');
+      console.error('❌ 백엔드 서버에 연결할 수 없습니다. 15.165.158.127:8081이 실행 중인지 확인하세요.');
       throw new Error('백엔드 서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하세요.');
+    }
+    
+    // 타임아웃 에러 처리
+    if (error.name === 'AbortError') {
+      console.error('🔴 요청 타임아웃:', url);
+      throw new Error('서버 응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.');
     }
     
     // 상태 코드 0 에러 처리
@@ -126,11 +139,18 @@ const apiClient = async <T>(endpoint: string, options: RequestInit = {}, require
 // --- 인증 관련 함수 (인증 없이 호출) ---
 export const login = async (credentials: { email: string; password: string }) => {
   try {
+    // 타임아웃 설정 (10초)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
-    method: 'POST',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
     
     const result = await response.json();
     
@@ -147,17 +167,35 @@ export const login = async (credentials: { email: string; password: string }) =>
     return { success: true, token, data: result.data || result };
   } catch (error: any) {
     console.error('로그인 에러:', error);
+    
+    // 타임아웃 에러 처리
+    if (error.name === 'AbortError') {
+      throw new Error('서버 응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.');
+    }
+    
+    // 네트워크 에러 처리
+    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+      throw new Error('백엔드 서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하세요.');
+    }
+    
     throw error;
   }
 };
 
 export const register = async (userData: { email: string; password: string; nickname: string }) => {
   try {
+    // 타임아웃 설정 (10초)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
-    method: 'POST',
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
     
     const result = await response.json();
     
@@ -168,6 +206,17 @@ export const register = async (userData: { email: string; password: string; nick
     return { success: true, message: result.message || '회원가입 성공' };
   } catch (error: any) {
     console.error('회원가입 에러:', error);
+    
+    // 타임아웃 에러 처리
+    if (error.name === 'AbortError') {
+      throw new Error('서버 응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.');
+    }
+    
+    // 네트워크 에러 처리
+    if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+      throw new Error('백엔드 서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하세요.');
+    }
+    
     throw error;
   }
 };
@@ -188,9 +237,9 @@ export const loginWithGoogle = async (googleToken: string) => {
   try {
     console.log('🔐 구글 로그인 시도:', { endpoint: `${API_BASE_URL}/auth/google`, tokenLength: googleToken.length });
     
-    // 타임아웃 설정 (30초)
+    // 타임아웃 설정 (10초 - 더 빠른 피드백)
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
     
     const response = await fetch(`${API_BASE_URL}/auth/google`, {
       method: 'POST',
@@ -201,7 +250,12 @@ export const loginWithGoogle = async (googleToken: string) => {
     
     clearTimeout(timeoutId);
     
-    console.log('📥 구글 로그인 응답:', { status: response.status, ok: response.ok });
+    console.log('📥 구글 로그인 응답:', { 
+      status: response.status, 
+      ok: response.ok,
+      statusText: response.statusText,
+      headers: Object.fromEntries(response.headers.entries())
+    });
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -224,23 +278,32 @@ export const loginWithGoogle = async (googleToken: string) => {
     }
     
     const result = await response.json();
+    console.log('📦 구글 로그인 응답 전체:', JSON.stringify(result, null, 2));
     console.log('✅ 구글 로그인 성공:', { 
+      success: result.success,
+      hasData: !!result.data,
       hasToken: !!(result.data?.token || result.token), 
       nickname: result.data?.nickname,
       fullData: result.data,
       fullResult: result
     });
     
-    // 응답 형식: { success: true, data: { token, nickname } } 또는 { token, ... }
-    const token = result.data?.token || result.token;
-    if (token) {
-      localStorage.setItem('auth_token', token);
+    // 백엔드 응답 형식: { success: true, data: { token, nickname, email, ... } }
+    if (!result.success) {
+      throw new Error(result.error || '구글 로그인 실패');
     }
     
-    // data 객체가 없으면 result 전체를 data로 사용
-    const responseData = result.data || result;
+    // data 객체에서 토큰 추출
+    const token = result.data?.token;
+    if (!token) {
+      console.error('❌ 토큰이 응답에 없습니다:', result);
+      throw new Error('서버에서 토큰을 받지 못했습니다.');
+    }
     
-    return { success: true, token, data: responseData };
+    localStorage.setItem('auth_token', token);
+    
+    // data 객체 전체를 반환
+    return { success: true, token, data: result.data };
   } catch (error: any) {
     console.error('❌ 구글 로그인 에러:', error);
     
@@ -256,7 +319,7 @@ export const loginWithGoogle = async (googleToken: string) => {
       console.error('🔴 네트워크 에러 상세:', {
         message: error.message,
         endpoint: `${API_BASE_URL}/auth/google`,
-        suggestion: '백엔드 서버가 lovealgorithmgame.site:8081에서 실행 중인지 확인하세요.'
+        suggestion: '백엔드 서버가 15.165.158.127:8081에서 실행 중인지 확인하세요.'
       });
       throw detailedError;
     }
