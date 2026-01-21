@@ -397,6 +397,8 @@ const convertSceneToGameEvent = (sceneId: string, scene: any): GameEvent | null 
         game_name: (script.gameConfig || script.game_config).gameName || (script.gameConfig || script.game_config).game_name,
         win_scene_id: (script.gameConfig || script.game_config).winSceneId || (script.gameConfig || script.game_config).win_scene_id,
         lose_scene_id: (script.gameConfig || script.game_config).loseSceneId || (script.gameConfig || script.game_config).lose_scene_id,
+        win_score_list: (script.gameConfig || script.game_config).winScoreList || (script.gameConfig || script.game_config).win_score_list,
+        lose_score_list: (script.gameConfig || script.game_config).loseScoreList || (script.gameConfig || script.game_config).lose_score_list,
       } : undefined,
     };
   });

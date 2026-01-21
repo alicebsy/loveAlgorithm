@@ -3,13 +3,13 @@ import styled from 'styled-components';
 import { useGameStore } from '../../store/gameStore';
 import { InfoModal } from '../ui/InfoModal';
 
-const ScreenContainer = styled.div`
+const ScreenContainer = styled.div<{ $bgImage: string }>`
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: url(${(props) => props.$bgImage}) center center / cover no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -98,9 +98,84 @@ const DebugLabel = styled.div`
   margin-bottom: 4px;
 `;
 
+const AffectionSliderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 200px;
+  margin-top: 8px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+`;
+
+const AffectionRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const AffectionName = styled.span`
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  min-width: 40px;
+`;
+
+const AffectionSlider = styled.input`
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+  -webkit-appearance: none;
+  
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+  }
+  
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    border: none;
+  }
+`;
+
+const AffectionValue = styled.span`
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  min-width: 35px;
+  text-align: right;
+  font-weight: 600;
+`;
+
 export const StartScreen = () => {
-  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, setUser, user, gameEvents, loadScript, goToScene } = useGameStore();
+  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, setUser, user, gameEvents, loadScript, goToScene, affections, updateAffection } = useGameStore();
   const [showControls, setShowControls] = useState(false);
+  
+  // 배경 이미지 경로 (한글 파일명 인코딩)
+  const backgroundImagePath = `/backgrounds/${encodeURIComponent('홈화면.png')}`;
+  
+  // 캐릭터 ID
+  const characters = [
+    { id: '도희', name: '도희' },
+    { id: '지수', name: '지수' },
+    { id: '세라', name: '세라' },
+  ];
+  
+  const handleAffectionChange = async (characterId: string, value: number) => {
+    const clampedValue = Math.max(0, Math.min(100, value));
+    await updateAffection(characterId, clampedValue);
+  };
 
   const handleLogout = async () => {
     try {
@@ -159,8 +234,23 @@ export const StartScreen = () => {
     }
   };
 
+  const handleDebugConfession = async (sceneId: string) => {
+    console.log(`🔧 디버깅: ${sceneId}로 이동`);
+    // 게임 시작 전 모든 BGM 정지 및 캐시 초기화
+    const { clearSoundCache } = await import('../../services/soundService');
+    clearSoundCache();
+    
+    // gameEvents가 없으면 로드
+    if (!gameEvents || Object.keys(gameEvents).length === 0) {
+      await loadScript();
+    }
+    
+    goToScene(sceneId);
+    setCurrentScreen('game');
+  };
+
   return (
-    <ScreenContainer>
+    <ScreenContainer $bgImage={backgroundImagePath}>
       {isAuthenticated && (
         <UserInfo>
           <span>{user?.nickname || '게스트'}님</span>
@@ -189,6 +279,38 @@ export const StartScreen = () => {
           <DebugButton onClick={() => handleDebugWeek(3)}>Week 3</DebugButton>
           <DebugButton onClick={() => handleDebugWeek(4)}>Week 4</DebugButton>
         </div>
+        <DebugLabel style={{ marginTop: '12px' }}>💕 고백 엔딩</DebugLabel>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_dohee')} style={{background: 'rgba(100, 200, 100, 0.3)'}}>도희 성공</DebugButton>
+          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_dohee_fail')} style={{background: 'rgba(200, 100, 100, 0.3)'}}>도희 실패</DebugButton>
+          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_jisoo')} style={{background: 'rgba(100, 200, 100, 0.3)'}}>지수 성공</DebugButton>
+          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_jisoo_fail')} style={{background: 'rgba(200, 100, 100, 0.3)'}}>지수 실패</DebugButton>
+          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_sera')} style={{background: 'rgba(100, 200, 100, 0.3)'}}>세라 성공</DebugButton>
+          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_sera_fail')} style={{background: 'rgba(200, 100, 100, 0.3)'}}>세라 실패</DebugButton>
+        </div>
+        <DebugLabel style={{ marginTop: '12px' }}>🎮 미니게임</DebugLabel>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <DebugButton onClick={() => handleDebugConfession('chapter1_scene5_party')} style={{background: 'rgba(150, 150, 255, 0.3)'}}>카드 게임</DebugButton>
+          <DebugButton onClick={() => handleDebugConfession('chapter2_scene1')} style={{background: 'rgba(150, 150, 255, 0.3)'}}>리팩토링</DebugButton>
+          <DebugButton onClick={() => handleDebugConfession('chapter3_scene2_jisoo_menu')} style={{background: 'rgba(150, 150, 255, 0.3)'}}>메뉴 찾기</DebugButton>
+          <DebugButton onClick={() => handleDebugConfession('chapter3_scene6')} style={{background: 'rgba(150, 150, 255, 0.3)'}}>성심당</DebugButton>
+        </div>
+        <DebugLabel style={{ marginTop: '12px' }}>💖 호감도 조절</DebugLabel>
+        <AffectionSliderContainer>
+          {characters.map((char) => (
+            <AffectionRow key={char.id}>
+              <AffectionName>{char.name}</AffectionName>
+              <AffectionSlider
+                type="range"
+                min="0"
+                max="100"
+                value={affections[char.id] || 0}
+                onChange={(e) => handleAffectionChange(char.id, parseInt(e.target.value))}
+              />
+              <AffectionValue>{affections[char.id] || 0}</AffectionValue>
+            </AffectionRow>
+          ))}
+        </AffectionSliderContainer>
       </DebugContainer>
     </ScreenContainer>
   );

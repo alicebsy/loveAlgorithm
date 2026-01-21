@@ -3,9 +3,9 @@ import { useGameStore } from '../store/gameStore';
 import { processScenarioItem, applyChoiceScores } from '../services/scenarioService';
 import { getBackgroundImagePath } from '../services/imageService';
 import { gameEvents as localGameEvents } from '../data/script';
-import { characterId } from '../data/constants';
+import { characterId, confessionThreshold } from '../data/constants';
 import { replaceHeroName } from '../utils/nameUtils';
-import type { Dialogue, ScenarioItem } from '../types/game.types';
+import type { Dialogue, ScenarioItem, ScoreItem } from '../types/game.types';
 
 export const useGameEngine = () => {
   const store = useGameStore();
@@ -168,18 +168,33 @@ export const useGameEngine = () => {
       }
     }
     
-    if (mergedItem.type?.startsWith('카톡')) {
+    // 이전 타입이 카톡인지 확인
+    const previousTypeWasKakao = previousItemTypeRef.current?.startsWith('카톡') ?? false;
+    const currentTypeIsKakao = mergedItem.type?.startsWith('카톡') ?? false;
+    
+    if (currentTypeIsKakao) {
       // 현재 script에서 chatTitle 추출
       const currentChatTitle = getChatTitleFromScript(script);
       
-      // 카톡방 이름이 바뀌면 히스토리 초기화
-      if (currentChatTitle !== previousChatTitleRef.current) {
-        console.log(`🔄 카톡방 이름 변경: ${previousChatTitleRef.current} → ${currentChatTitle}`);
+      if (previousTypeWasKakao) {
+        // 이전 타입도 카톡이었을 때: [xx] 패턴 비교
+        const previousChatTitle = previousChatTitleRef.current || '몰입캠프 2분반';
+        
+        // [xx] 패턴이 다르면 히스토리 초기화
+        if (currentChatTitle !== previousChatTitle) {
+          console.log(`🔄 카톡방 이름 변경: ${previousChatTitle} → ${currentChatTitle}`);
+          store.clearKakaoTalkHistory();
+          previousChatTitleRef.current = currentChatTitle;
+        }
+        // 패턴이 같으면 기존 대화에 이어붙이기 (히스토리 초기화 없이 메시지 추가)
+      } else {
+        // 이전 타입이 카톡이 아니었을 때: 히스토리 초기화 후 새로 시작
+        console.log(`🔄 카톡 시작 (이전 타입: ${previousItemTypeRef.current})`);
         store.clearKakaoTalkHistory();
         previousChatTitleRef.current = currentChatTitle;
       }
       
-      // 메시지 추가 (연속 카톡이면 계속 이어붙임)
+      // 메시지 추가
       store.addKakaoTalkMessage(script, mergedItem.character_id || '', mergedItem.type, mergedItem.character_id || '');
     } else if (mergedItem.type === '시스템') {
       store.addSystemMessage(script);
@@ -216,11 +231,30 @@ export const useGameEngine = () => {
     store.setPreviousValues(updatedValues);
   }, [rawItem, store.heroName, store.settings]);
 
-  const handleGameResult = useCallback((result: 'win' | 'lose') => {
+  const handleGameResult = useCallback(async (result: 'win' | 'lose') => {
     if (!rawItem?.game) return;
+    
+    // 게임 결과에 따른 호감도 변화 적용
+    const scoreList: ScoreItem[] | undefined = result === 'win' 
+      ? rawItem.game.win_score_list 
+      : rawItem.game.lose_score_list;
+    
+    if (scoreList && scoreList.length > 0) {
+      console.log(`🎮 게임 ${result === 'win' ? '승리' : '실패'} - 호감도 변화 적용:`, scoreList);
+      await applyChoiceScores(
+        scoreList,
+        store.updateAffection,
+        () => store.affections
+      );
+      
+      // 호감도 변경 후 자동 저장
+      await store.autoSave();
+    }
+    
+    // 다음 씬으로 이동
     const nextScene = result === 'win' ? rawItem.game.win_scene_id : rawItem.game.lose_scene_id;
     if (nextScene) store.goToScene(nextScene);
-  }, [rawItem, store.goToScene]);
+  }, [rawItem, store]);
 
   return {
     currentDialogue: useMemo((): Dialogue | null => {
@@ -252,29 +286,32 @@ export const useGameEngine = () => {
           currentItem.script?.includes('Love_Point')) {
         const currentSceneId = store.gameState.currentSceneId;
         const affections = store.affections;
-        const MIN_AFFECTION_THRESHOLD = 50; // 호감도 최소 기준값
         
         // 현재 씬에 따라 캐릭터 ID 결정
-        let characterId: string | null = null;
+        let targetCharacterId: string | null = null;
         let failSceneId: string | null = null;
         
         if (currentSceneId === 'chapter4_scene4_dohee') {
-          characterId = '도희';
+          targetCharacterId = characterId.dohee;
           failSceneId = 'chapter4_scene4_dohee_fail';
         } else if (currentSceneId === 'chapter4_scene4_jisoo') {
-          characterId = '지수';
+          targetCharacterId = characterId.jisoo;
           failSceneId = 'chapter4_scene4_jisoo_fail';
         } else if (currentSceneId === 'chapter4_scene4_sera') {
-          characterId = '세라';
+          targetCharacterId = characterId.sera;
           failSceneId = 'chapter4_scene4_sera_fail';
         }
         
         // 호감도 확인 및 분기
-        if (characterId && failSceneId) {
-          const affectionValue = affections[characterId] || 0;
-          console.log(`💕 호감도 계산: ${characterId} = ${affectionValue} (기준: ${MIN_AFFECTION_THRESHOLD})`);
+        if (targetCharacterId && failSceneId) {
+          const affectionValue = affections[targetCharacterId] || 0;
+          const threshold = (targetCharacterId in confessionThreshold) 
+            ? confessionThreshold[targetCharacterId as keyof typeof confessionThreshold]
+            : 50; // 기본값 50
           
-          if (affectionValue < MIN_AFFECTION_THRESHOLD) {
+          console.log(`💕 호감도 계산: ${targetCharacterId} = ${affectionValue} (기준: ${threshold})`);
+          
+          if (affectionValue < threshold) {
             // 호감도 부족 - 실패 씬으로 이동
             console.log(`❌ 호감도 부족으로 실패 씬으로 이동: ${failSceneId}`);
             store.goToScene(failSceneId);
@@ -292,7 +329,25 @@ export const useGameEngine = () => {
       } else if (event?.next_scene_id) {
         store.goToScene(event.next_scene_id);
       } else {
-        store.nextDialogue();
+        // 엔딩 씬이 끝났을 때 시작 화면으로 돌아가기
+        const currentSceneId = store.gameState.currentSceneId;
+        const isEndingScene = 
+          currentSceneId === 'chapter4_scene4_dohee' ||
+          currentSceneId === 'chapter4_scene4_dohee_fail' ||
+          currentSceneId === 'chapter4_scene4_jisoo' ||
+          currentSceneId === 'chapter4_scene4_jisoo_fail' ||
+          currentSceneId === 'chapter4_scene4_sera' ||
+          currentSceneId === 'chapter4_scene4_sera_fail' ||
+          currentSceneId === 'ending_scene1' ||
+          currentSceneId === 'chapter4_scene2_bad_ending';
+        
+        if (isEndingScene) {
+          // 엔딩이 끝나면 시작 화면으로 돌아가기
+          console.log('🎬 엔딩 종료 - 시작 화면으로 돌아갑니다');
+          store.setCurrentScreen('start');
+        } else {
+          store.nextDialogue();
+        }
       }
     }, [gameEvents, store]),
     selectChoice: useCallback(async (choiceId: string) => {

@@ -169,6 +169,15 @@ export const effectSoundId = {
   can_open: 'can_open',
 } as const;
 
+// 각 캐릭터별 고백 성공 호감도 기준점
+// 최적의 선택을 1번 정도 안해도 성공할 수 있도록 설정
+// (최적 선택 총점의 약 80% 수준)
+export const confessionThreshold = {
+  [characterId.dohee]: 11,  // 최적 선택 총점: 14점 (솔의눈+2, 파티+1, 죽배달+2, 저녁+3, 자리+5, 게임+1)
+  [characterId.jisoo]: 6,    // 최적 선택 총점: 7점 (도와주기+3, 저녁+3, 게임+1)
+  [characterId.sera]: 10,   // 최적 선택 총점: 13점 (무시+1, 사과+1, 사실지적+2, 직접도움+3, 자리+5, 게임+1)
+} as const;
+
 // ID 생성 헬퍼 함수
 export const generateId = (): string => {
   return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;

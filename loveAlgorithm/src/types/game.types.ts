@@ -38,6 +38,8 @@ export interface GameConfig {
   game_name?: string;
   win_scene_id: string;
   lose_scene_id: string;
+  win_score_list?: ScoreItem[]; // 게임 승리 시 호감도 변화
+  lose_score_list?: ScoreItem[]; // 게임 실패 시 호감도 변화
 }
 
 export interface ScenarioItem {

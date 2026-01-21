@@ -665,7 +665,7 @@ export const gameEvents: Record<string, GameEvent> = {
           {
             id: 'opt_milk',
             text: '[초코우유] "여자분들은 단 거 좋아하시잖아요."',
-            score_list: [{ id: 'score_dohee_milk', character_id: characterId.dohee, score: -1 }],
+            score_list: [{ id: 'score_dohee_milk', character_id: characterId.dohee, score: 0 }],
             nextSceneId: 'chapter1_scene4_reaction_milk',
           },
         ],
@@ -1793,6 +1793,13 @@ export const gameEvents: Record<string, GameEvent> = {
           game_name: '스파게티 코드 리팩토링',
           win_scene_id: 'chapter2_scene1_win',
           lose_scene_id: 'chapter2_scene1_lose',
+          // 게임 결과에 따른 호감도 변화 (선택사항)
+          win_score_list: [
+            { id: 'refactor_win_1', character_id: characterId.sera, score: 1 },
+          ],
+          lose_score_list: [
+            { id: 'refactor_lose_1', character_id: characterId.sera, score: 0 },
+          ],
         },
         id: 'chapter2_scene1_19',
         index: 19,
@@ -2317,13 +2324,13 @@ export const gameEvents: Record<string, GameEvent> = {
           {
             id: 'opt_sera_fact',
             text: '"버리는 거 치고는... 2+1 스티커가 너무 선명한데요."',
-            score_list: [{ id: 'score_sera_fact', character_id: characterId.sera, score: 2 }],
+            score_list: [{ id: 'score_sera_fact', character_id: characterId.sera, score: 1 }],
             nextSceneId: 'chapter2_scene3_result2',
           },
           {
             id: 'opt_sera_direct',
             text: '"다리에 쥐 났다면서요... 혼자 설 수 있을 때까지 잡고 있을게요."',
-            score_list: [{ id: 'score_sera_direct', character_id: characterId.sera, score: 3 }],
+            score_list: [{ id: 'score_sera_direct', character_id: characterId.sera, score: 2 }],
             nextSceneId: 'chapter2_scene3_result3',
           },
         ],
@@ -2597,13 +2604,13 @@ export const gameEvents: Record<string, GameEvent> = {
           {
             id: 'opt_help_jisoo',
             text: '💻 지수를 도와준다',
-            score_list: [{ id: 'score_jisoo_help', character_id: characterId.jisoo, score: 3 }, { id: 'score_sera_help_jisoo', character_id: characterId.sera, score: -2 }],
+            score_list: [{ id: 'score_jisoo_help', character_id: characterId.jisoo, score: 1 }, { id: 'score_sera_help_jisoo', character_id: characterId.sera, score: -1 }],
             nextSceneId: 'chapter2_scene4_jisoo',
           },
           {
             id: 'opt_finish_sera',
             text: '📝 세라와 마무리한다',
-            score_list: [{ id: 'score_sera_finish', character_id: characterId.sera, score: 3 }, { id: 'score_jisoo_finish', character_id: characterId.jisoo, score: -1 }],
+            score_list: [{ id: 'score_sera_finish', character_id: characterId.sera, score: 1 }, { id: 'score_jisoo_finish', character_id: characterId.jisoo, score: -1 }],
             nextSceneId: 'chapter2_scene4_sera',
           },
         ],
@@ -3126,19 +3133,19 @@ export const gameEvents: Record<string, GameEvent> = {
           {
             id: 'opt_jisoo_dinner',
             text: '[지수]와 먹는다. (메뉴: 마라탕)',
-            score_list: [{ id: 'score_jisoo_dinner', character_id: characterId.jisoo, score: 3 }, { id: 'score_dohee_jisoo', character_id: characterId.dohee, score: -2 }],
+            score_list: [{ id: 'score_jisoo_dinner', character_id: characterId.jisoo, score: 1 }, { id: 'score_dohee_jisoo', character_id: characterId.dohee, score: -1 }],
             nextSceneId: 'chapter3_scene2_jisoo',
           },
           {
             id: 'opt_dohee_dinner',
             text: '[도희]와 먹는다. (메뉴: 국밥)',
-            score_list: [{ id: 'score_dohee_dinner', character_id: characterId.dohee, score: 3 }, { id: 'score_jisoo_dohee', character_id: characterId.jisoo, score: -1 }],
+            score_list: [{ id: 'score_dohee_dinner', character_id: characterId.dohee, score: 1 }, { id: 'score_jisoo_dohee', character_id: characterId.jisoo, score: -1 }],
             nextSceneId: 'chapter3_scene2_dohee',
           },
           {
             id: 'opt_together_dinner',
             text: '(히든) 셋이 같이 먹는다. (병렬 처리 시도)',
-            score_list: [{ id: 'score_dohee_together', character_id: characterId.dohee, score: -3 }, { id: 'score_jisoo_together', character_id: characterId.jisoo, score: 1 }],
+            score_list: [{ id: 'score_dohee_together', character_id: characterId.dohee, score: -1 }, { id: 'score_jisoo_together', character_id: characterId.jisoo, score: -1 }],
             nextSceneId: 'chapter3_scene2_together',
           },
         ],
@@ -3246,6 +3253,12 @@ export const gameEvents: Record<string, GameEvent> = {
           game_name: '틀린 글자 찾기 - 메뉴 주문',
           win_scene_id: 'chapter3_scene2_jisoo_win',
           lose_scene_id: 'chapter3_scene2_jisoo_lose',
+          win_score_list: [
+            { id: 'menu_find_win_1', character_id: characterId.jisoo, score: 1 },
+          ],
+          lose_score_list: [
+            { id: 'menu_find_lose_1', character_id: characterId.jisoo, score: 0 },
+          ],
         },
         id: 'chapter3_scene2_jisoo_menu_4',
         index: 4,
@@ -3594,6 +3607,12 @@ export const gameEvents: Record<string, GameEvent> = {
           game_name: '틀린 글자 찾기 - 메뉴 주문',
           win_scene_id: 'chapter3_scene2_dohee_win',
           lose_scene_id: 'chapter3_scene2_dohee_lose',
+          win_score_list: [
+            { id: 'menu_find_win_1', character_id: characterId.dohee, score: 1 },
+          ],
+          lose_score_list: [
+            { id: 'menu_find_lose_1', character_id: characterId.dohee, score: 0 },
+          ],
         },
         id: 'chapter3_scene2_dohee_8',
         index: 8,
@@ -4272,6 +4291,12 @@ export const gameEvents: Record<string, GameEvent> = {
           game_name: '성심당 튀소 확보 작전',
           win_scene_id: 'chapter3_scene6_win',
           lose_scene_id: 'chapter3_scene6_lose',
+          win_score_list: [
+            { id: 'sungsimdang_game_win_1', character_id: characterId.dohee, score: 1 },
+          ],
+          lose_score_list: [
+            { id: 'sungsimdang_game_lose_1', character_id: characterId.dohee, score: 0 },
+          ],
         },
         id: 'chapter3_scene6_12',
         index: 12,
@@ -4676,13 +4701,13 @@ export const gameEvents: Record<string, GameEvent> = {
           {
             id: 'opt_sera_seat',
             text: '앞줄 (세라 옆)',
-            score_list: [{ id: 'score_sera_seat', character_id: characterId.sera, score: 5 }],
+            score_list: [{ id: 'score_sera_seat', character_id: characterId.sera, score: 1 }],
             nextSceneId: 'chapter4_scene1_sera',
           },
           {
             id: 'opt_dohee_seat',
             text: '뒷줄 (도희 옆)',
-            score_list: [{ id: 'score_dohee_seat', character_id: characterId.dohee, score: 5 }],
+            score_list: [{ id: 'score_dohee_seat', character_id: characterId.dohee, score: 1 }],
             nextSceneId: 'chapter4_scene1_dohee',
           },
         ],
