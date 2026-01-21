@@ -13,7 +13,15 @@ import java.util.List;
 // 프론트엔드 fetchSaveSlots() 등의 호출 경로인 /api/save/slots 에 맞춥니다.
 @RequestMapping("/api/save/slots")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = {
+    "http://localhost:5174",
+    "http://localhost:5175",
+    "http://localhost:5176",
+    "http://15.165.158.127",
+    "http://15.165.158.127:8081",
+    "https://15.165.158.127",
+    "https://love-algorithm-seven.vercel.app"
+})
 public class SaveController {
 
     private final SaveService saveService;

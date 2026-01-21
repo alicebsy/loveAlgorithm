@@ -1,7 +1,9 @@
 package com.madcamp.love_algorithm.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.madcamp.love_algorithm.dto.*;
 import com.madcamp.love_algorithm.entity.Account;
+import com.madcamp.love_algorithm.entity.SocialProvider;
 import com.madcamp.love_algorithm.entity.User;
 import com.madcamp.love_algorithm.repository.AccountRepository;
 import com.madcamp.love_algorithm.repository.UserRepository;
@@ -9,7 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +63,11 @@ public class AuthService {
         // 해당 계정에 연결된 게임 캐릭터(User)가 있는지 조회
         User user = userRepository.findByAccount(account).orElse(null);
 
+        // JWT 토큰 생성 (간단한 토큰, 실제로는 JWT 라이브러리 사용 권장)
+        String token = "auth_token_" + account.getId() + "_" + System.currentTimeMillis();
+
         return AuthResponseDto.builder()
+                .token(token)
                 .accountId(account.getId())
                 .userId(user != null ? user.getId() : null)
                 .email(account.getEmail())
@@ -91,5 +103,94 @@ public class AuthService {
                 .characterName(user.getName())
                 .currentSceneId(user.getCurrentSceneId())
                 .build();
+    }
+
+    // 4. 구글 로그인 처리
+    @Transactional
+    public Map<String, Object> processGoogleUser(String googleToken) {
+        try {
+            System.out.println("🔍 Google UserInfo API 호출 시작...");
+            // Google UserInfo API 호출
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://www.googleapis.com/oauth2/v2/userinfo"))
+                    .header("Authorization", "Bearer " + googleToken)
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println("📥 Google UserInfo API 응답: " + response.statusCode());
+
+            if (response.statusCode() != 200) {
+                System.err.println("❌ 구글 UserInfo API 호출 실패: " + response.statusCode());
+                System.err.println("응답 본문: " + response.body());
+                throw new RuntimeException("구글 사용자 정보를 가져올 수 없습니다. 상태 코드: " + response.statusCode());
+            }
+
+            // JSON 파싱
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> userInfo = mapper.readValue(response.body(), Map.class);
+
+            String googleId = (String) userInfo.get("id");
+            String email = (String) userInfo.get("email");
+            String name = (String) userInfo.get("name");
+            String picture = (String) userInfo.get("picture");
+
+            // 기존 계정 확인 (소셜 ID 또는 이메일로)
+            Account account = accountRepository.findBySocialId(googleId)
+                    .orElse(accountRepository.findByEmail(email).orElse(null));
+
+            if (account == null) {
+                // 새 계정 생성
+                account = Account.builder()
+                        .email(email)
+                        .passwordHash(null) // 소셜 로그인은 비밀번호 없음
+                        .nickname(name != null ? name : email.split("@")[0])
+                        .socialProvider(SocialProvider.GOOGLE)
+                        .socialId(googleId)
+                        .createdAt(LocalDateTime.now())
+                        .lastLoginAt(LocalDateTime.now())
+                        .build();
+                accountRepository.save(account);
+            } else {
+                // 기존 계정 업데이트
+                account.setSocialProvider(SocialProvider.GOOGLE);
+                account.setSocialId(googleId);
+                if (account.getNickname() == null && name != null) {
+                    account.setNickname(name);
+                }
+                account.setLastLoginAt(LocalDateTime.now());
+                accountRepository.save(account);
+            }
+
+            // 게임 캐릭터(User) 조회 또는 생성
+            User user = userRepository.findByAccount(account).orElse(null);
+            if (user == null) {
+                user = User.builder()
+                        .name(account.getNickname() != null ? account.getNickname() : email.split("@")[0])
+                        .account(account)
+                        .currentSceneId("chapter1_scene1")
+                        .createdAt(LocalDateTime.now())
+                        .build();
+                userRepository.save(user);
+            }
+
+            // JWT 토큰 생성 (간단한 토큰, 실제로는 JWT 라이브러리 사용 권장)
+            String token = "google_token_" + account.getId() + "_" + System.currentTimeMillis();
+
+            // 응답 데이터 구성
+            Map<String, Object> result = new HashMap<>();
+            result.put("token", token);
+            result.put("nickname", account.getNickname() != null ? account.getNickname() : name);
+            result.put("email", email);
+            result.put("userId", user.getId());
+            result.put("accountId", account.getId());
+
+            return result;
+        } catch (Exception e) {
+            System.err.println("구글 로그인 처리 중 에러: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("구글 로그인 처리 실패: " + e.getMessage());
+        }
     }
 }

@@ -11,7 +11,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = {
+    "http://localhost:5174",
+    "http://localhost:5175",
+    "http://localhost:5176",
+    "http://15.165.158.127",
+    "http://15.165.158.127:8081",
+    "https://15.165.158.127",
+    "https://love-algorithm-seven.vercel.app"
+})
 @RestController
 @RequestMapping("/api") // 프론트가 /api/script 로 호출함
 @RequiredArgsConstructor

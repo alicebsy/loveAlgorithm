@@ -1,0 +1,5530 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::      (v3.5.10-SNAPSHOT)
+
+2026-01-21T17:44:13.548+09:00  INFO 72116 --- [           main] c.m.l.LoveAlgorithmApplication           : Starting LoveAlgorithmApplication v0.0.1-SNAPSHOT using Java 17.0.17 with PID 72116 (/Users/king/madcamp/loveAlgorithm/love-algorithm/build/libs/love-algorithm-0.0.1-SNAPSHOT.jar started by king in /Users/king/madcamp/loveAlgorithm/love-algorithm)
+2026-01-21T17:44:13.562+09:00  INFO 72116 --- [           main] c.m.l.LoveAlgorithmApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-01-21T17:44:17.481+09:00  INFO 72116 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-21T17:44:17.884+09:00  INFO 72116 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 352 ms. Found 8 JPA repository interfaces.
+2026-01-21T17:44:19.602+09:00  INFO 72116 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2026-01-21T17:44:19.639+09:00  INFO 72116 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-21T17:44:19.640+09:00  INFO 72116 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-01-21T17:44:19.725+09:00  INFO 72116 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-21T17:44:19.731+09:00  INFO 72116 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 5945 ms
+2026-01-21T17:44:20.321+09:00  INFO 72116 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-21T17:44:20.399+09:00  INFO 72116 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.41.Final
+2026-01-21T17:44:20.446+09:00  INFO 72116 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-21T17:44:21.254+09:00  INFO 72116 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-21T17:44:21.338+09:00  INFO 72116 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-21T17:44:21.617+09:00  INFO 72116 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6fc1a8f6
+2026-01-21T17:44:21.621+09:00  INFO 72116 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-21T17:44:21.822+09:00  INFO 72116 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-21T17:44:24.991+09:00  INFO 72116 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: 
+    alter table game_option 
+       drop 
+       foreign key FKlkjcu479344wuhqrxbwdehh1d
+Hibernate: 
+    alter table option_score 
+       drop 
+       foreign key FK4y2yc0vd412p3hhcukdkg6u6l
+Hibernate: 
+    alter table save_slots 
+       drop 
+       foreign key FK207btw67nl3fepabhcuahgbn
+Hibernate: 
+    alter table scripts 
+       drop 
+       foreign key FKi2o70r8hx0vx878wgmskacmvf
+Hibernate: 
+    alter table user_affinity 
+       drop 
+       foreign key FK23cxua7g1wkdhcvb7x02d0gs8
+Hibernate: 
+    alter table users 
+       drop 
+       foreign key FKfm8rm8ks0kgj4fhlmmljkj17x
+Hibernate: 
+    drop table if exists accounts
+Hibernate: 
+    drop table if exists game_option
+Hibernate: 
+    drop table if exists option_score
+Hibernate: 
+    drop table if exists save_slots
+Hibernate: 
+    drop table if exists scenes
+Hibernate: 
+    drop table if exists scripts
+Hibernate: 
+    drop table if exists user_affinity
+Hibernate: 
+    drop table if exists users
+Hibernate: 
+    create table accounts (
+        account_id bigint not null auto_increment,
+        created_at datetime(6),
+        last_login_at datetime(6),
+        email varchar(255) not null,
+        nickname varchar(255),
+        password_hash varchar(255),
+        social_id varchar(255),
+        role enum ('ADMIN','USER'),
+        social_provider enum ('APPLE','GOOGLE','KAKAO','LOCAL'),
+        primary key (account_id)
+    ) engine=InnoDB
+Hibernate: 
+    create table game_option (
+        id bigint not null auto_increment,
+        next_scene_id varchar(255),
+        scene_id varchar(255),
+        text varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table option_score (
+        score integer not null,
+        id bigint not null auto_increment,
+        option_id bigint,
+        target_character_id varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table save_slots (
+        slot_number integer not null,
+        id bigint not null auto_increment,
+        saved_at datetime(6),
+        user_id bigint,
+        preview_text varchar(255),
+        scene_id varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table scenes (
+        event_seq integer,
+        chapter_id varchar(255),
+        default_next_scene_id varchar(255),
+        scene_id varchar(255) not null,
+        title varchar(255),
+        primary key (scene_id)
+    ) engine=InnoDB
+Hibernate: 
+    create table scripts (
+        script_index integer,
+        background_img_id varchar(255),
+        background_sound_id varchar(255),
+        character_img_id varchar(255),
+        content TEXT,
+        effect_sound_id varchar(255),
+        overlay_image_id varchar(255),
+        scene_id varchar(255),
+        script_id varchar(255) not null,
+        speaker_id varchar(255),
+        type enum ('GAME','INPUT','KAKAO','NARRATION','TEXT','THINK','시스템','전환'),
+        primary key (script_id)
+    ) engine=InnoDB
+Hibernate: 
+    create table user_affinity (
+        score integer not null,
+        id bigint not null auto_increment,
+        user_id bigint,
+        target_character_id varchar(255),
+        primary key (id)
+    ) engine=InnoDB
+Hibernate: 
+    create table users (
+        account_id bigint,
+        created_at datetime(6),
+        updated_at datetime(6),
+        user_id bigint not null auto_increment,
+        current_scene_id varchar(255),
+        name varchar(255),
+        primary key (user_id)
+    ) engine=InnoDB
+Hibernate: 
+    alter table accounts 
+       add constraint UKn7ihswpy07ci568w34q0oi8he unique (email)
+Hibernate: 
+    alter table users 
+       add constraint UK1yov8c5ew74vlt8qra6cewq99 unique (account_id)
+Hibernate: 
+    alter table game_option 
+       add constraint FKlkjcu479344wuhqrxbwdehh1d 
+       foreign key (scene_id) 
+       references scenes (scene_id)
+Hibernate: 
+    alter table option_score 
+       add constraint FK4y2yc0vd412p3hhcukdkg6u6l 
+       foreign key (option_id) 
+       references game_option (id)
+Hibernate: 
+    alter table save_slots 
+       add constraint FK207btw67nl3fepabhcuahgbn 
+       foreign key (user_id) 
+       references users (user_id)
+Hibernate: 
+    alter table scripts 
+       add constraint FKi2o70r8hx0vx878wgmskacmvf 
+       foreign key (scene_id) 
+       references scenes (scene_id)
+Hibernate: 
+    alter table user_affinity 
+       add constraint FK23cxua7g1wkdhcvb7x02d0gs8 
+       foreign key (user_id) 
+       references users (user_id)
+Hibernate: 
+    alter table users 
+       add constraint FKfm8rm8ks0kgj4fhlmmljkj17x 
+       foreign key (account_id) 
+       references accounts (account_id)
+2026-01-21T17:44:25.370+09:00  INFO 72116 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-21T17:44:27.435+09:00  WARN 72116 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-21T17:44:29.060+09:00  INFO 72116 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2026-01-21T17:44:29.117+09:00  INFO 72116 --- [           main] c.m.l.LoveAlgorithmApplication           : Started LoveAlgorithmApplication in 18.594 seconds (process running for 21.287)
+Hibernate: 
+    select
+        o1_0.id,
+        o1_0.next_scene_id,
+        o1_0.scene_id,
+        o1_0.text 
+    from
+        game_option o1_0
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title 
+    from
+        scenes s1_0
+Hibernate: 
+    select
+        u1_0.user_id,
+        u1_0.account_id,
+        u1_0.created_at,
+        u1_0.current_scene_id,
+        u1_0.name,
+        u1_0.updated_at 
+    from
+        users u1_0
+Hibernate: 
+    insert 
+    into
+        users
+        (account_id, created_at, current_scene_id, name, updated_at) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        u1_0.user_id,
+        u1_0.account_id,
+        u1_0.created_at,
+        u1_0.current_scene_id,
+        u1_0.name,
+        u1_0.updated_at 
+    from
+        users u1_0
+Hibernate: 
+    delete 
+    from
+        users 
+    where
+        user_id=?
+>>> 테스트 유저 생성 완료: ID=1, 이름=도훈
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    select
+        s1_0.scene_id,
+        s1_0.chapter_id,
+        s1_0.default_next_scene_id,
+        s1_0.event_seq,
+        s1_0.title,
+        d1_0.scene_id,
+        d1_0.script_id,
+        d1_0.background_img_id,
+        d1_0.background_sound_id,
+        d1_0.character_img_id,
+        d1_0.content,
+        d1_0.effect_sound_id,
+        d1_0.overlay_image_id,
+        d1_0.script_index,
+        d1_0.speaker_id,
+        d1_0.type 
+    from
+        scenes s1_0 
+    left join
+        scripts d1_0 
+            on s1_0.scene_id=d1_0.scene_id 
+    where
+        s1_0.scene_id=? 
+    order by
+        d1_0.script_index
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scenes
+        (chapter_id, default_next_scene_id, event_seq, title, scene_id) 
+    values
+        (?, ?, ?, ?, ?)
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    select
+        s1_0.script_id,
+        s1_0.background_img_id,
+        s1_0.background_sound_id,
+        s1_0.character_img_id,
+        s1_0.content,
+        s1_0.effect_sound_id,
+        s1_0.overlay_image_id,
+        s1_0.scene_id,
+        s1_0.script_index,
+        s1_0.speaker_id,
+        s1_0.type 
+    from
+        scripts s1_0 
+    where
+        s1_0.script_id=?
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: 
+    insert 
+    into
+        scripts
+        (background_img_id, background_sound_id, character_img_id, content, effect_sound_id, overlay_image_id, scene_id, script_index, speaker_id, type, script_id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+>>> Chapter 1 데이터 로딩 완료
+ 2026-01-21T17:44:07.835+09:00  INFO 70383 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-01-21T17:44:07.860+09:00  INFO 70383 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-01-21T17:44:07.884+09:00  INFO 70383 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-21T17:44:07.893+09:00  INFO 70383 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-01-21T17:44:07.934+09:00  INFO 70383 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
