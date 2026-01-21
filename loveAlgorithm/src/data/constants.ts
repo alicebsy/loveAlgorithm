@@ -4,6 +4,7 @@ export const chapterId = {
   chapter1: 'chapter_1',
   chapter2: 'chapter_2',
   chapter3: 'chapter_3',
+  chapter4: 'chapter_4',
 } as const;
 
 export const characterId = {
@@ -16,6 +17,7 @@ export const characterId = {
   donghwi: '동휘',
   wonyoung: '원영',
   sera: '세라',
+  hayoung: '하영',
 } as const;
 
 export const characterImageId = {
@@ -25,6 +27,7 @@ export const characterImageId = {
   myeongseong: '아무개.png',
   hanjin: '한진.png',
   wonyoung: '아무개.png',
+  hayoung: '하영.png',
   seoyeon_basic: 'seoyeon_basic',
   seoyeon_side: 'seoyeon_side',
   nubzuki_basic: 'nubzuki_basic',
@@ -39,6 +42,13 @@ export const characterImageId = {
   jisoo_begging: 'jisoo_begging.png',
   jisoo_lookingup: 'jisoo_lookingup.png',
   jisoo_삐짐: "jisoo_삐짐.png",
+  jisoo_신난다: "jisoo_신난다.png",
+  jisoo_disappointed: "jisoo_disappointed.png",
+  jisoo_running: "jisoo_running.png",
+  jisoo_running_stand: "jisoo_running_stand.png",
+  jisoo_crying: "jisoo_crying.png",
+  jisoo_경멸: "jisoo_경멸.png",
+  jisoo_shy_happy: "jisoo_shy_happy.png",
   dohee_basic: 'dohee_basic',
   dohee_happy: 'dohee_happy.png',
   dohee_smile: 'dohee_smile',
@@ -51,31 +61,29 @@ export const characterImageId = {
   dohee_access_denied: 'dohee_access_denied.png',
   dohee_boring: 'dohee_boring.png',
   dohee_drunken: 'dohee_drunken.png',
-  dohee_joy: 'dohee_joy',
-  // 3주차 도희 이미지들
   dohee_no_basic: 'dohee_no_basic.png',
   dohee_no_angry: 'dohee_no_angry.png',
+  dohee_no_부탁: 'dohee_no_부탁.png',
+  dohee_no_surprised: 'dohee_no_surprised.png',
+  dohee_no_smile: 'dohee_no_smile.png',
+  dohee_no_shy: 'dohee_no_shy.png',
+  dohee_no_안아줘요: 'dohee_no_안아줘요.png',
   dohee_no_annoyed: 'dohee_no_annoyed.png',
   dohee_no_cafe: 'dohee_no_cafe.png',
   dohee_no_cafe_shame: 'dohee_no_cafe_shame.png',
-  dohee_no_lookingup: 'dohee_no_lookingup.png',
-  dohee_no_shy: 'dohee_no_shy.png',
-  dohee_no_smile: 'dohee_no_smile.png',
-  dohee_no_surprised: 'dohee_no_surprised.png',
-  dohee_no_부탁: 'dohee_no_부탁.png',
   dohee_no_빼꼼: 'dohee_no_빼꼼.png',
-  dohee_no_안아줘요: 'dohee_no_안아줘요.png',
+  dohee_no_sigh: 'dohee_no_sigh.png',
+  dohee_no_shy_side: 'dohee_no_shy_side.png',
+  dohee_joy: 'dohee_joy',
   dohee_pretty_basic: 'dohee_pretty_basic.png',
   dohee_pretty_bread: 'dohee_pretty_bread.png',
   dohee_pretty_bread_shame: 'dohee_pretty_bread_shame.png',
   dohee_pretty_sad: 'dohee_pretty_sad.png',
   dohee_pretty_sitting_cry: 'dohee_pretty_sitting_cry.png',
-  // 3주차 지수 이미지들
-  jisoo_disappointed: 'jisoo_disappointed.png',
-  jisoo_laugh_png: 'jisoo_laugh.png',
-  jisoo_running: 'jisoo_running.png',
-  jisoo_running_stand: 'jisoo_running_stand.png',
-  jisoo_신난다: 'jisoo_신난다.png',
+  dohee_earphone_give: 'dohee_earphone_give.png',
+  dohee_earphone_hand: 'dohee_earphone_hand.png',
+  dohee_earphone: 'dohee_earphone.png',
+  dohee_earphone_hand_up: 'dohee_earphone_hand_up.png',
   sera_basic: 'sera_basic.png',
   sera_거만_crossedarm: 'sera_거만_crossedarm.png',
   sera_칭찬부끄: 'sera_칭찬부끄.png',
@@ -89,6 +97,10 @@ export const characterImageId = {
   sera_surprised: 'sera_surprised.png',
   sera_shy_facecover: 'sera_shy_facecover.png',
   sera_annoy_shy: 'sera_annoy_shy.png',
+  sera_경멸: 'sera_경멸.png',
+  sera_shy_side: 'sera_shy_side.png',
+  hayoung_no_fun: 'hayoung_no_fun.png',
+
 
 } as const;
 
@@ -115,24 +127,26 @@ export const backgroundImageId = {
   pocha_inside: 'pocha_inside.png',
   pocha_front: 'pocha_front.png',
   convenience_store_front: 'convenience_store_front.png',
-  auditorium: 'auditorium.png',
+  auditorium: 'auditorium.jpeg',
   dorm_room: 'dorm_room.png',
   jisoo_room: 'jisoo_room.png',
-  lab: 'classroom.png',
+  cafe: 'cafe.jpeg',
   duck_pond: 'krafton_passageway_night.png',
   kaist_pond: 'kaist_pond.png',
-  // 3주차 배경 이미지들
-  auditorium_jpeg: 'auditorium.jpeg',
-  boardgame_cafe: 'boardgame_cafe.png',
-  cafe: 'cafe.jpeg',
   dohee_alone: 'dohee_alone.jpeg',
-  dohee_alone_background: 'dohee_alone_background.jpeg',
+  boardgame_cafe: 'boardgame_cafe.png',
   kiosk: 'kiosk.jpeg',
+  dohee_alone_background: 'dohee_alone_background.jpeg',
   성심당_앞: '성심당_앞.jpeg',
+  campfire: 'campfire.jpeg',
+  mt_outside: 'mt_outside.jpeg',
+  mt_inside: 'mt_inside.jpeg',
+  jisoo_고백: 'jisoo_고백.jpeg',
+  dohee_고백: 'dohee_고백.jpeg',
+  sera_고백: 'sera_고백.jpeg',
 } as const;
 
 export const backgroundSoundId = {
-  // 기존 BGM ID들
   alert: 'alert',
   morning_ambience: 'morning_ambience',
   romantic: 'romantic',
@@ -145,29 +159,17 @@ export const backgroundSoundId = {
   typing_noise: 'typing_noise',
   party_noise: 'party_noise',
   keyboard_typing: 'keyboard',
-  // public/sounds/bgm 폴더의 파일들
-  daldal_bgm: 'daldal_bgm',
-  game: 'game',
-  relax: 'relax',
-  select: 'select',
 } as const;
 
-// 기본 BGM 없음 - 각 구간별로 script.ts에서 명시적으로 background_sound_id 지정 필요
-
 export const effectSoundId = {
-  kakaotalk: 'kakaotalk',
+  kakao_alert: 'kakao_alert',
   shock: 'shock',
   keyboard: 'keyboard',
   disappointed: 'disappointed',
   can_open: 'can_open',
-  // public/sounds/sfx 폴더의 파일들
-  computer_keyboard: 'computer-keyboard', // 파일명에 하이픈이 있어서 언더스코어로 변환
-  heartbeat: 'heartbeat',
-  skirr: 'skirr',
 } as const;
 
 // ID 생성 헬퍼 함수
 export const generateId = (): string => {
   return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 };
-

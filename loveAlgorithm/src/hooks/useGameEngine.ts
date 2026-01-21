@@ -16,6 +16,7 @@ export const useGameEngine = () => {
   const previousValuesRef = useRef(store.previousValues);
   const previousItemTypeRef = useRef<string | undefined>(undefined);
   const previousSceneIdRef = useRef<string>(store.gameState.currentSceneId);
+  const previousChatTitleRef = useRef<string>('몰입캠프 2분반');
 
   // 로컬 데이터를 기본으로 사용 (백엔드는 선택적)
   // gameEvents가 null이어도 로컬 데이터를 즉시 사용
@@ -147,7 +148,38 @@ export const useGameEngine = () => {
     
     // 카톡/시스템 메시지 처리 - 이름 교체 로직 적용
     const script = mergedItem.script ? replaceHeroName(mergedItem.script, store.heroName) : '';
+    
+    // 카톡방 이름 추출 함수
+    const getChatTitleFromScript = (scriptText: string): string => {
+      const match = scriptText.match(/\[([^\]]+)\]\s*$/);
+      if (match) {
+        return match[1]; // [xxx]에서 xxx 부분 반환
+      }
+      return '몰입캠프 2분반';
+    };
+    
+    // 현재 히스토리에서 카톡방 이름 확인 (이전 버튼으로 돌아왔을 때를 대비)
+    if (store.kakaoTalkHistory.length > 0) {
+      const lastMessage = store.kakaoTalkHistory[store.kakaoTalkHistory.length - 1];
+      const lastScript = lastMessage.message || lastMessage.text || '';
+      const lastChatTitle = getChatTitleFromScript(lastScript);
+      if (lastChatTitle !== previousChatTitleRef.current) {
+        previousChatTitleRef.current = lastChatTitle;
+      }
+    }
+    
     if (mergedItem.type?.startsWith('카톡')) {
+      // 현재 script에서 chatTitle 추출
+      const currentChatTitle = getChatTitleFromScript(script);
+      
+      // 카톡방 이름이 바뀌면 히스토리 초기화
+      if (currentChatTitle !== previousChatTitleRef.current) {
+        console.log(`🔄 카톡방 이름 변경: ${previousChatTitleRef.current} → ${currentChatTitle}`);
+        store.clearKakaoTalkHistory();
+        previousChatTitleRef.current = currentChatTitle;
+      }
+      
+      // 메시지 추가 (연속 카톡이면 계속 이어붙임)
       store.addKakaoTalkMessage(script, mergedItem.character_id || '', mergedItem.type, mergedItem.character_id || '');
     } else if (mergedItem.type === '시스템') {
       store.addSystemMessage(script);
@@ -155,6 +187,7 @@ export const useGameEngine = () => {
       // 카톡/시스템이 아닐 때는 카톡 히스토리 초기화 (일반 대사로 넘어갈 때)
       if (store.kakaoTalkHistory.length > 0) {
         store.clearKakaoTalkHistory();
+        previousChatTitleRef.current = '몰입캠프 2분반';
       }
     }
     
@@ -212,6 +245,46 @@ export const useGameEngine = () => {
       
       const event = gameEvents[store.gameState.currentSceneId];
       const currentItem = event?.scenario[store.gameState.currentDialogueIndex];
+      
+      // 호감도 계산 시스템 메시지 처리
+      if (currentItem?.type === '시스템' && 
+          currentItem.script?.includes('최종 호감도') && 
+          currentItem.script?.includes('Love_Point')) {
+        const currentSceneId = store.gameState.currentSceneId;
+        const affections = store.affections;
+        const MIN_AFFECTION_THRESHOLD = 50; // 호감도 최소 기준값
+        
+        // 현재 씬에 따라 캐릭터 ID 결정
+        let characterId: string | null = null;
+        let failSceneId: string | null = null;
+        
+        if (currentSceneId === 'chapter4_scene4_dohee') {
+          characterId = '도희';
+          failSceneId = 'chapter4_scene4_dohee_fail';
+        } else if (currentSceneId === 'chapter4_scene4_jisoo') {
+          characterId = '지수';
+          failSceneId = 'chapter4_scene4_jisoo_fail';
+        } else if (currentSceneId === 'chapter4_scene4_sera') {
+          characterId = '세라';
+          failSceneId = 'chapter4_scene4_sera_fail';
+        }
+        
+        // 호감도 확인 및 분기
+        if (characterId && failSceneId) {
+          const affectionValue = affections[characterId] || 0;
+          console.log(`💕 호감도 계산: ${characterId} = ${affectionValue} (기준: ${MIN_AFFECTION_THRESHOLD})`);
+          
+          if (affectionValue < MIN_AFFECTION_THRESHOLD) {
+            // 호감도 부족 - 실패 씬으로 이동
+            console.log(`❌ 호감도 부족으로 실패 씬으로 이동: ${failSceneId}`);
+            store.goToScene(failSceneId);
+            return;
+          } else {
+            // 호감도 충분 - 성공 씬 계속 진행
+            console.log(`✅ 호감도 충분, 성공 씬 계속 진행`);
+          }
+        }
+      }
       
       // 다음 대화가 있으면 다음으로, 없으면 다음 씬으로
       if (currentItem && store.gameState.currentDialogueIndex < event.scenario.length - 1) {

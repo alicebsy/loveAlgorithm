@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { BackgroundDisplay } from '../ui/BackgroundDisplay';
 import { CharacterDisplay } from '../ui/CharacterDisplay';
 import { DialogueBox } from '../ui/DialogueBox';
@@ -148,6 +148,29 @@ export const GameScreen = () => {
   const hasKakaoTalkHistory = kakaoTalkHistory.length > 0;
   const isTransition = currentScenarioItem?.type === '전환';
   const isSystem = currentScenarioItem?.type === '시스템';
+  
+  // 카톡방 이름 추출 (카톡방 이름이 바뀔 때만 컴포넌트 리마운트)
+  // 이전 코드처럼 key를 사용하되, chatTitle이 변경될 때만 key를 업데이트
+  const previousChatTitleRef = useRef<string>('');
+  const getChatTitle = (): string => {
+    for (const msg of kakaoTalkHistory) {
+      const script = msg.message || (msg as any).text || '';
+      // script 끝에 [xxx] 패턴이 있는지 확인 (xxx는 어떤 이름이든 가능)
+      const match = script.match(/\[([^\]]+)\]\s*$/);
+      if (match) {
+        return match[1]; // [xxx]에서 xxx 부분 반환
+      }
+    }
+    return '몰입캠프 2분반';
+  };
+  
+  const currentChatTitle = getChatTitle();
+  // chatTitle이 변경되었을 때만 ref 업데이트
+  if (currentChatTitle !== previousChatTitleRef.current) {
+    previousChatTitleRef.current = currentChatTitle;
+  }
+  // key는 chatTitle이 변경될 때만 변경되도록 ref 값 사용
+  const chatTitleKey = previousChatTitleRef.current || currentChatTitle;
   const isGame = currentScenarioItem?.type === 'game';
   const isInputMode = currentScenarioItem?.type === 'input'; // 입력 모드 확인
   const gameConfig = currentScenarioItem?.game;
@@ -296,6 +319,7 @@ export const GameScreen = () => {
 
       {(isKakaoTalk || hasKakaoTalkHistory) && (
         <KakaoTalkModal 
+          key={chatTitleKey}
           messages={kakaoTalkHistory}
           onClose={proceedToNext}
           onTeamView={proceedToNext}

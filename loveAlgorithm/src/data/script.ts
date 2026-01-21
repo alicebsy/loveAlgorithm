@@ -453,14 +453,14 @@ export const gameEvents: Record<string, GameEvent> = {
         index: 6,
       },
       {
-        script: '[뽑기_시작]팀 나누기가 시작됐어요',
+        script: '[뽑기_시작]팀 나누기가 시작됐어요 [2분반]',
         character_id: characterId.manager,
         type: '카톡',
         id: 'chapter1_scene4_intro_7',
         index: 7,
       },
       {
-        script: '[뽑기]나의 팀은 4팀입니다.',
+        script: '[뽑기]나의 팀은 4팀입니다. [2분반]',
         type: '카톡',
         character_id: characterId.hero,
         id: 'chapter1_scene4_intro_8',

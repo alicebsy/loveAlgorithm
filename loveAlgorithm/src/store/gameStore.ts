@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { GameState, Settings, ScreenType, GameEvent, SaveSlot } from '../types/game.types';
 import { gameEvents as localGameEvents } from '../data/script';
+import { replaceHeroName } from '../utils/nameUtils';
 
 interface GameStore {
   // 기본 상태
@@ -89,8 +90,62 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const currentSceneId = state.gameState.currentSceneId;
       const history = state.gameState.history || [];
       const gameEvents = state.gameEvents || localGameEvents;
+      const heroName = state.heroName;
       
       console.log('◀ 이전 버튼 클릭:', { currentIndex, currentSceneId, history });
+      
+      // 카톡/시스템 히스토리 재구성을 위한 헬퍼 함수
+      const rebuildHistory = (sceneId: string, endIndex: number) => {
+        const event = gameEvents[sceneId];
+        if (!event?.scenario) return { kakaoTalk: [], system: [] };
+        
+        const restoredKakaoTalk: any[] = [];
+        const restoredSystem: any[] = [];
+        let previousChatTitle = '몰입캠프 2분반';
+        
+        for (let i = 0; i <= endIndex; i++) {
+          const item = event.scenario[i];
+          if (!item) continue;
+          
+          const script = item.script ? replaceHeroName(item.script, heroName) : '';
+          
+          if (item.type?.startsWith('카톡')) {
+            // 카톡방 이름 추출
+            const getChatTitleFromScript = (scriptText: string): string => {
+              const match = scriptText.match(/\[([^\]]+)\]\s*$/);
+              return match ? match[1] : '몰입캠프 2분반';
+            };
+            
+            const currentChatTitle = getChatTitleFromScript(script);
+            
+            // 카톡방 이름이 바뀌면 히스토리 초기화
+            if (currentChatTitle !== previousChatTitle) {
+              restoredKakaoTalk.length = 0; // 배열 초기화
+              previousChatTitle = currentChatTitle;
+            }
+            
+            // 메시지 추가
+            restoredKakaoTalk.push({
+              message: script,
+              text: script,
+              sender: item.character_id || '',
+              characterId: item.character_id || '',
+              type: item.type,
+              id: item.character_id || ''
+            });
+          } else if (item.type === '시스템') {
+            restoredSystem.push(script);
+          } else {
+            // 카톡/시스템이 아닐 때는 카톡 히스토리 초기화
+            if (restoredKakaoTalk.length > 0) {
+              restoredKakaoTalk.length = 0;
+              previousChatTitle = '몰입캠프 2분반';
+            }
+          }
+        }
+        
+        return { kakaoTalk: restoredKakaoTalk, system: restoredSystem };
+      };
       
       if (currentIndex > 0) {
         // 현재 씬에서 이전 대사로 이동
@@ -134,8 +189,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
           }
         }
         
+        // 카톡/시스템 히스토리 재구성
+        const restoredHistory = rebuildHistory(currentSceneId, previousIndex);
+        
         console.log('✅ 현재 씬에서 이전 대사로 이동:', previousIndex);
         console.log('🖼️ 복원된 이미지 상태:', restoredPreviousValues);
+        console.log('💬 복원된 카톡 히스토리:', restoredHistory.kakaoTalk.length, '개');
+        console.log('📢 복원된 시스템 히스토리:', restoredHistory.system.length, '개');
         
         return { 
           gameState: { 
@@ -143,7 +203,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
             currentDialogueIndex: previousIndex,
             previousValues: restoredPreviousValues
           },
-          previousValues: restoredPreviousValues
+          previousValues: restoredPreviousValues,
+          kakaoTalkHistory: restoredHistory.kakaoTalk,
+          systemHistory: restoredHistory.system
         };
       } else {
         // 현재 씬의 첫 번째 대사면 이전 씬으로 이동
@@ -188,8 +250,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
             }
           }
           
+          // 카톡/시스템 히스토리 재구성
+          const restoredHistory = rebuildHistory(previousSceneId, lastDialogueIndex);
+          
           console.log('✅ 이전 씬으로 이동:', { previousSceneId, lastDialogueIndex });
           console.log('🖼️ 복원된 이미지 상태:', restoredPreviousValues);
+          console.log('💬 복원된 카톡 히스토리:', restoredHistory.kakaoTalk.length, '개');
+          console.log('📢 복원된 시스템 히스토리:', restoredHistory.system.length, '개');
           
           return {
             gameState: {
@@ -199,7 +266,9 @@ export const useGameStore = create<GameStore>((set, get) => ({
               history: newHistory,
               previousValues: restoredPreviousValues
             },
-            previousValues: restoredPreviousValues
+            previousValues: restoredPreviousValues,
+            kakaoTalkHistory: restoredHistory.kakaoTalk,
+            systemHistory: restoredHistory.system
           };
         }
         // 이전 씬이 없으면 현재 상태 유지

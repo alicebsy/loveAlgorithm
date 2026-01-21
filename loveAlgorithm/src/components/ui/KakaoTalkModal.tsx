@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { characterId } from '../../data/constants';
 import { useGameStore } from '../../store/gameStore';
 
+
 interface KakaoTalkMessage {
   message: string;
   characterName?: string;
@@ -365,6 +366,23 @@ export const KakaoTalkModal = ({ messages, onClose, onTeamView }: KakaoTalkModal
   // characterId가 hero인지 확인
   const isHero = (charId?: string) => charId === characterId.hero;
   
+  // 카톡 제목 결정: script 끝에 [xxx] 패턴이 있으면 xxx를 톡방 이름으로 설정 (xxx는 어떤 이름이든 가능)
+  const getChatTitle = (): string => {
+    // 모든 메시지의 script를 확인
+    for (const msg of messages) {
+      const script = msg.message || (msg as any).text || '';
+      // script 끝에 [xxx] 패턴이 있는지 확인
+      const match = script.match(/\[([^\]]+)\]\s*$/);
+      if (match) {
+        return match[1]; // [xxx]에서 xxx 부분 반환
+      }
+    }
+    // 패턴이 없으면 기본값
+    return '몰입캠프 2분반';
+  };
+  
+  const chatTitle = getChatTitle();
+  
   // 메시지가 추가되면 자동으로 스크롤
   useEffect(() => {
     if (chatAreaRef.current) {
@@ -394,33 +412,87 @@ export const KakaoTalkModal = ({ messages, onClose, onTeamView }: KakaoTalkModal
     // msg 객체의 구조 확인: text 또는 message 필드 사용
     const charId = msg.characterId || (msg as any).sender;
     const script = msg.message || (msg as any).text || '';
+    const msgType = msg.type || (msg as any).type || '';
     const align = isHero(charId) ? 'right' : 'left';
     const characterName = getCharacterNameFromId(charId);
     const characterInitial = characterName.charAt(0);
     
-    // MessageHeader는 항상 먼저 생성
-    const messageHeader = (
+    // 이전 메시지 확인
+    const prevMsg = index > 0 ? messages[index - 1] : null;
+    const prevCharId = prevMsg ? (prevMsg.characterId || (prevMsg as any).sender) : null;
+    const prevType = prevMsg ? (prevMsg.type || (prevMsg as any).type || '') : '';
+    
+    // 연속 메시지 판단: 같은 사람이고 이전 메시지도 카톡 타입이면 연속
+    const isConsecutive = prevMsg && 
+      prevCharId === charId && 
+      prevType?.startsWith('카톡') && 
+      msgType?.startsWith('카톡');
+    
+    // [xx] 패턴 추출 함수
+    const getChatTitleFromScript = (scriptText: string): string | null => {
+      const match = scriptText.match(/\[([^\]]+)\]\s*$/);
+      return match ? match[1] : null;
+    };
+    
+    // 현재 메시지와 이전 메시지의 [xx] 패턴 확인
+    const currentChatTitle = getChatTitleFromScript(script);
+    const prevChatTitle = prevMsg ? getChatTitleFromScript(prevMsg.message || (prevMsg as any).text || '') : null;
+    
+    // [xx] 패턴이 연속인지 확인 (둘 다 있고 같으면 연속)
+    const isChatTitleConsecutive = currentChatTitle && prevChatTitle && currentChatTitle === prevChatTitle;
+    
+    // MessageHeader는 연속 메시지가 아니거나, [xx] 패턴이 연속이 아닐 때만 표시
+    const shouldShowHeader = !isConsecutive || !isChatTitleConsecutive;
+    
+    const messageHeader = shouldShowHeader ? (
       <MessageHeader key={`header-${index}`} style={{ alignSelf: align === 'right' ? 'flex-end' : 'flex-start' }}>
         <ProfileImage>{characterInitial}</ProfileImage>
         <SenderName>{characterName}</SenderName>
       </MessageHeader>
-    );
+    ) : null;
     
     // script의 시작 부분에 따라 다른 컴포넌트 렌더링
     let content = null;
     let displayText = script;
     
+    // 메시지 끝에 있는 [xxx] 패턴(톡방 이름) 제거 함수
+    const removeChatTitlePattern = (text: string): string => {
+      // 메시지 끝에 [xxx] 패턴이 있으면 제거 (xxx는 어떤 이름이든 가능)
+      return text.replace(/\s*\[([^\]]+)\]\s*$/, '');
+    };
+    
     if (script.startsWith('[image]')) {
       // 이미지 메시지
-      const imagePath = script.replace('[image]', '').trim();
+      let imagePath = script.replace('[image]', '').trim();
+      // 이미지 경로에서도 [xxx] 패턴 제거
+      imagePath = removeChatTitlePattern(imagePath);
+      // 경로가 /로 시작하지 않으면 / 추가
+      if (imagePath && !imagePath.startsWith('/')) {
+        imagePath = '/' + imagePath;
+      }
+      // 한글 파일명을 위한 URL 인코딩 (경로 부분은 인코딩하지 않고 파일명만 인코딩)
+      const pathParts = imagePath.split('/');
+      const fileName = pathParts[pathParts.length - 1];
+      const dirPath = pathParts.slice(0, -1).join('/');
+      const encodedPath = dirPath + '/' + encodeURIComponent(fileName);
+      
       content = (
         <MessageImage key={`image-${index}`} $align={align}>
           <ImageContent 
-            src={imagePath || '/characters/default.png'} 
+            src={encodedPath || '/characters/default.png'} 
             alt="이미지"
             onError={(e) => {
-              // 이미지 로드 실패 시 기본 이미지 표시
-              (e.target as HTMLImageElement).src = '/characters/default.png';
+              console.error('이미지 로드 실패:', encodedPath, '원본 경로:', imagePath);
+              // 인코딩된 경로가 실패하면 원본 경로로 재시도
+              if ((e.target as HTMLImageElement).src !== imagePath) {
+                (e.target as HTMLImageElement).src = imagePath;
+              } else {
+                // 이미지 로드 실패 시 기본 이미지 표시
+                (e.target as HTMLImageElement).src = '/characters/default.png';
+              }
+            }}
+            onLoad={() => {
+              console.log('이미지 로드 성공:', encodedPath);
             }}
           />
         </MessageImage>
@@ -428,10 +500,41 @@ export const KakaoTalkModal = ({ messages, onClose, onTeamView }: KakaoTalkModal
     } else if (script.startsWith('[뽑기_시작]')) {
       // MinigameNotification
       displayText = script.replace('[뽑기_시작]', '');
+      // 메시지 끝에 있는 [xxx] 패턴 제거
+      displayText = removeChatTitlePattern(displayText);
       content = (
         <MinigameNotification key={`notification-${index}`} style={{ alignSelf: align === 'right' ? 'flex-end' : 'flex-start' }}>
           <FlagsContainer>
-            <Flag src="public/icon/자리뽑기_flag.png" alt="깃발" />
+            <Flag 
+              src={(() => {
+                // 인생네컷.png와 동일한 방식으로 경로 처리
+                let imagePath = '/icon/자리뽑기_flag.png';
+                // 경로가 /로 시작하지 않으면 / 추가
+                if (imagePath && !imagePath.startsWith('/')) {
+                  imagePath = '/' + imagePath;
+                }
+                // 한글 파일명을 위한 URL 인코딩 (경로 부분은 인코딩하지 않고 파일명만 인코딩)
+                const pathParts = imagePath.split('/');
+                const fileName = pathParts[pathParts.length - 1];
+                const dirPath = pathParts.slice(0, -1).join('/');
+                return dirPath + '/' + encodeURIComponent(fileName);
+              })()}
+              alt="깃발" 
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                console.error('깃발 이미지 로드 실패:', target.src, '원본 경로:', '/icon/자리뽑기_flag.png');
+                // 인코딩된 경로가 실패하면 원본 경로로 재시도
+                if (target.src !== '/icon/자리뽑기_flag.png') {
+                  target.src = '/icon/자리뽑기_flag.png';
+                } else {
+                  // 이미지 로드 실패 시 기본 이미지 표시
+                  target.src = '/characters/default.png';
+                }
+              }}
+              onLoad={() => {
+                console.log('깃발 이미지 로드 성공');
+              }}
+            />
           </FlagsContainer>
           <MinigameTitle>{displayText}</MinigameTitle>
           <MinigameDescription>
@@ -445,6 +548,8 @@ export const KakaoTalkModal = ({ messages, onClose, onTeamView }: KakaoTalkModal
     } else if (script.startsWith('[뽑기]')) {
       // TeamInfoCard
       displayText = script.replace('[뽑기]', '');
+      // 메시지 끝에 있는 [xxx] 패턴 제거
+      displayText = removeChatTitlePattern(displayText);
       content = (
         <TeamInfoCard key={`teamcard-${index}`} $align={align}>
           <TeamInfoTop>
@@ -453,7 +558,36 @@ export const KakaoTalkModal = ({ messages, onClose, onTeamView }: KakaoTalkModal
               <TeamInfoNumber>4팀</TeamInfoNumber>
             </TeamInfoText>
             <FlagsContainer>
-              <Flag src="public/icon/자리뽑기_flag.png" alt="깃발" />
+              <Flag 
+                src={(() => {
+                  // 인생네컷.png와 동일한 방식으로 경로 처리
+                  let imagePath = '/icon/자리뽑기_flag.png';
+                  // 경로가 /로 시작하지 않으면 / 추가
+                  if (imagePath && !imagePath.startsWith('/')) {
+                    imagePath = '/' + imagePath;
+                  }
+                  // 한글 파일명을 위한 URL 인코딩 (경로 부분은 인코딩하지 않고 파일명만 인코딩)
+                  const pathParts = imagePath.split('/');
+                  const fileName = pathParts[pathParts.length - 1];
+                  const dirPath = pathParts.slice(0, -1).join('/');
+                  return dirPath + '/' + encodeURIComponent(fileName);
+                })()}
+                alt="깃발" 
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  console.error('깃발 이미지 로드 실패:', target.src, '원본 경로:', '/icon/자리뽑기_flag.png');
+                  // 인코딩된 경로가 실패하면 원본 경로로 재시도
+                  if (target.src !== '/icon/자리뽑기_flag.png') {
+                    target.src = '/icon/자리뽑기_flag.png';
+                  } else {
+                    // 이미지 로드 실패 시 기본 이미지 표시
+                    target.src = '/characters/default.png';
+                  }
+                }}
+                onLoad={() => {
+                  console.log('깃발 이미지 로드 성공');
+                }}
+              />
             </FlagsContainer>
           </TeamInfoTop>
           <TeamInfoBottom>
@@ -468,6 +602,8 @@ export const KakaoTalkModal = ({ messages, onClose, onTeamView }: KakaoTalkModal
       if (script.startsWith('[message]')) {
         displayText = script.replace('[message]', '');
       }
+      // 메시지 끝에 있는 [xxx] 패턴 제거
+      displayText = removeChatTitlePattern(displayText);
       content = (
         <MessageBubble key={`bubble-${index}`} $isMine={isHero(charId)} $hasProfile={true} style={{ alignSelf: align === 'right' ? 'flex-end' : 'flex-start' }}>
           {displayText}
@@ -477,7 +613,7 @@ export const KakaoTalkModal = ({ messages, onClose, onTeamView }: KakaoTalkModal
     
     return (
       <div key={`message-${index}`} style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-        {messageHeader}
+        {shouldShowHeader && messageHeader}
         {content}
       </div>
     );
@@ -494,7 +630,7 @@ export const KakaoTalkModal = ({ messages, onClose, onTeamView }: KakaoTalkModal
           </StatusBar>
           <Header>
             <BackButton onClick={onClose}>←</BackButton>
-            <ChatTitle>몰입캠프 2분반</ChatTitle>
+            <ChatTitle>{chatTitle}</ChatTitle>
             <HeaderRight>
               <IconButton>🔍</IconButton>
               <IconButton>☰</IconButton>

@@ -68,8 +68,38 @@ const LogoutButton = styled.button`
   cursor: pointer;
 `;
 
+const DebugButton = styled.button`
+  padding: 8px 12px;
+  background: rgba(255, 200, 0, 0.3);
+  border: 1px solid rgba(255, 200, 0, 0.5);
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 4px;
+  &:hover {
+    background: rgba(255, 200, 0, 0.5);
+  }
+`;
+
+const DebugContainer = styled.div`
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+`;
+
+const DebugLabel = styled.div`
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4px;
+`;
+
 export const StartScreen = () => {
-  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, setUser, user, gameEvents, loadScript } = useGameStore();
+  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, setUser, user, gameEvents, loadScript, goToScene } = useGameStore();
   const [showControls, setShowControls] = useState(false);
 
   const handleLogout = async () => {
@@ -104,6 +134,31 @@ export const StartScreen = () => {
     setCurrentScreen('game');
   };
 
+  const handleDebugWeek = async (week: number) => {
+    console.log(`🔧 디버깅: Week ${week}로 이동`);
+    // 게임 시작 전 모든 BGM 정지 및 캐시 초기화
+    const { clearSoundCache } = await import('../../services/soundService');
+    clearSoundCache();
+    
+    // gameEvents가 없으면 로드
+    if (!gameEvents || Object.keys(gameEvents).length === 0) {
+      await loadScript();
+    }
+    
+    // 각 Week의 시작 씬으로 이동
+    const sceneMap: Record<number, string> = {
+      2: 'chapter2_scene1',
+      3: 'chapter3_scene1',
+      4: 'chapter4_scene1',
+    };
+    
+    const targetScene = sceneMap[week];
+    if (targetScene) {
+      goToScene(targetScene);
+      setCurrentScreen('game');
+    }
+  };
+
   return (
     <ScreenContainer>
       {isAuthenticated && (
@@ -127,6 +182,14 @@ export const StartScreen = () => {
           onClose={() => setShowControls(false)}
         />
       )}
+      <DebugContainer>
+        <DebugLabel>🔧 디버깅 (임시)</DebugLabel>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <DebugButton onClick={() => handleDebugWeek(2)}>Week 2</DebugButton>
+          <DebugButton onClick={() => handleDebugWeek(3)}>Week 3</DebugButton>
+          <DebugButton onClick={() => handleDebugWeek(4)}>Week 4</DebugButton>
+        </div>
+      </DebugContainer>
     </ScreenContainer>
   );
 };
