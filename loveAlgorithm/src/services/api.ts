@@ -188,11 +188,18 @@ export const loginWithGoogle = async (googleToken: string) => {
   try {
     console.log('🔐 구글 로그인 시도:', { endpoint: `${API_BASE_URL}/auth/google`, tokenLength: googleToken.length });
     
+    // 타임아웃 설정 (30초)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    
     const response = await fetch(`${API_BASE_URL}/auth/google`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token: googleToken }),
+      signal: controller.signal,
     });
+    
+    clearTimeout(timeoutId);
     
     console.log('📥 구글 로그인 응답:', { status: response.status, ok: response.ok });
     
@@ -236,6 +243,12 @@ export const loginWithGoogle = async (googleToken: string) => {
     return { success: true, token, data: responseData };
   } catch (error: any) {
     console.error('❌ 구글 로그인 에러:', error);
+    
+    // 타임아웃 에러 처리
+    if (error.name === 'AbortError') {
+      console.error('🔴 요청 타임아웃: 백엔드 서버가 응답하지 않습니다.');
+      throw new Error('서버 응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.');
+    }
     
     // 네트워크 에러 처리
     if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
