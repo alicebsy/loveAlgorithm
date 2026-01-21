@@ -8,28 +8,27 @@ import App from './App.tsx'
 // .env 파일에 VITE_GOOGLE_CLIENT_ID=your_client_id 추가 필요
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
-// 구글 OAuth 클라이언트 ID 확인
-const DUMMY_CLIENT_ID = 'dummy-client-id-for-provider';
-const clientId = GOOGLE_CLIENT_ID || DUMMY_CLIENT_ID;
-
-// 디버깅: 환경 변수 확인
-console.log('🔍 main.tsx - 구글 클라이언트 ID 확인:', {
-  raw: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-  processed: GOOGLE_CLIENT_ID,
-  clientId: clientId,
-  isDummy: clientId === DUMMY_CLIENT_ID,
-  allEnvKeys: Object.keys(import.meta.env).filter(key => key.includes('GOOGLE') || key.includes('VITE'))
-});
+// 구글 로그인이 활성화되어 있는지 확인
+const isGoogleLoginEnabled = GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== '' && !GOOGLE_CLIENT_ID.includes('dummy');
 
 try {
-  createRoot(document.getElementById('root')!).render(
+  const app = <App />;
+  
+  // Google OAuth가 설정되어 있을 때만 Provider로 감싸기
+  const rootElement = isGoogleLoginEnabled ? (
     <StrictMode>
-      <GoogleOAuthProvider clientId={clientId}>
-        <App />
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        {app}
       </GoogleOAuthProvider>
-    </StrictMode>,
+    </StrictMode>
+  ) : (
+    <StrictMode>
+      {app}
+    </StrictMode>
   );
-  console.log('✅ 앱 렌더링 성공');
+  
+  createRoot(document.getElementById('root')!).render(rootElement);
+  console.log('✅ 앱 렌더링 성공', { isGoogleLoginEnabled });
 } catch (error) {
   console.error('❌ 앱 렌더링 실패:', error);
   // 에러 발생 시 Provider 없이 렌더링 시도
