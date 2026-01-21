@@ -68,114 +68,13 @@ const LogoutButton = styled.button`
   cursor: pointer;
 `;
 
-const DebugButton = styled.button`
-  padding: 8px 12px;
-  background: rgba(255, 200, 0, 0.3);
-  border: 1px solid rgba(255, 200, 0, 0.5);
-  border-radius: 6px;
-  color: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  margin: 4px;
-  &:hover {
-    background: rgba(255, 200, 0, 0.5);
-  }
-`;
-
-const DebugContainer = styled.div`
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: flex-start;
-`;
-
-const DebugLabel = styled.div`
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 4px;
-`;
-
-const AffectionSliderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 200px;
-  margin-top: 8px;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  backdrop-filter: blur(10px);
-`;
-
-const AffectionRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-`;
-
-const AffectionName = styled.span`
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.9);
-  min-width: 40px;
-`;
-
-const AffectionSlider = styled.input`
-  flex: 1;
-  height: 6px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.2);
-  outline: none;
-  -webkit-appearance: none;
-  
-  &::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #fff;
-    cursor: pointer;
-  }
-  
-  &::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #fff;
-    cursor: pointer;
-    border: none;
-  }
-`;
-
-const AffectionValue = styled.span`
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.9);
-  min-width: 35px;
-  text-align: right;
-  font-weight: 600;
-`;
 
 export const StartScreen = () => {
-  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, setUser, user, gameEvents, loadScript, goToScene, affections, updateAffection } = useGameStore();
+  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, setUser, user, gameEvents, loadScript } = useGameStore();
   const [showControls, setShowControls] = useState(false);
   
   // 배경 이미지 경로 (한글 파일명 인코딩)
   const backgroundImagePath = `/backgrounds/${encodeURIComponent('홈화면.png')}`;
-  
-  // 캐릭터 ID
-  const characters = [
-    { id: '도희', name: '도희' },
-    { id: '지수', name: '지수' },
-    { id: '세라', name: '세라' },
-  ];
-  
-  const handleAffectionChange = async (characterId: string, value: number) => {
-    const clampedValue = Math.max(0, Math.min(100, value));
-    await updateAffection(characterId, clampedValue);
-  };
 
   const handleLogout = async () => {
     try {
@@ -209,45 +108,6 @@ export const StartScreen = () => {
     setCurrentScreen('game');
   };
 
-  const handleDebugWeek = async (week: number) => {
-    console.log(`🔧 디버깅: Week ${week}로 이동`);
-    // 게임 시작 전 모든 BGM 정지 및 캐시 초기화
-    const { clearSoundCache } = await import('../../services/soundService');
-    clearSoundCache();
-    
-    // gameEvents가 없으면 로드
-    if (!gameEvents || Object.keys(gameEvents).length === 0) {
-      await loadScript();
-    }
-    
-    // 각 Week의 시작 씬으로 이동
-    const sceneMap: Record<number, string> = {
-      2: 'chapter2_scene1',
-      3: 'chapter3_scene1',
-      4: 'chapter4_scene1',
-    };
-    
-    const targetScene = sceneMap[week];
-    if (targetScene) {
-      goToScene(targetScene);
-      setCurrentScreen('game');
-    }
-  };
-
-  const handleDebugConfession = async (sceneId: string) => {
-    console.log(`🔧 디버깅: ${sceneId}로 이동`);
-    // 게임 시작 전 모든 BGM 정지 및 캐시 초기화
-    const { clearSoundCache } = await import('../../services/soundService');
-    clearSoundCache();
-    
-    // gameEvents가 없으면 로드
-    if (!gameEvents || Object.keys(gameEvents).length === 0) {
-      await loadScript();
-    }
-    
-    goToScene(sceneId);
-    setCurrentScreen('game');
-  };
 
   return (
     <ScreenContainer $bgImage={backgroundImagePath}>
@@ -272,46 +132,6 @@ export const StartScreen = () => {
           onClose={() => setShowControls(false)}
         />
       )}
-      <DebugContainer>
-        <DebugLabel>🔧 디버깅 (임시)</DebugLabel>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          <DebugButton onClick={() => handleDebugWeek(2)}>Week 2</DebugButton>
-          <DebugButton onClick={() => handleDebugWeek(3)}>Week 3</DebugButton>
-          <DebugButton onClick={() => handleDebugWeek(4)}>Week 4</DebugButton>
-        </div>
-        <DebugLabel style={{ marginTop: '12px' }}>💕 고백 엔딩</DebugLabel>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_dohee')} style={{background: 'rgba(100, 200, 100, 0.3)'}}>도희 성공</DebugButton>
-          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_dohee_fail')} style={{background: 'rgba(200, 100, 100, 0.3)'}}>도희 실패</DebugButton>
-          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_jisoo')} style={{background: 'rgba(100, 200, 100, 0.3)'}}>지수 성공</DebugButton>
-          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_jisoo_fail')} style={{background: 'rgba(200, 100, 100, 0.3)'}}>지수 실패</DebugButton>
-          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_sera')} style={{background: 'rgba(100, 200, 100, 0.3)'}}>세라 성공</DebugButton>
-          <DebugButton onClick={() => handleDebugConfession('chapter4_scene4_sera_fail')} style={{background: 'rgba(200, 100, 100, 0.3)'}}>세라 실패</DebugButton>
-        </div>
-        <DebugLabel style={{ marginTop: '12px' }}>🎮 미니게임</DebugLabel>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          <DebugButton onClick={() => handleDebugConfession('chapter1_scene5_party')} style={{background: 'rgba(150, 150, 255, 0.3)'}}>카드 게임</DebugButton>
-          <DebugButton onClick={() => handleDebugConfession('chapter2_scene1')} style={{background: 'rgba(150, 150, 255, 0.3)'}}>리팩토링</DebugButton>
-          <DebugButton onClick={() => handleDebugConfession('chapter3_scene2_jisoo_menu')} style={{background: 'rgba(150, 150, 255, 0.3)'}}>메뉴 찾기</DebugButton>
-          <DebugButton onClick={() => handleDebugConfession('chapter3_scene6')} style={{background: 'rgba(150, 150, 255, 0.3)'}}>성심당</DebugButton>
-        </div>
-        <DebugLabel style={{ marginTop: '12px' }}>💖 호감도 조절</DebugLabel>
-        <AffectionSliderContainer>
-          {characters.map((char) => (
-            <AffectionRow key={char.id}>
-              <AffectionName>{char.name}</AffectionName>
-              <AffectionSlider
-                type="range"
-                min="0"
-                max="100"
-                value={affections[char.id] || 0}
-                onChange={(e) => handleAffectionChange(char.id, parseInt(e.target.value))}
-              />
-              <AffectionValue>{affections[char.id] || 0}</AffectionValue>
-            </AffectionRow>
-          ))}
-        </AffectionSliderContainer>
-      </DebugContainer>
     </ScreenContainer>
   );
 };
