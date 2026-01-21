@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import type { GameConfig } from '../../types/game.types';
 import { CardGame } from './CardGame';
 import { SpaghettiCodeGame } from './SpaghettiCodeGame';
+import { MenuFindGame } from './MenuFindGame';
+import { SungsimdangGame } from './SungsimdangGame';
+import { useGameStore } from '../../store/gameStore';
 
 interface MiniGameModalProps {
   gameConfig: GameConfig;
@@ -95,6 +98,21 @@ const GameButton = styled.button<{ $variant?: 'win' | 'lose' }>`
 `;
 
 export const MiniGameModal = ({ gameConfig, onWin, onLose }: MiniGameModalProps) => {
+  const { gameState } = useGameStore();
+  const currentSceneId = gameState.currentSceneId;
+
+  // 메뉴 찾기 게임인 경우 MenuFindGame 컴포넌트 사용
+  if (gameConfig.game_id === 'menu_find_game') {
+    // 스크립트에서 "5초 안에 찾아 클릭하세요"라고 했지만, 전체 게임 시간은 120초로 설정
+    // 각 라운드를 빠르게 완료해야 함
+    return <MenuFindGame onWin={onWin} onLose={onLose} currentSceneId={currentSceneId} timeLimit={120} />;
+  }
+
+  // 성심당 게임인 경우 SungsimdangGame 컴포넌트 사용
+  if (gameConfig.game_id === 'sungsimdang_game') {
+    return <SungsimdangGame onWin={onWin} onLose={onLose} />;
+  }
+
   // 카드 게임인 경우 CardGame 컴포넌트 사용
   if (gameConfig.game_id === 'card_game' || gameConfig.game_id === 'drinking_game_card') {
     return <CardGame onWin={onWin} onLose={onLose} timeLimit={60} />;

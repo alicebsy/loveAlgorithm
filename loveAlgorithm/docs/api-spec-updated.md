@@ -2,7 +2,7 @@
 
 ## 기본 정보
 
-- Base URL: `http://localhost:8080/api`
+- Base URL: `http://lovealgorithmgame.site:8081/api`
 - Content-Type: `application/json`
 - 인증: Bearer Token (JWT) - Authorization 헤더에 포함
 - 응답 형식: 모든 응답은 `ApiResponse<T>` 형식을 따릅니다.

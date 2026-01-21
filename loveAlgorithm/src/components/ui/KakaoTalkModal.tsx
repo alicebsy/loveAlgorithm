@@ -391,8 +391,9 @@ export const KakaoTalkModal = ({ messages, onClose, onTeamView }: KakaoTalkModal
   
   // 메시지 렌더링 함수
   const renderMessage = (msg: KakaoTalkMessage, index: number) => {
-    const charId = msg.characterId;
-    const script = msg.message || '';
+    // msg 객체의 구조 확인: text 또는 message 필드 사용
+    const charId = msg.characterId || (msg as any).sender;
+    const script = msg.message || (msg as any).text || '';
     const align = isHero(charId) ? 'right' : 'left';
     const characterName = getCharacterNameFromId(charId);
     const characterInitial = characterName.charAt(0);

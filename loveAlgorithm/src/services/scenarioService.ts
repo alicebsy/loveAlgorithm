@@ -37,7 +37,8 @@ export const getCurrentScenarioItem = async (
  */
 export const processScenarioItem = (
   item: ScenarioItem,
-  settings: { bgmVolume: number; sfxVolume: number }
+  settings: { bgmVolume: number; sfxVolume: number },
+  _previousItemType?: string
 ): {
   backgroundPath?: string;
   characterImagePaths?: {
@@ -108,8 +109,10 @@ export const processScenarioItem = (
 
   // BGM 재생
   if (item.background_sound_id) {
+    // 특정 BGM이 지정된 경우 해당 BGM 재생
     playBGM(item.background_sound_id, settings.bgmVolume);
   }
+  // background_sound_id가 없으면 BGM을 재생하지 않음 (키보드 소리 구간 등)
 
   // 효과음 재생
   if (item.effect_sound_id) {

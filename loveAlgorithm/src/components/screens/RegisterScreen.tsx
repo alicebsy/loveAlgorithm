@@ -1,101 +1,180 @@
 import { useState } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { useGameStore } from '../../store/gameStore';
-import { register, login } from '../../services/api';
+import { register } from '../../services/api';
+import { ToastManager } from '../ui/ToastManager';
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const float = keyframes`
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+`;
 
 const ScreenContainer = styled.div`
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 15s ease infinite;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
   align-items: center;
-  z-index: 100;
   color: #fff;
+  overflow: hidden;
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: ${float} 20s ease-in-out infinite;
+    pointer-events: none;
+  }
 `;
 
 const RegisterBox = styled.div`
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 16px;
-  padding: 40px;
-  min-width: 400px;
-  max-width: 500px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.15); 
+  padding: 48px 40px; 
+  border-radius: 24px;
+  min-width: 420px; 
+  max-width: 90%;
+  backdrop-filter: blur(20px); 
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  animation: ${fadeIn} 0.6s ease-out;
+  position: relative;
+  z-index: 1;
+
+  @media (max-width: 480px) {
+    min-width: 90%;
+    padding: 32px 24px;
+  }
 `;
 
 const Title = styled.h1`
-  font-size: 43px;
-  margin-bottom: 30px;
   text-align: center;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  font-family: '강원교육모두Bold', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 `;
 
-const FormGroup = styled.div`
+const Subtitle = styled.p`
+  text-align: center;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 32px;
+`;
+
+const InputGroup = styled.div`
+  position: relative;
   margin-bottom: 20px;
 `;
 
-const Label = styled.label`
-  display: block;
-  margin-bottom: 8px;
-  font-size: 17px;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
-`;
-
 const Input = styled.input`
-  width: 100%;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 8px;
-  color: #fff;
-  font-size: 19px;
-  transition: all 0.3s;
-  box-sizing: border-box;
+  width: 100%; 
+  padding: 14px 16px; 
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3); 
+  background: rgba(255, 255, 255, 0.1); 
+  color: white;
+  font-size: 15px;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
 
   &:focus {
     outline: none;
     border-color: rgba(255, 255, 255, 0.6);
     background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
   }
 
-  &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;
 
-const Button = styled.button`
-  width: 100%;
-  padding: 14px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.4);
+const ErrorMessage = styled.div`
+  color: #ff6b6b;
+  font-size: 13px;
+  margin-bottom: 12px;
+  min-height: 20px;
+  padding: 8px 12px;
+  background: rgba(255, 107, 107, 0.1);
   border-radius: 8px;
-  color: #fff;
-  font-size: 19px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  margin-top: 10px;
+  border-left: 3px solid #ff6b6b;
+`;
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.6);
+const SuccessMessage = styled.div`
+  color: #51cf66;
+  font-size: 13px;
+  margin-bottom: 12px;
+  min-height: 20px;
+  padding: 8px 12px;
+  background: rgba(81, 207, 102, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid #51cf66;
+`;
+
+const Button = styled.button`
+  width: 100%; 
+  padding: 14px; 
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  border: none;
+  border-radius: 12px; 
+  color: white; 
+  cursor: pointer; 
+  margin-top: 10px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+
+  &:hover:not(:disabled) {
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.5);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: translateY(0);
   }
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
     transform: none;
   }
@@ -103,188 +182,131 @@ const Button = styled.button`
 
 const SecondaryButton = styled(Button)`
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.3);
-  margin-top: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: none;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
   }
 `;
 
-const ErrorMessage = styled.div`
-  color: #ff6b6b;
-  font-size: 17px;
-  margin-top: 10px;
-  text-align: center;
-  min-height: 20px;
-`;
-
-const SuccessMessage = styled.div`
-  color: #51cf66;
-  font-size: 17px;
-  margin-top: 10px;
-  text-align: center;
-  min-height: 20px;
-`;
-
-const PasswordHint = styled.div`
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 4px;
-`;
-
 export const RegisterScreen = () => {
-  const { setCurrentScreen, showToast, setIsAuthenticated, syncWithBackend } = useGameStore();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [nickname, setNickname] = useState('');
+  const { setCurrentScreen, showToast } = useGameStore();
+  const [formData, setFormData] = useState({ email: '', password: '', nickname: '' });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const validateForm = () => {
-    if (!email || !password || !confirmPassword || !nickname) {
-      setError('모든 필드를 입력해주세요.');
-      return false;
-    }
-
-    if (password.length < 6) {
-      setError('비밀번호는 최소 6자 이상이어야 합니다.');
-      return false;
-    }
-
-    if (password !== confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다.');
-      return false;
-    }
-
-    if (!email.includes('@')) {
-      setError('올바른 이메일 형식이 아닙니다.');
-      return false;
-    }
-
-    return true;
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
-
-    if (!validateForm()) {
+    setLoading(true);
+    
+    if (!formData.email || !formData.password || !formData.nickname) {
+      setError('모든 항목을 입력해주세요.');
+      setLoading(false);
       return;
     }
 
-    setIsLoading(true);
-
-    try {
-      const success = await register(email, password, nickname);
-      if (success) {
-        setSuccess('회원가입이 완료되었습니다. 로그인 중...');
-        
-        // 자동으로 로그인 시도
-        const loginResult = await login(email, password);
-        if (loginResult) {
-          setIsAuthenticated(true);
-          showToast('회원가입 및 로그인 성공!', 'success');
-          
-          // 백엔드에서 사용자 정보 동기화 (syncWithBackend에서 user 정보도 설정됨)
-          try {
-            await syncWithBackend();
-          } catch (syncError) {
-            console.error('Failed to sync with backend:', syncError);
-          }
-          
-          // 메인 화면으로 이동
-          setCurrentScreen('start');
-        } else {
-          setError('회원가입은 완료되었지만 로그인에 실패했습니다. 로그인 화면으로 이동합니다.');
-          setTimeout(() => {
-            setCurrentScreen('login');
-          }, 2000);
-        }
-      } else {
-        setError('회원가입에 실패했습니다. 이미 존재하는 이메일일 수 있습니다.');
-      }
-    } catch (err) {
-      setError('회원가입 중 오류가 발생했습니다.');
-      console.error('Register error:', err);
-    } finally {
-      setIsLoading(false);
+    // 이메일 형식 검증
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('올바른 이메일 형식을 입력해주세요.');
+      setLoading(false);
+      return;
     }
-  };
 
-  const handleBackToLogin = () => {
-    setCurrentScreen('login');
+    // 비밀번호 길이 검증
+    if (formData.password.length < 6) {
+      setError('비밀번호는 최소 6자 이상이어야 합니다.');
+      setLoading(false);
+      return;
+    }
+    
+    try {
+      const result = await register(formData);
+      
+      if (result.success) {
+        setSuccess('회원가입이 완료되었습니다! 로그인해주세요.');
+        showToast('회원가입 성공! 로그인해주세요.', 'success');
+        setTimeout(() => {
+          setCurrentScreen('login');
+        }, 1500);
+      } else {
+        setError(result.message || '회원가입에 실패했습니다.');
+      }
+    } catch (err: any) {
+      console.error('회원가입 에러:', err);
+      setError(err.message || '서버 연결 실패');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <ScreenContainer>
       <RegisterBox>
         <Title>회원가입</Title>
+        <Subtitle>새로운 계정을 만들어보세요</Subtitle>
+        
         <form onSubmit={handleRegister}>
-          <FormGroup>
-            <Label htmlFor="nickname">닉네임</Label>
-            <Input
-              id="nickname"
-              type="text"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              placeholder="닉네임을 입력하세요"
-              required
-              disabled={isLoading}
+          <InputGroup>
+            <Input 
+              type="text" 
+              placeholder="닉네임을 입력하세요" 
+              value={formData.nickname}
+              onChange={e => setFormData({...formData, nickname: e.target.value})}
+              disabled={loading}
             />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="email">이메일</Label>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="이메일을 입력하세요"
-              required
-              disabled={isLoading}
+          </InputGroup>
+
+          <InputGroup>
+            <Input 
+              type="email" 
+              placeholder="이메일을 입력하세요" 
+              value={formData.email}
+              onChange={e => setFormData({...formData, email: e.target.value})}
+              disabled={loading}
             />
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="password">비밀번호</Label>
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="비밀번호를 입력하세요"
-              required
-              disabled={isLoading}
+          </InputGroup>
+
+          <InputGroup>
+            <Input 
+              type="password" 
+              placeholder="비밀번호를 입력하세요 (최소 6자)" 
+              value={formData.password}
+              onChange={e => setFormData({...formData, password: e.target.value})}
+              disabled={loading}
             />
-            <PasswordHint>최소 6자 이상 입력해주세요</PasswordHint>
-          </FormGroup>
-          <FormGroup>
-            <Label htmlFor="confirmPassword">비밀번호 확인</Label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="비밀번호를 다시 입력하세요"
-              required
-              disabled={isLoading}
-            />
-          </FormGroup>
-          <ErrorMessage>{error}</ErrorMessage>
-          <SuccessMessage>{success}</SuccessMessage>
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? '가입 중...' : '회원가입'}
+          </InputGroup>
+
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          {success && <SuccessMessage>{success}</SuccessMessage>}
+
+          <Button type="submit" disabled={loading}>
+            {loading ? (
+              <>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="2" strokeDasharray="43.98" strokeDashoffset="10" strokeLinecap="round">
+                    <animate attributeName="stroke-dasharray" values="0 43.98;21.99 21.99;0 43.98" dur="1.5s" repeatCount="indefinite"/>
+                    <animate attributeName="stroke-dashoffset" values="0;-10.99;-21.99" dur="1.5s" repeatCount="indefinite"/>
+                  </circle>
+                </svg>
+                가입 중...
+              </>
+            ) : (
+              '가입하기'
+            )}
           </Button>
         </form>
-        <SecondaryButton onClick={handleBackToLogin} disabled={isLoading}>
+
+        <SecondaryButton onClick={() => setCurrentScreen('login')} disabled={loading}>
           로그인으로 돌아가기
         </SecondaryButton>
       </RegisterBox>
+      <ToastManager />
     </ScreenContainer>
   );
 };
-
-

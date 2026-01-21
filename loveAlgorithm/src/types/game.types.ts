@@ -90,7 +90,8 @@ export interface GameState {
 }
 
 export interface SaveSlot {
-  id: string;
+  id?: string;
+  slotIndex?: number; // 백엔드에서 사용하는 슬롯 인덱스 (0~N)
   timestamp: number;
   preview: string;
   gameState: GameState;
@@ -104,7 +105,7 @@ export interface Settings {
   textSpeed: number; // 0-100
 }
 
-export type ScreenType = 'login' | 'register' | 'start' | 'game' | 'saveLoad' | 'settings';
+export type ScreenType = 'login' | 'register' | 'start' | 'game' | 'saveLoad' | 'settings' | 'debug';
 
 // API 응답 타입
 export interface ApiResponse<T> {

@@ -1,4 +1,4 @@
-import type { Scene, Dialogue } from '../types/game.types';
+import type { Scene, Dialogue, GameEvent } from '../types/game.types';
 import { fetchGameScript } from './api';
 import { gameScript as localScript } from '../data/script';
 
@@ -6,6 +6,38 @@ import { gameScript as localScript } from '../data/script';
 let scriptCache: Record<string, Scene> | null = null;
 let isLoading = false;
 let loadPromise: Promise<Record<string, Scene>> | null = null;
+
+/**
+ * GameEvent를 Scene으로 변환하는 헬퍼 함수
+ */
+const convertGameEventToScene = (events: Record<string, GameEvent>): Record<string, Scene> => {
+  const scenes: Record<string, Scene> = {};
+  for (const [sceneId, event] of Object.entries(events)) {
+    scenes[sceneId] = {
+      id: sceneId,
+      dialogues: event.scenario.map((item, index) => ({
+        id: item.id || `${sceneId}_${index}`,
+        text: item.script,
+        character: item.character_id,
+        background: item.background_image_id,
+        characterImage: item.character_image_id ? 
+          (typeof item.character_image_id === 'object' ? 
+            (item.character_image_id[2] || item.character_image_id.all || '') : 
+            item.character_image_id) : 
+          undefined,
+        bgm: item.background_sound_id,
+        sfx: item.effect_sound_id,
+        choices: item.options?.map(opt => ({
+          id: opt.id || '',
+          text: opt.text || '',
+          nextSceneId: opt.nextSceneId,
+          score_list: opt.score_list || [],
+        })),
+      })),
+    };
+  }
+  return scenes;
+};
 
 /**
  * 스크립트 데이터를 로드합니다.
@@ -25,10 +57,10 @@ export const loadScript = async (): Promise<Record<string, Scene>> => {
   isLoading = true;
 
   try {
-    // 모킹 모드 또는 백엔드 모드 모두 fetchGameScript 사용
-    // fetchGameScript 내부에서 모드에 따라 분기 처리
-    loadPromise = fetchGameScript();
-    scriptCache = await loadPromise;
+    // fetchGameScript는 GameEvent를 반환하므로 Scene으로 변환 필요
+    const gameEvents = await fetchGameScript();
+    scriptCache = convertGameEventToScene(gameEvents);
+    loadPromise = Promise.resolve(scriptCache);
 
     return scriptCache;
   } catch (error) {

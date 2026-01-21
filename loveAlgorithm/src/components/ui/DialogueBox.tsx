@@ -7,10 +7,12 @@ interface DialogueBoxProps {
   scenarioType?: ScenarioType;
   isTyping: boolean;
   onNext: () => void;
+  onPrevious?: () => void; // 이전 화면으로 돌아가기
   onChoiceSelect?: (choiceId: string) => void;
   textSpeed?: number; // 0-100, 높을수록 빠름
   onNameInput?: (name: string) => void; // 이름 입력 콜백
   defaultName?: string; // 기본 이름
+  canGoBack?: boolean; // 이전으로 돌아갈 수 있는지 여부
 }
 
 const DialogueContainer = styled.div`
@@ -173,6 +175,7 @@ const NextIndicator = styled.div`
   font-size: 14px;
   color: #999;
   animation: bounce 1s infinite;
+  cursor: pointer;
   
   @keyframes bounce {
     0%, 100% { transform: translateY(0); }
@@ -180,10 +183,10 @@ const NextIndicator = styled.div`
   }
 `;
 
-export const DialogueBox = ({ dialogue, scenarioType, isTyping, onNext, onChoiceSelect, textSpeed = 50, onNameInput, defaultName = '이도훈' }: DialogueBoxProps) => {
+export const DialogueBox = ({ dialogue, scenarioType, isTyping, onNext, onPrevious: _onPrevious, onChoiceSelect: _onChoiceSelect, textSpeed = 50, onNameInput, defaultName: _defaultName = '', canGoBack: _canGoBack = true }: DialogueBoxProps) => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [inputName, setInputName] = useState(defaultName);
+  const [inputName, setInputName] = useState('');
   const prevDialogueIdRef = useRef<string | null>(null);
   const isInputMode = scenarioType === 'input';
 
@@ -195,8 +198,8 @@ export const DialogueBox = ({ dialogue, scenarioType, isTyping, onNext, onChoice
   const dialogueChanged = prevDialogueIdRef.current !== currentDialogueId;
   
   // 렌더링 시점에 표시할 텍스트 결정 (가장 먼저 계산)
-  // 대화가 변경되었거나, 타이핑이 시작되지 않았고 currentIndex가 0이면 빈 문자열
-  const safeDisplayText = (dialogueChanged || (!isTyping && currentIndex === 0 && !isInputMode)) ? '' : displayedText;
+  // 입력 모드면 즉시 표시, 아니면 displayedText 사용
+  const safeDisplayText = isInputMode ? dialogue.text : displayedText;
   
   // 대화가 변경되면 즉시 상태 초기화 (동기적으로)
   if (dialogueChanged) {
@@ -211,11 +214,14 @@ export const DialogueBox = ({ dialogue, scenarioType, isTyping, onNext, onChoice
   // 대화가 변경되면 타이핑 효과 초기화
   useEffect(() => {
     if (dialogueChanged) {
-      if (isInputMode && defaultName) {
-        setInputName(defaultName);
+      setDisplayedText('');
+      setCurrentIndex(0);
+      prevDialogueIdRef.current = currentDialogueId;
+      if (isInputMode) {
+        setInputName(''); // 입력 모드일 때 빈 문자열로 초기화
       }
     }
-  }, [currentDialogueId, dialogueChanged, isInputMode, defaultName]);
+  }, [currentDialogueId, dialogueChanged, isInputMode]);
 
   // 한 글자씩 타이핑 효과
   useEffect(() => {
@@ -226,13 +232,19 @@ export const DialogueBox = ({ dialogue, scenarioType, isTyping, onNext, onChoice
       return;
     }
 
-    // 대화가 변경되었고 타이핑이 시작되지 않았으면 빈 텍스트 유지
-    if (currentIndex === 0 && !isTyping) {
+    // 대화가 변경되었을 때 초기화
+    if (dialogueChanged) {
       setDisplayedText('');
+      setCurrentIndex(0);
+      // 타이핑이 시작되면 즉시 첫 글자 표시
+      if (isTyping && dialogue.text.length > 0) {
+        setDisplayedText(dialogue.text[0]);
+        setCurrentIndex(1);
+      }
       return;
     }
 
-    // 타이핑이 시작되지 않았으면 항상 빈 텍스트 유지
+    // 타이핑이 시작되지 않았으면 빈 텍스트 유지
     if (!isTyping) {
       if (currentIndex === 0) {
         setDisplayedText('');
@@ -262,7 +274,7 @@ export const DialogueBox = ({ dialogue, scenarioType, isTyping, onNext, onChoice
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [currentIndex, isTyping, dialogue.text, dialogue.id, textSpeed, isInputMode, displayedText]);
+  }, [currentIndex, isTyping, dialogue.text, dialogue.id, textSpeed, isInputMode, dialogueChanged]);
 
   const hasChoices = dialogue.choices && dialogue.choices.length > 0;
   const displayName = () => {
@@ -274,7 +286,14 @@ export const DialogueBox = ({ dialogue, scenarioType, isTyping, onNext, onChoice
   };
 
   const handleClick = () => {
-    if (isInputMode) return; // 입력 모드일 때는 클릭 무시
+    // 입력 모드일 때는 클릭 완전히 차단 (이름 입력 필수)
+    if (isInputMode) {
+      // 이름이 입력되지 않았으면 경고 메시지
+      if (!inputName.trim()) {
+        alert('이름을 입력해주세요.');
+      }
+      return;
+    }
     
     if (isTyping && currentIndex < dialogue.text.length) {
       // 타이핑 중이면 즉시 완료
@@ -286,8 +305,14 @@ export const DialogueBox = ({ dialogue, scenarioType, isTyping, onNext, onChoice
   };
 
   const handleNameSubmit = () => {
-    if (inputName.trim() && onNameInput) {
-      onNameInput(inputName.trim());
+    const trimmedName = inputName.trim();
+    if (!trimmedName) {
+      // 이름이 비어있으면 경고 메시지 표시 (또는 토스트)
+      alert('이름을 입력해주세요.');
+      return;
+    }
+    if (onNameInput) {
+      onNameInput(trimmedName);
       onNext();
     }
   };
@@ -321,16 +346,27 @@ export const DialogueBox = ({ dialogue, scenarioType, isTyping, onNext, onChoice
                 value={inputName}
                 onChange={(e) => setInputName(e.target.value)}
                 onKeyPress={handleNameKeyPress}
-                placeholder="이름을 입력하세요"
+                placeholder="이름을 입력하세요 (성 포함)"
                 maxLength={20}
                 autoFocus
+                required
               />
             )}
           </div>
         </DialogueTextContainer>
-        {!hasChoices && !isInputMode && currentIndex >= dialogue.text.length && <NextIndicator>▶ 다음</NextIndicator>}
+        {!hasChoices && !isInputMode && currentIndex >= dialogue.text.length && (
+          <NextIndicator onClick={onNext}>▶ 다음</NextIndicator>
+        )}
         {isInputMode && (
-          <NextIndicator onClick={handleNameSubmit} style={{ cursor: 'pointer' }}>▶ 확인</NextIndicator>
+          <NextIndicator 
+            onClick={handleNameSubmit} 
+            style={{ 
+              cursor: inputName.trim() ? 'pointer' : 'not-allowed',
+              opacity: inputName.trim() ? 1 : 0.5
+            }}
+          >
+            ▶ 확인
+          </NextIndicator>
         )}
         <BottomBar />
       </DialogueContainer>

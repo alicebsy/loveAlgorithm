@@ -123,6 +123,8 @@ export const SungsimdangGame = ({ onWin, onLose }: SungsimdangGameProps) => {
   const gameLoopRef = useRef<number | null>(null);
   const directionRef = useRef<Direction>('UP');
   const foodRef = useRef<Position | null>(null);
+  const isGameOverRef = useRef<boolean>(false);
+  const speedRef = useRef<number>(INITIAL_SPEED);
 
   // 초기 스네이크 생성 (가운데에서 랜덤 방향으로)
   const initializeSnake = useCallback(() => {
@@ -197,7 +199,8 @@ export const SungsimdangGame = ({ onWin, onLose }: SungsimdangGameProps) => {
   // 게임 루프
   const gameLoop = useCallback(() => {
     setSnake((currentSnake) => {
-      if (currentSnake.length === 0 || isGameOver) return currentSnake;
+      // isGameOver 상태를 직접 체크하지 않고 ref로 확인
+      if (currentSnake.length === 0) return currentSnake;
       
       const currentDir = directionRef.current;
       const head = currentSnake[0];
@@ -221,6 +224,7 @@ export const SungsimdangGame = ({ onWin, onLose }: SungsimdangGameProps) => {
       
       // 충돌 확인
       if (checkCollision(newHead, currentSnake)) {
+        isGameOverRef.current = true;
         setIsGameOver(true);
         setGameMessage('패배!');
         setTimeout(() => onLose(), 1500);
@@ -240,6 +244,7 @@ export const SungsimdangGame = ({ onWin, onLose }: SungsimdangGameProps) => {
         setBreadCount((prev) => {
           const newCount = prev + 1;
           if (newCount >= TARGET_BREAD) {
+            isGameOverRef.current = true;
             setIsGameOver(true);
             setGameMessage('승리!');
             setTimeout(() => onWin(), 1500);
@@ -260,7 +265,7 @@ export const SungsimdangGame = ({ onWin, onLose }: SungsimdangGameProps) => {
       
       return newSnake;
     });
-  }, [isGameOver, checkCollision, generateFood, onWin, onLose]);
+  }, [checkCollision, generateFood, onWin, onLose]);
 
   // 키보드 입력 처리
   useEffect(() => {
@@ -324,9 +329,20 @@ export const SungsimdangGame = ({ onWin, onLose }: SungsimdangGameProps) => {
     foodRef.current = food;
   }, [food]);
 
+  // isGameOver ref 동기화
+  useEffect(() => {
+    isGameOverRef.current = isGameOver;
+  }, [isGameOver]);
+
+  // speed ref 동기화
+  useEffect(() => {
+    speedRef.current = speed;
+  }, [speed]);
+
   // 게임 루프 시작
   useEffect(() => {
-    if (isGameOver || snake.length === 0) {
+    // 게임 준비 조건: 스네이크가 있고, 빵이 있고, 게임이 끝나지 않았을 때
+    if (snake.length === 0 || !food || isGameOver) {
       if (gameLoopRef.current) {
         clearInterval(gameLoopRef.current);
         gameLoopRef.current = null;
@@ -337,11 +353,14 @@ export const SungsimdangGame = ({ onWin, onLose }: SungsimdangGameProps) => {
     // 기존 interval 정리
     if (gameLoopRef.current) {
       clearInterval(gameLoopRef.current);
+      gameLoopRef.current = null;
     }
     
-    // 새 interval 시작
-    gameLoopRef.current = setInterval(() => {
-      gameLoop();
+    // 새 interval 시작 (speed가 변경될 때마다 재시작)
+    gameLoopRef.current = window.setInterval(() => {
+      if (!isGameOverRef.current) {
+        gameLoop();
+      }
     }, speed);
     
     return () => {
@@ -350,7 +369,7 @@ export const SungsimdangGame = ({ onWin, onLose }: SungsimdangGameProps) => {
         gameLoopRef.current = null;
       }
     };
-  }, [speed, gameLoop, isGameOver]);
+  }, [speed, gameLoop, isGameOver, snake.length, food]);
 
   // 스네이크 위치 Set 메모이제이션 (snake가 변경될 때만 재계산)
   const snakeSet = useMemo(() => {

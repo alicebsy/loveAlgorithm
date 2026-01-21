@@ -18,16 +18,16 @@ const CharacterContainer = styled.div<{ $location: 1 | 2 | 3 }>`
 
   ${(props) => {
     if (props.$location === 1) {
-      // 왼쪽
+      // 왼쪽 - 간격 줄이기 (25% → 20%)
       return `
-        left: 15%;
+        left: 20%;
         transform: translateX(-50%);
         justify-content: center;
       `;
     } else if (props.$location === 3) {
-      // 오른쪽
+      // 오른쪽 - 간격 줄이기 (25% → 20%)
       return `
-        right: 15%;
+        right: 20%;
         transform: translateX(50%);
         justify-content: center;
       `;

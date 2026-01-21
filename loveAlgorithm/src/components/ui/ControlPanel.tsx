@@ -3,11 +3,12 @@ import styled from 'styled-components';
 interface ControlPanelProps {
   onSave: () => void;
   onLoad: () => void;
-  onSkip: () => void;
   onNext: () => void;
+  onPrevious?: () => void; // 이전 화면으로 돌아가기
   onSettings: () => void;
   onMainMenu: () => void;
-  skipMode: boolean;
+  isInputMode?: boolean; // 입력 모드 여부
+  canGoBack?: boolean; // 이전으로 돌아갈 수 있는지 여부
 }
 
 const PanelContainer = styled.div`
@@ -41,14 +42,7 @@ const Button = styled.button`
   }
 `;
 
-const SkipButton = styled(Button)<{ $active: boolean }>`
-  ${(props) =>
-    props.$active &&
-    `
-    background: rgba(255, 215, 0, 0.3);
-    border-color: #ffd700;
-  `}
-`;
+// SkipButton는 사용되지 않으므로 제거
 
 const HotkeyHint = styled.span`
   font-size: 13px;
@@ -66,10 +60,22 @@ const MainMenuButton = styled(Button)`
   }
 `;
 
-export const ControlPanel = ({ onSave, onLoad, onSkip, onNext, onSettings, onMainMenu, skipMode }: ControlPanelProps) => {
+export const ControlPanel = ({ onSave, onLoad, onNext, onPrevious, onSettings, onMainMenu, isInputMode = false, canGoBack = false }: ControlPanelProps) => {
   return (
     <PanelContainer>
-      <Button onClick={onNext}>
+      {canGoBack && onPrevious && (
+        <Button onClick={onPrevious}>
+          ◀ 이전
+        </Button>
+      )}
+      <Button 
+        onClick={onNext}
+        style={{
+          opacity: isInputMode ? 0.5 : 1,
+          cursor: isInputMode ? 'not-allowed' : 'pointer'
+        }}
+        disabled={isInputMode}
+      >
         다음<HotkeyHint>(Space)</HotkeyHint>
       </Button>
       <Button onClick={onSave}>
@@ -78,9 +84,6 @@ export const ControlPanel = ({ onSave, onLoad, onSkip, onNext, onSettings, onMai
       <Button onClick={onLoad}>
         불러오기<HotkeyHint>(Ctrl+L)</HotkeyHint>
       </Button>
-      <SkipButton onClick={onSkip} $active={skipMode}>
-        스킵<HotkeyHint>(K)</HotkeyHint>
-      </SkipButton>
       <Button onClick={onSettings}>
         설정<HotkeyHint>(ESC)</HotkeyHint>
       </Button>

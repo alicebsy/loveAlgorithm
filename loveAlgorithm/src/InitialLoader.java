@@ -1,0 +1,610 @@
+package com.madcamp.love_algorithm.loader;
+
+import com.madcamp.love_algorithm.entity.*;
+import com.madcamp.love_algorithm.repository.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import com.madcamp.love_algorithm.repository.UserRepository;
+
+@Component
+@RequiredArgsConstructor
+public class InitialLoader implements CommandLineRunner {
+
+    private final SceneRepository sceneRepository;
+    private final ScriptRepository scriptRepository;
+    private final UserRepository userRepository;
+    private final OptionRepository optionRepository;
+
+
+    @Override
+//    @Transactional
+    public void run(String... args) throws Exception {
+
+        // 1. 기존 데이터 초기화
+        optionRepository.deleteAll();
+        scriptRepository.deleteAll();
+        sceneRepository.deleteAll();
+        userRepository.deleteAll();
+
+        // 2. 테스트용 유저 생성 (로그인 없이 테스트하기 위함)
+        User testUser = User.builder()
+                .name("도훈") // 이제 setName이 아니라 Builder나 setName 사용 가능
+                .createdAt(LocalDateTime.now())
+                .build();
+        userRepository.save(testUser);
+        userRepository.deleteAll();
+
+        System.out.println(">>> 테스트 유저 생성 완료: ID=" + testUser.getId() + ", 이름=" + testUser.getName());
+
+
+        // 2. 주차별 데이터 로딩
+        loadChapter1();
+        loadChapter2();
+    }
+
+    // ==========================================
+    // [Chapter 1] 1주차 데이터 로딩
+    // ==========================================
+    private void loadChapter1() {
+        List<Scene> scenes = new ArrayList<>();
+        List<Script> scripts = new ArrayList<>();
+
+        // ------------------------------------------------------
+        // 1. Scene 생성
+        // ------------------------------------------------------
+        Scene s1_1 = createScene("chapter1_scene1", "chapter1", 1, "합격 통보", "chapter1_scene2");
+        Scene s1_2 = createScene("chapter1_scene2", "chapter1", 2, "지수와의 만남", "chapter1_scene3");
+        Scene s1_3 = createScene("chapter1_scene3", "chapter1", 3, "강의실", "chapter1_scene4_intro");
+        Scene s1_4_intro = createScene("chapter1_scene4_intro", "chapter1", 4, "회식 시작", null);
+        Scene s1_4_sol = createScene("chapter1_scene4_reaction_sol", "chapter1", 4, "솔의눈 선택", "chapter1_scene4_table");
+        Scene s1_4_drink = createScene("chapter1_scene4_reaction_drink", "chapter1", 4, "숙취해소제 선택", "chapter1_scene4_table");
+        Scene s1_4_milk = createScene("chapter1_scene4_reaction_milk", "chapter1", 4, "초코우유 선택", "chapter1_scene4_table");
+        Scene s1_4_table = createScene("chapter1_scene4_table", "chapter1", 4, "편의점 앞 테이블 대화", "chapter1_scene4_outro");
+        Scene s1_4_outro = createScene("chapter1_scene4_outro", "chapter1", 4, "편의점 이후", null);
+        Scene s1_5_party = createScene("chapter1_scene5_party", "chapter1", 5, "2차를 간다 - 파티", "chapter1_scene5_debug");
+        Scene s1_5_party_win = createScene("chapter1_scene5_party_win", "chapter1", 5, "미니게임 승리 후", "chapter1_scene5_debug");
+        Scene ending_scene1 = createScene("ending_scene1", "chapter1", 99, "BAD ENDING", null);
+        Scene s1_5_dorm = createScene("chapter1_scene5_dorm", "chapter1", 5, "2차를 안 간다 - 기숙사", "chapter1_scene5_debug");
+        Scene s1_5_debug = createScene("chapter1_scene5_debug", "chapter1", 5, "구세주", "chapter1_scene6_commit");
+        Scene s1_6_commit = createScene("chapter1_scene6_commit", "chapter1", 6, "결과 발표", "chapter2_scene1");
+
+        scenes.addAll(List.of(s1_1, s1_2, s1_3, s1_4_intro, s1_4_sol, s1_4_drink, s1_4_milk, s1_4_table, s1_4_outro,
+                s1_5_party, s1_5_party_win, ending_scene1, s1_5_dorm, s1_5_debug, s1_6_commit));
+        sceneRepository.saveAll(scenes);
+        sceneRepository.flush();
+
+        // ------------------------------------------------------
+        // 2. Script 데이터 생성 (대본)
+        // ------------------------------------------------------
+
+        // --- Scene 1-1: 합격 통보 ---
+        scripts.add(createScript(s1_1, 0, ScriptType.전환, null, "week1: init()", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_1, 1, ScriptType.NARRATION, null, "📧 [합격 메일]이 도착했습니다.", "dohoon_room.png", null, "alert", null, null));
+        scripts.add(createScript(s1_1, 2, ScriptType.NARRATION, null, "모니터 화면에 \"제 14회 KAIST 몰입캠프 합격\"이라는 글자가 떠 있다.", "dohoon_room_monitor.png", null, null, null, null));
+        scripts.add(createScript(s1_1, 3, ScriptType.THINK, "hero", "휴, 다행이다. 이번 방학은 헛되이 보내지 않겠어.", null, null, null, null, null));
+        scripts.add(createScript(s1_1, 4, ScriptType.THINK, "hero", "내 목표는 오로지 하나. 코딩 실력 향상.", null, null, null, null, null));
+        scripts.add(createScript(s1_1, 5, ScriptType.THINK, "hero", "연애? 그런 비효율적인 프로세스는 내 메모리에 할당하지 않는다.", null, null, null, null, null));
+        scripts.add(createScript(s1_1, 6, ScriptType.THINK, "hero", "남들에게 피해 안 주고, 조용히 알고리즘이나 깎다가 오는 거야. 완벽해.", null, null, null, null, null));
+        scripts.add(createScript(s1_1, 7, ScriptType.TEXT, null, "카톡이 울린다.", null, null, null, "kakao_alert", null));
+        scripts.add(createScript(s1_1, 8, ScriptType.KAKAO, "manager", "[message]안녕하세요! 2분반 여러분 환영합니다. 내일 오전 11시까지 카이마루(북측 식당) 앞으로 모여주세요!", null, null, null, null, null));
+        scripts.add(createScript(s1_1, 9, ScriptType.THINK, "hero", "내일 11시 집합이라... 일찍 자고 일찍 일어나야 겠다", "dohoon_room.png", null, null, null, null));
+
+        // --- Scene 1-2: 지수와의 만남 ---
+        scripts.add(createScript(s1_2, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_2, 1, ScriptType.THINK, "hero", "11시 집합인데 긴장해서 10시에 와버렸다. TimeLimit 설정을 너무 넉넉하게 잡았나.", "kaimaru_front.png", null, "morning_ambience", null, null));
+        scripts.add(createScript(s1_2, 2, ScriptType.THINK, "hero", "아는 사람 마주치면 피곤한데... 일단 안으로 들어가자.", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 3, ScriptType.NARRATION, null, "그때, 뒤에서 누군가 나를 부른다", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 4, ScriptType.TEXT, "jisoo", "저기요! 학생증 떨어뜨리셨어요!", null, "{\"2\":\"jisoo_hello.png\"}", null, null, null));
+        scripts.add(createScript(s1_2, 5, ScriptType.INPUT, null, "학생증에 적힐 이름을 입력하세요:", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 6, ScriptType.TEXT, "jisoo", "여기요, 이도훈 님? 어! 혹시 몰입캠프 오셨어요?", null, "{\"2\":\"jisoo_smile.png\"}", null, null, null));
+        scripts.add(createScript(s1_2, 7, ScriptType.TEXT, "hero", "아... 네, 감사합니다.", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 8, ScriptType.TEXT, "jisoo", "와 대박! 저돈데! 전 1분반 한지수예요. 반갑습니당!", null, "{\"2\":\"jisoo_smile.png\"}", null, null, null));
+        scripts.add(createScript(s1_2, 9, ScriptType.TEXT, "jisoo", "근데 몇 살이세요?", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 10, ScriptType.TEXT, "hero", "스물넷입니다.", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 11, ScriptType.TEXT, "jisoo", "아, 오빠네! 저 스물하나예요. 말 놔도 되죠? 오빠 안녕!", null, "{\"2\":\"jisoo_hello.png\"}", null, null, null));
+        scripts.add(createScript(s1_2, 12, ScriptType.THINK, "hero", "오... 오빠? 만난 지 1분 만에 반말 모드 활성화라고?", null, null, null, "shock", null));
+        scripts.add(createScript(s1_2, 13, ScriptType.THINK, "hero", "이 친화력은 뭐지? 혹시... 나한테 관심 있나?", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 14, ScriptType.THINK, "hero", "이성적인 호감이 아니고서야 이렇게 급발진할 리가...", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 15, ScriptType.TEXT, "jisoo", "(깔깔 웃으며) 뭐야, 오빠 왜 이렇게 당황해? 귀엽게 ㅋㅋㅋ", null, "{\"2\":\"jisoo_smile.png\"}", null, null, null));
+        scripts.add(createScript(s1_2, 16, ScriptType.THINK, "hero", "'귀엽다'까지 나왔다. 이건 True다. 내 인생에도 봄날이...", null, null, "romantic", null, null));
+        scripts.add(createScript(s1_2, 17, ScriptType.NARRATION, null, "그때, 문이 열리고 다른 학생들이 우르르 들어온다", null, null, "noise", null, null));
+        scripts.add(createScript(s1_2, 18, ScriptType.TEXT, "jisoo", "(도훈을 지나쳐 뛰어가며) 어!! 안녕하세요~! 몰입캠프시죠? 여기예요 여기!", null, "{\"2\":\"jisoo_hello.png\"}", null, null, null));
+        scripts.add(createScript(s1_2, 19, ScriptType.TEXT, "jisoo", "와, 짐 무겁죠? 제가 들어드릴까요? 저 1분반 한지수예요! 말 놔도 되죠?!", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 20, ScriptType.THINK, "hero", "...아. Unicast가 아니라 Broadcast였구나.", null, null, "comical_fail", null, null));
+        scripts.add(createScript(s1_2, 21, ScriptType.THINK, "hero", "나한테만 보낸 패킷이 아니었어.", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 22, ScriptType.THINK, "hero", "그래, 나랑은 다른 세상 사람이다. 기대하지 말자.", null, null, null, null, null));
+        scripts.add(createScript(s1_2, 23, ScriptType.시스템, null, "Expectation = Null", null, null, null, null, null));
+
+        // --- Scene 1-3: 도희와의 만남 (짝꿍) ---
+        scripts.add(createScript(s1_3, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_3, 1, ScriptType.THINK, "hero", "오후 2시 20분. 강의실에 사람들이 많이 있다.", "classroom_dohee.png", "{\"2\":\"nobody\"}", "typing_noise", null, null));
+        scripts.add(createScript(s1_3, 2, ScriptType.THINK, "hero", "내 앞자리에 후드티를 푹 눌러쓴 여자가 앉아있다. 주변 온도가 2도는 낮아 보인다.", null, null, null, null, null));
+        scripts.add(createScript(s1_3, 3, ScriptType.THINK, "hero", "저분은... 포스가 장난 아닌데. 접근 금지(`Access Denied`) 구역이다.", null, null, null, null, null));
+        scripts.add(createScript(s1_3, 4, ScriptType.THINK, "hero", "어?... [솔의 눈]?", "dohee_can_closeup.png", null, null, null, null));
+        scripts.add(createScript(s1_3, 5, ScriptType.TEXT, "myeongseong", "(뒤에서 소근소근) 야, 동휘야. 저기 앞자리 여자분 혼자 계시는데 말 걸어볼까? 예쁘실 것 같은데.", "classroom.png", "{\"2\":\"dohee_access_denied.png\"}", null, null, null));
+        scripts.add(createScript(s1_3, 6, ScriptType.TEXT, "donghwi", "미쳤냐? 딱 봐도 건드리면 문다. 그냥 앞이나 봐.", null, null, null, null, null));
+        scripts.add(createScript(s1_3, 7, ScriptType.TEXT, "manager", "자~ 이제 1주차 짝꿍 배정하겠습니다!", "classroom_back.png", "{\"2\":\"성준.png\"}", null, null, null));
+        scripts.add(createScript(s1_3, 8, ScriptType.TEXT, "manager", "이도훈 님은... 탁한진 님!", null, null, null, null, null));
+        scripts.add(createScript(s1_3, 9, ScriptType.THINK, "hero", "휴, 다행이다. 저 앞자리 분이랑만 안 걸리면 돼.", null, null, null, null, null));
+        scripts.add(createScript(s1_3, 10, ScriptType.TEXT, "hanjin", "(다크서클 가득한 눈으로) ...안녕하세요. 저희 안드로이드 스튜디오 쓰죠?", null, "{\"2\":\"아무개.png\"}", null, null, null));
+        scripts.add(createScript(s1_3, 11, ScriptType.TEXT, "hanjin", "전 백엔드 짤 테니까 그쪽이 UI 하실래요?", null, null, null, null, null));
+        scripts.add(createScript(s1_3, 12, ScriptType.TEXT, "hero", "아, 네. 일단 기획부터 하시죠", null, null, null, null, null));
+        scripts.add(createScript(s1_3, 13, ScriptType.THINK, "hero", "그렇게 남자 둘의 칙칙한 코딩이 시작되었다.", null, null, null, null, null));
+
+        // --- Scene 1-4 Intro: 회식 & 편의점 ---
+        scripts.add(createScript(s1_4_intro, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_4_intro, 1, ScriptType.TEXT, "manager", "여러분! 코딩하느라 힘드시죠? 오늘 회식입니다! 다들 나오세요!", "classroom_back.png", "{\"2\":\"성준.png\"}", "party_noise", null, null));
+        scripts.add(createScript(s1_4_intro, 2, ScriptType.THINK, "hero", "아... 귀찮은데. `Skip` 버튼 없나. 그냥 대충 먹고 가야겠다.", null, "{\"2\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_4_intro, 3, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_4_intro, 4, ScriptType.NARRATION, null, "(시간 경과. 시끌벅적한 술자리)", "restaurant_inside.png", null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 5, ScriptType.THINK, "hero", "할 얘기도 다 떨어졌고, 기 빨린다. 슬슬 탈출각을...", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 6, ScriptType.TEXT, "manager", "자자! 분위기 전환 겸 자리 한 번 섞겠습니다! 카톡방에서 제비뽑기 확인하세요!", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 7, ScriptType.KAKAO, "manager", "[뽑기_시작]팀 나누기가 시작됐어요", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 8, ScriptType.KAKAO, "hero", "[뽑기]나의 팀은 4팀입니다.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 9, ScriptType.KAKAO, "dohee", "[뽑기]나의 팀은 4팀입니다.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 10, ScriptType.THINK, "hero", "...망했다. 어제 그 '솔의 눈' 그녀다.", null, "{\"2\":\"dohee_access_denied.png\"}", null, null, null));
+        scripts.add(createScript(s1_4_intro, 11, ScriptType.THINK, "hero", "모자 벗으니까... 꽤 예쁘네. 아니, 예쁜 정도가 아닌데?", null, "{\"2\":\"dohee_basic\"}", null, null, null));
+        scripts.add(createScript(s1_4_intro, 12, ScriptType.THINK, "hero", "하지만 표정이 '말 걸면 죽임'이다.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 13, ScriptType.THINK, "hero", "그래, 없는 사람 취급해 주는 게 최고의 배려다. `Invisible` 모드 유지.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 14, ScriptType.NARRATION, null, "(주변 남자들이 도희에게 몰려든다)", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 15, ScriptType.TEXT, "myeongseong", "도희 님! 술 잘 못하시죠? 여기 초코우유 사 왔어요!", null, "{\"2\":\"dohee_boring.png\"}", null, null, null));
+        scripts.add(createScript(s1_4_intro, 16, ScriptType.TEXT, "donghwi", "여대생들은 이런 거 좋아하신다면서요? 달달한 거 드세요!", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 17, ScriptType.TEXT, "dohee", "(작게 한숨을 쉬며) ...아, 네. 감사합니다.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 18, ScriptType.NARRATION, null, "(초코우유를 구석으로 밀어둔다)", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 19, ScriptType.THINK, "hero", "엄청 귀찮아 보이네.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 20, ScriptType.THINK, "hero", "표정을 보니 단 건 질색인 눈치인데... 다들 헛다리 짚고 있군.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 21, ScriptType.NARRATION, null, "도희가 자리에서 일어난다", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 22, ScriptType.TEXT, "dohee", "화장실 좀 다녀올게요.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 23, ScriptType.THINK, "hero", "나도 이틈에 바람이나 좀 쐬고 와야겠다.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 24, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_4_intro, 25, ScriptType.THINK, "hero", "저기 편의점에 가야겠다", "convenience_store_outside.png", null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 26, ScriptType.TEXT, "dohee", "...너 도훈이라고 했나?", null, "{\"2\":\"dohee_basic\"}", null, null, null));
+        scripts.add(createScript(s1_4_intro, 27, ScriptType.THINK, "hero", "깜짝이야! 고도희?", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 28, ScriptType.TEXT, "hero", "어... 네.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 29, ScriptType.TEXT, "dohee", "안 들어가고 뭐 해? 나 편의점 갈 건데 같이 갈래?", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 30, ScriptType.TEXT, "hero", "(엉겁결에) 아, 네.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 31, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_4_intro, 32, ScriptType.THINK, "hero", "도희가 계산대 앞에 섰다.", "convenience_store_inside.png", "{\"2\":\"dohee_basic\"}", null, null, null));
+        scripts.add(createScript(s1_4_intro, 33, ScriptType.THINK, "hero", "뭔가 하나 건네줘야 할 타이밍인가.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_intro, 34, ScriptType.THINK, "hero", "센스라는 걸 발휘해 보자", null, null, null, null, null));
+
+        // --- Scene 1-4 Branch A: 솔의 눈 ---
+        scripts.add(createScript(s1_4_sol, 1, ScriptType.TEXT, "hero", "(무심하게 솔의 눈을 집어 건넨다) 이거 드시던데요.", null, "{\"2\":\"dohee_basic\"}", null, null, null));
+        scripts.add(createScript(s1_4_sol, 2, ScriptType.TEXT, "dohee", "...어? 뭐야. 너 뭘 좀 아는구나?", null, "{\"2\":\"dohee_smile\"}", null, null, null));
+        scripts.add(createScript(s1_4_sol, 3, ScriptType.TEXT, "dohee", "다들 초코우유만 들이밀어서 속 느글거려 죽는 줄 알았는데.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_sol, 4, ScriptType.TEXT, "dohee", "고마워. 잘 마실게.", null, null, "romantic_intro", null, null));
+        scripts.add(createScript(s1_4_sol, 5, ScriptType.시스템, null, "[호감도 대폭 상승] 도희가 당신을 \"말이 통하는 사람\"으로 인식합니다.", null, null, null, null, null));
+
+        // --- Scene 1-4 Branch B: 숙취해소제 ---
+        scripts.add(createScript(s1_4_drink, 1, ScriptType.TEXT, "hero", "술 깨는 데엔 이게 최고죠.", null, "{\"2\":\"dohee_basic\"}", null, null, null));
+        scripts.add(createScript(s1_4_drink, 2, ScriptType.TEXT, "dohee", "오, 현실적이네. 고마워. 내일 코딩하려면 정신 차려야지.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_drink, 3, ScriptType.시스템, null, "[호감도 +1] 무난한 선택입니다.", null, null, null, null, null));
+
+        // --- Scene 1-4 Branch C: 초코우유 ---
+        scripts.add(createScript(s1_4_milk, 1, ScriptType.TEXT, "hero", "여자분들은 단 거 좋아하시잖아요.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_milk, 2, ScriptType.TEXT, "dohee", "(미간을 찌푸리며) ...아. 너도 똑같구나.", null, "{\"2\":\"dohee_annoyed\"}", null, "disappointed", null));
+        scripts.add(createScript(s1_4_milk, 3, ScriptType.TEXT, "dohee", "나 단 거 안 좋아해. 마음만 받을게.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_milk, 4, ScriptType.시스템, null, "💔 [호감도 감소] 도희가 실망했습니다.", null, null, null, null, null));
+
+        // --- Scene 1-4 Table: 편의점 앞 테이블 대화 ---
+        scripts.add(createScript(s1_4_table, 1, ScriptType.NARRATION, null, "(두 사람은 편의점 앞 플라스틱 테이블에 잠시 걸터앉는다. 캔 따는 소리가 경쾌하게 들린다.)", "convenience_store_outside.png", "{\"2\":\"dohee_side_smile.png\"}", null, "can_open", null));
+        scripts.add(createScript(s1_4_table, 2, ScriptType.TEXT, "hero", "(캔을 따며) 사실 아까 엄청 고민했어요.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 3, ScriptType.TEXT, "dohee", "(음료를 마시다 말고) 뭘?", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 4, ScriptType.TEXT, "hero", "이게 2+1 행사 상품이더라고요. 하나를 더 가져와서 제가 두 개를 마실지, 아니면 그냥 깔끔하게 하나씩 마실지.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 5, ScriptType.TEXT, "dohee", "(황당하다는 듯) 보통은 남은 하나를 킵해두거나 나한테 더 주지 않아?", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 6, ScriptType.TEXT, "hero", "에이, 솔의 눈 두 캔은 치사량이죠. 그건 암살 시도나 마찬가지라 참았습니다.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 7, ScriptType.TEXT, "dohee", "(풉, 하고 웃음이 터지며) 뭐야 그게. 나 이거 좋아한다니까?", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 8, ScriptType.TEXT, "dohee", "아... 근데 두 개는 좀 힘들긴 하겠다. 머리 띵해서.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 9, ScriptType.TEXT, "hero", "그쵸? 지금 딱 숲속에서 숨 쉬는 기분인데, 두 개 마시면 아마 나무가 됐을지도 몰라요.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 10, ScriptType.TEXT, "dohee", "(입가에 미소를 띤 채 도훈을 본다) 너 되게 조용해 보였는데, 은근히 엉뚱한 소리 잘 하네.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 11, ScriptType.TEXT, "hero", "술기운 빌려서 하는 거죠, 뭐. 아, 바람 시원하다.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 12, ScriptType.TEXT, "hero", "(하늘을 보며) 지금 들어가지 말고 그냥 여기서 노상이나 깔까요?", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 13, ScriptType.TEXT, "dohee", "(키득거리며) 참나, 객기 부리지 마. 너 얼굴 빨개.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 14, ScriptType.TEXT, "dohee", "그래도... 바람 쐬니까 좀 살 것 같긴 하다.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 15, ScriptType.NARRATION, null, "(잠시 정적이 흐르지만, 어색하지 않다. 도희가 캔을 가볍게 흔들며 먼저 일어난다.)", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 16, ScriptType.TEXT, "dohee", "가자. 너무 오래 비우면 애들이 우리 도망간 줄 알겠다.", null, null, null, null, null));
+        scripts.add(createScript(s1_4_table, 17, ScriptType.TEXT, "hero", "(따라 일어나며) 오해받으면 억울하니까 가야죠.", null, null, null, null, null));
+
+        // --- Scene 1-4 Outro ---
+        scripts.add(createScript(s1_4_outro, 1, ScriptType.THINK, "hero", "편의점에 갔다가 다시 자리로 돌아왔다", "restaurant_inside.png", "{\"2\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_4_outro, 2, ScriptType.TEXT, "manager", "자, 1차 끝났습니다! 집 갈 사람은 가고, 2차 갈 사람들은 생생맥주로 이동~!", null, "{\"2\":\"성준.png\"}", null, null, null));
+        scripts.add(createScript(s1_4_outro, 3, ScriptType.TEXT, "dohee", "(도훈을 쳐다보며) 너는? 갈 거야?", null, "{\"2\":\"dohee_basic\"}", null, null, null));
+
+        // --- Scene 1-5 Party: 2차를 간다 - 파티 ---
+        scripts.add(createScript(s1_5_party, 1, ScriptType.THINK, "hero", "안 갈 수가 없었다", "second_restaurant_inside.png", null, "party_noise", null, null));
+        scripts.add(createScript(s1_5_party, 2, ScriptType.THINK, "hero", "저렇게 예쁜 분이 물어보는데 안 간다고 할 수 있는 사람이 있을까?", null, null, null, null, null));
+        scripts.add(createScript(s1_5_party, 3, ScriptType.TEXT, "wonyoung", "우리 다 같이 술 게임이나 할까요? 같은 그림 찾기 어때요?", null, null, null, null, null));
+        scripts.add(createScript(s1_5_party, 4, ScriptType.시스템, null, "🎮 미니게임 [카드 게임 - 같은 그림 찾기]이 시작됩니다!", null, null, null, null, null));
+        scripts.add(createScript(s1_5_party, 5, ScriptType.시스템, null, "성공 시: 술을 적게 마심 / 실패 시: 벌주 원샷", null, null, null, null, null));
+        scripts.add(createScript(s1_5_party, 6, ScriptType.GAME, null, "🎮 미니게임 [카드 게임 - 같은 그림 찾기]", null, null, null, null, null));
+
+        // --- Scene 1-5 Party Win: 미니게임 승리 후 ---
+        scripts.add(createScript(s1_5_party_win, 0, ScriptType.시스템, null, "미니게임 승리!", null, null, null, null, null));
+        scripts.add(createScript(s1_5_party_win, 1, ScriptType.THINK, "hero", "술게임을 잘해버린 탓에 고도희가 많이 마셨다.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_party_win, 2, ScriptType.TEXT, "dohee", "(얼굴이 발그레하다) 으... 나 좀 취한 것 같아. 머리 아파.", "second_restaurant_inside.png", "{\"2\":\"dohee_drunken.png\"}", "party_noise", null, null));
+        scripts.add(createScript(s1_5_party_win, 3, ScriptType.TEXT, "hero", "괜찮아요? 기숙사까지 데려다줄게요.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_party_win, 4, ScriptType.TEXT, "dohee", "...그래 줄래? 혼자 가는건 힘들 것 같아서.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_party_win, 5, ScriptType.NARRATION, null, "밤공기를 맞으며 도희와 나란히 걷는다. 그녀가 묵묵히 걷다가 작게 \"고맙다\"고 중얼거렸다.", "night_street.png", null, "romantic", null, null));
+        scripts.add(createScript(s1_5_party_win, 6, ScriptType.시스템, null, "💖 [호감도 대폭 상승]", null, null, null, null, null));
+
+        // --- Ending Scene 1: 미니게임 실패 - BAD ENDING ---
+        scripts.add(createScript(ending_scene1, 0, ScriptType.THINK, "hero", "으윽... 세상이 돈다. ", "second_restaurant_inside.png", "{\"2\":\"nobody\"}", "comical_fail", null, null));
+        scripts.add(createScript(ending_scene1, 1, ScriptType.시스템, null, "System.exit(0)", null, null, null, null, null));
+        scripts.add(createScript(ending_scene1, 2, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(ending_scene1, 3, ScriptType.NARRATION, null, "(다음 날 아침) 눈을 뜨니 기억이 없다. 실수한 것 같다. 퇴소각이다...", "dohoon_room.png", null, "morning_ambience", null, null));
+        scripts.add(createScript(ending_scene1, 4, ScriptType.시스템, null, "[BAD ENDING]", null, null, null, null, null));
+
+        // --- Scene 1-5 Dorm: 2차를 안 간다 - 기숙사 ---
+        scripts.add(createScript(s1_5_dorm, 1, ScriptType.TEXT, "myeongseong", "도희! 넌 가는 거지? 에이~ 2분반 예쁜이가 빠지면 섭섭하지!", "restaurant_inside.png", null, null, null, null));
+        scripts.add(createScript(s1_5_dorm, 2, ScriptType.TEXT, "hero", "전 먼저 들어가 보겠습니다. 내일 봬요.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_dorm, 3, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_5_dorm, 4, ScriptType.NARRATION, null, "(다음 날 아침)", "dohoon_room.png", null, "morning_ambience", null, null));
+        scripts.add(createScript(s1_5_dorm, 5, ScriptType.NARRATION, null, "단톡방에 [인생네컷] 사진이 올라왔습니다.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_dorm, 6, ScriptType.KAKAO, "myeongseong", "[image]/icon/인생네컷.png", null, null, null, null, null));
+        scripts.add(createScript(s1_5_dorm, 7, ScriptType.KAKAO, "hanjin", "[message]오늘 너무 재밌었어요. 조심히 들어가세요! ", null, null, null, null, null));
+        scripts.add(createScript(s1_5_dorm, 8, ScriptType.KAKAO, "manager", "[message]조심히 들어가세요~~", null, null, null, null, null));
+        scripts.add(createScript(s1_5_dorm, 9, ScriptType.THINK, "hero", "사진 속 도희가 환하게 웃고 있다.", null, null, null, null, "/icon/인생네컷.png"));
+        scripts.add(createScript(s1_5_dorm, 10, ScriptType.THINK, "hero", "...재밌었나 보네. 표정이 좋네.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_dorm, 11, ScriptType.THINK, "hero", "갈 걸 그랬나? 조금 아쉽다. Rollback 하고 싶지만 이미 늦었다.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_dorm, 12, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+
+        // --- Scene 1-5 Debug: 구세주 ---
+        scripts.add(createScript(s1_5_debug, 1, ScriptType.THINK, "hero", "어제 술 마신 게 아직도 안 깨네. 물이나 마시러 가자.", "krafton_passageway_day.png", "{\"2\":\"nobody\"}", "morning_ambience", null, null));
+        scripts.add(createScript(s1_5_debug, 2, ScriptType.TEXT, "jisoo", "(머리를 쥐어뜯으며) 으아아앙... 왜 안 되냐고... 나한테 왜 이래 ㅠㅠ", null, "{\"2\":\"jisoo_hard.png\"}", null, null, null));
+        scripts.add(createScript(s1_5_debug, 3, ScriptType.THINK, "hero", "못 본 척 지나가야지", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 4, ScriptType.TEXT, "jisoo", "어! 도훈 오빠다! ㅠㅠ 오빠 잘 만났다. 나 좀 살려줘!!", null, "{\"2\":\"jisoo_begging.png\"}", null, null, null));
+        scripts.add(createScript(s1_5_debug, 5, ScriptType.TEXT, "hero", "저 물 마시러 나온 건데요... 그리고 저 안드로이드 잘 모르는데.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 6, ScriptType.TEXT, "jisoo", "(울먹이며) 거짓말! 오빠 잘하는 거 다 알아. 이거 빨간 줄 좀 봐주라. 응?", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 7, ScriptType.TEXT, "jisoo", "안 고쳐지면 나 오늘 밤새워야 해...", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 8, ScriptType.TEXT, "hero", "(한숨) ...줘 봐요.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 9, ScriptType.NARRATION, null, "도훈은 익숙하게 Ctrl + Alt + S를 누르고 로그를 훑어본다.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 10, ScriptType.TEXT, "hero", "그냥 안드로이드 스튜디오가 가끔 멍청해질 때가 있어서 그래.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 11, ScriptType.THINK, "hero", "(타닥, 탁. Sync Project with Gradle Files을 클릭한다)", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 12, ScriptType.TEXT, "hero", "자, 됐죠?", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 13, ScriptType.TEXT, "jisoo", "어? 어?? 빨간 줄 다 없어졌다!!", null, "{\"2\":\"jisoo_lookingup.png\"}", null, null, null));
+        scripts.add(createScript(s1_5_debug, 14, ScriptType.TEXT, "jisoo", "헐... 오빠 뭐야? 방금 뭐 한 거야? 마법사야?", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 15, ScriptType.TEXT, "hero", "그냥 싱크 다시 맞춘 거야. 고장 안 났으니까 걱정 말고 해.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 16, ScriptType.TEXT, "hero", "그럼 난 이만.", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 17, ScriptType.TEXT, "jisoo", "(뒤에서 외치며) 와... 진짜 멋있다... 고마워 오빠!!! 내가 밥 살게!!!", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 18, ScriptType.NARRATION, null, "그날 이후, 4일차, 5일차, 6일차... 지수는 틈만 나면 \"오빠!\" 하고 찾아오기 시작했다.", null, "{\"2\":\"jisoo_hello.png\"}", null, null, null));
+        scripts.add(createScript(s1_5_debug, 19, ScriptType.NARRATION, null, "그리고 그 모습을, 도희가 멀리서 조용히 지켜보고 있었다.", null, "{\"2\":\"dohee_basic\"}", null, null, null));
+        scripts.add(createScript(s1_5_debug, 20, ScriptType.TEXT, "dohee", ". . .", null, null, null, null, null));
+        scripts.add(createScript(s1_5_debug, 21, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+
+        // --- Scene 1-6 Commit: 결과 발표 ---
+        scripts.add(createScript(s1_6_commit, 0, ScriptType.TEXT, "manager", "자, 대망의 1주차 금픽 발표가 있겠습니다!", "classroom_back.png", "{\"2\":\"성준.png\"}", null, null, null));
+        scripts.add(createScript(s1_6_commit, 1, ScriptType.TEXT, "manager", "이번 주 우승 팀은... 고도희, 임유진 조! 이도훈, 탁한진 조!", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 2, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_6_commit, 3, ScriptType.NARRATION, null, "발표가 끝나고 강당을 나오는데 지수가 싱긋 웃으며 다가온다.", "krafton_auditorium_entry.png", null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 4, ScriptType.TEXT, "jisoo", "도훈 오빠! 축하해! 우리 조 오빠 덕분에 금픽 됐어~", null, "{\"2\":\"jisoo_smile.png\"}", null, null, null));
+        scripts.add(createScript(s1_6_commit, 5, ScriptType.TEXT, "jisoo", "오빠가 안 도와줬으면 나 완성도 못 했을 거야 ㅠㅠ", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 6, ScriptType.TEXT, "hero", "(머쓱하게 목을 긁으며) 별말씀을... 네가 잘해서 된 거지.", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 7, ScriptType.NARRATION, null, "(지수가 도훈의 옆을 스쳐 지나간다. 은은한 샴푸 향기가 난다)", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 8, ScriptType.THINK, "hero", "어... 내가 좋아하는 향이다.", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 9, ScriptType.THINK, "hero", "심박수가 살짝 올라갔다. 위험해.", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 10, ScriptType.NARRATION, null, "(그때, 뒤에서 팔짱을 낀 도희가 다가온다)", null, "{\"2\":\"dohee_annoyed\"}", null, null, null));
+        scripts.add(createScript(s1_6_commit, 11, ScriptType.TEXT, "dohee", "야. 너 내 룸메랑 어떻게 아는 사이냐?", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 12, ScriptType.TEXT, "hero", "어? 둘이 룸메였어?", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 13, ScriptType.TEXT, "dohee", "그래. 밤마다 기숙사에서 \"2분반 안경 쓴 오빠가 코딩 개잘한다\", \"손가락이 섹시하다(?)\" 어찌나 떠들어대던지.", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 14, ScriptType.TEXT, "dohee", "그게 너였구나? 덕분에 내가 아주 시끄러워서 잠을 못 잤어.", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 15, ScriptType.TEXT, "hero", "예...? 전 그냥 코드만 봐줬는데요.", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 16, ScriptType.NARRATION, null, "(한 발짝 다가오며)", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 17, ScriptType.TEXT, "dohee", "그게 문제라고. 이 삭막한 공대에서, 밤새우는 여자애 코드 봐주는 거?", null, "{\"2\":\"dohee_annoyed\"}", null, null, null));
+        scripts.add(createScript(s1_6_commit, 18, ScriptType.TEXT, "dohee", "이 바닥에선 그거 플러팅(Flirting)이야. 알고나 있어?", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 19, ScriptType.TEXT, "dohee", "...뭐, 실력은 인정하지만.", null, "{\"2\":\"dohee_basic\"}", null, null, null));
+        scripts.add(createScript(s1_6_commit, 20, ScriptType.TEXT, "hero", "아... 죄송합니다? 제가 의도한 건 아닌데...", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 21, ScriptType.NARRATION, null, "(피식 웃으며 주머니에서 [솔의 눈]을 꺼내 도훈의 가슴팍에 툭 친다)", null, "{\"2\":\"dohee_smile\"}", null, null, null));
+        scripts.add(createScript(s1_6_commit, 22, ScriptType.TEXT, "dohee", "사과하지 말고, 이거나 마셔.", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 23, ScriptType.TEXT, "dohee", "지수 더 이상 헷갈리게 하지 말고", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 24, ScriptType.NARRATION, null, "(얼떨떨하게 캔을 받아든다)", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 25, ScriptType.TEXT, "hero", "...이걸 나한테?", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 26, ScriptType.TEXT, "dohee", "착각하지 마. 그냥 남아서 주는 거니까.", null, "{\"2\":\"dohee_smile\"}", null, null, null));
+        scripts.add(createScript(s1_6_commit, 27, ScriptType.NARRATION, null, "(도희는 뒤도 안 돌아보고 쿨하게 걸어간다)", null, "{\"2\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s1_6_commit, 28, ScriptType.THINK, "hero", "...뭐지, 이 상황?", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 29, ScriptType.THINK, "hero", "손에 쥐어진 솔의 눈이 차갑다.", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 30, ScriptType.THINK, "hero", "하지만 기분은 나쁘지 않다.", null, null, null, null, null));
+        scripts.add(createScript(s1_6_commit, 31, ScriptType.시스템, null, "1주차 종료. Save Point에 도달했습니다. 2주차 스토리를 로드하시겠습니까?", null, null, null, null, null));
+
+        // Script 저장
+        scriptRepository.saveAllAndFlush(scripts);
+        sceneRepository.flush();
+
+        System.out.println(">>> Chapter 1 데이터 로딩 완료");
+    }
+
+    // ==========================================
+    // [Chapter 2] 2주차 데이터 로딩
+    // ==========================================
+    private void loadChapter2() {
+        List<Scene> scenes = new ArrayList<>();
+        List<Script> scripts = new ArrayList<>();
+        List<Option> options = new ArrayList<>();
+
+        // ------------------------------------------------------
+        // 1. Scene 생성
+        // ------------------------------------------------------
+        Scene s2_1 = createScene("chapter2_scene1", "chapter2", 1, "Conflict - 새로운 파트너", "chapter2_scene2");
+        Scene s2_1_win = createScene("chapter2_scene1_win", "chapter2", 1, "리팩토링 성공", "chapter2_scene2");
+        Scene s2_1_lose = createScene("chapter2_scene1_lose", "chapter2", 1, "리팩토링 실패", "chapter2_scene2");
+        Scene s2_2 = createScene("chapter2_scene2", "chapter2", 2, "Missing_Component - 아픈 도희", null);
+        Scene s2_2_dohee = createScene("chapter2_scene2_dohee", "chapter2", 2, "죽 배달 (도희 루트)", "chapter2_scene3");
+        Scene s2_2_bad = createScene("chapter2_scene2_bad", "chapter2", 2, "꼰대 문자 (BAD ENDING)", null);
+        Scene s2_2_sera = createScene("chapter2_scene2_sera", "chapter2", 2, "안 보낸다 (세라 루트)", "chapter2_scene3");
+        Scene s2_3 = createScene("chapter2_scene3", "chapter2", 3, "Exception_Handling - 오리연못의 비밀", "chapter2_scene4");
+        Scene s2_3_result1 = createScene("chapter2_scene3_result1", "chapter2", 3, "선택 1 - 당황/사과", "chapter2_scene4");
+        Scene s2_3_result2 = createScene("chapter2_scene3_result2", "chapter2", 3, "선택 2 - 팩트 폭력/어색함", "chapter2_scene4");
+        Scene s2_3_result3 = createScene("chapter2_scene3_result3", "chapter2", 3, "선택 3 - 소심한 직구", "chapter2_scene4");
+        Scene s2_4 = createScene("chapter2_scene4", "chapter2", 4, "Deadlock - 발표 3시간 전", null);
+        Scene s2_4_jisoo = createScene("chapter2_scene4_jisoo", "chapter2", 4, "지수를 도와준다", null);
+        Scene s2_4_sera = createScene("chapter2_scene4_sera", "chapter2", 4, "세라와 마무리한다 (세라 True Route)", "chapter3_scene1");
+
+        scenes.addAll(List.of(s2_1, s2_1_win, s2_1_lose, s2_2, s2_2_dohee, s2_2_bad, s2_2_sera,
+                s2_3, s2_3_result1, s2_3_result2, s2_3_result3, s2_4, s2_4_jisoo, s2_4_sera));
+        sceneRepository.saveAll(scenes);
+        sceneRepository.flush();
+
+        // ------------------------------------------------------
+        // 2. Script 데이터 생성 (대본)
+        // ------------------------------------------------------
+
+        // --- Scene 2-1: Conflict - 새로운 파트너 ---
+        scripts.add(createScript(s2_1, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_1, 1, ScriptType.NARRATION, null, "1주차가 끝나고 팀이 리셋되었다. 이번 2주차 파트너는 포스텍에서 온 '천세라'.", "classroom.png", null, "typing_noise", null, null));
+        scripts.add(createScript(s2_1, 2, ScriptType.THINK, "hero", "소문으로는 성격이 보통이 아니라던데.", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 3, ScriptType.THINK, "hero", "뭐야, 얘 뭔데 나 팔짱 끼고 흝어봐", null, "{\"2\":\"sera_거만_crossedarm.png\"}", null, null, null));
+        scripts.add(createScript(s2_1, 4, ScriptType.TEXT, "sera", "안녕, 이도훈? 너 개발 좀 한다며?", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 5, ScriptType.TEXT, "sera", "1주차 금픽... 뭐 운이 좋았겠지. 이번엔 나한테 묻어가면 되니까, 방해만 하지 마.", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 6, ScriptType.TEXT, "hero", "...반갑습니다. 기획부터 잡죠.", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 7, ScriptType.NARRATION, null, "(잠시 후, 개발 시작)", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 8, ScriptType.NARRATION, null, "`git push` 알림이 도착했습니다. (Author: Sera_Chun)", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 9, ScriptType.THINK, "hero", "벌써 구현을 다 했다고? 속도가 비정상적인데. 코드를 확인해보자.", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 10, ScriptType.THINK, "hero", "...이게 뭐야.", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 11, ScriptType.TEXT, "hero", "세라 님, 여기 주석 보이세요?", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 12, ScriptType.NARRATION, null, "// 요청하신 '게임 저장 기능'에 대한 구현 예시를 아래와 같이 생성하였습니다.", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 13, ScriptType.TEXT, "hero", "이거 지우지도 않고 커밋했어요? 그리고 이 함수는 왜 이 파일에 들어가 있어요?", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 14, ScriptType.TEXT, "sera", "(움찔하며) 아, 돌아가면 장땡이지! 기능 구현 다 됐잖아!", null, "{\"2\":\"sera_annoy_sitting.png\"}", null, null, null));
+        scripts.add(createScript(s2_1, 15, ScriptType.TEXT, "sera", "요즘 누가 촌스럽게 한 줄 한 줄 다 짜? AI 써서 생산성 높이는 게 능력이야!", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 16, ScriptType.TEXT, "hero", "유지보수는요? 이 코드 나중에 에러 터지면 디버깅 불가능합니다. 비키세요. 제가 엎습니다.", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 17, ScriptType.TEXT, "sera", "(얼굴이 빨개져서) 야! 왜 바꿔! 내 코드가 어디가 어때서!", null, null, null, null, null));
+        scripts.add(createScript(s2_1, 18, ScriptType.시스템, null, "🎮 미니게임 [스파게티 코드 리팩토링]이 시작됩니다!", null, null, "keyboard_typing", null, null));
+
+        Script s2_1_19 = createScript(s2_1, 19, ScriptType.GAME, null, "🎮 미니게임 [스파게티 코드 리팩토링]", null, null, null, null, null);
+        // game_config는 Script 엔티티에 JSON으로 저장
+        // 현재 Script 엔티티에 gameConfig 필드가 없으므로, content에 JSON을 포함시키거나
+        // 나중에 Script 엔티티에 gameConfig 필드를 추가해야 합니다.
+        // 일단 content에 게임 정보를 포함시키는 방식으로 처리
+        String gameConfigJson = "{\"game_id\":\"refactor_game\",\"game_name\":\"스파게티 코드 리팩토링\",\"win_scene_id\":\"chapter2_scene1_win\",\"lose_scene_id\":\"chapter2_scene1_lose\"}";
+        s2_1_19.setContent(s2_1_19.getContent() + "\n[GAME_CONFIG]" + gameConfigJson);
+        scripts.add(s2_1_19);
+
+        // --- Scene 2-1 Win: 리팩토링 성공 ---
+        scripts.add(createScript(s2_1_win, 1, ScriptType.TEXT, "hero", "(안경을 고쳐 쓰며) 끝났습니다. 기능은 그대로고, 로직만 정리했습니다.", "lab.png", "{\"2\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_1_win, 2, ScriptType.TEXT, "sera", "(모니터를 보며) ...흥.", null, "{\"2\":\"sera_칭찬부끄.png\"}", null, null, null));
+        scripts.add(createScript(s2_1_win, 3, ScriptType.TEXT, "sera", "뭐... 확실히 가독성은 좀 괜찮아지긴 했네. 인정.", null, null, null, null, null));
+        scripts.add(createScript(s2_1_win, 4, ScriptType.TEXT, "hero", "그리고, 아까 AI 쓴 거요. 마냥 나쁜 건 아닌 것 같네요. 초안 잡는 속도는 빨랐으니까.", null, null, null, null, null));
+        scripts.add(createScript(s2_1_win, 5, ScriptType.TEXT, "hero", "덕분에 야근 안 하고 끝난 건 고맙습니다.", null, null, null, null, null));
+        scripts.add(createScript(s2_1_win, 6, ScriptType.TEXT, "sera", "뭐, 뭐래... 당연한 걸 가지고.", null, null, null, null, null));
+        scripts.add(createScript(s2_1_win, 7, ScriptType.THINK, null, "귀끝이 약간 빨개졌다.", null, null, null, null, null));
+
+        // --- Scene 2-1 Lose: 리팩토링 실패 ---
+        scripts.add(createScript(s2_1_lose, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_1_lose, 1, ScriptType.NARRATION, null, "코드가 너무 복잡해서 리팩토링에 실패했다.", "lab.png", null, null, null, null));
+        scripts.add(createScript(s2_1_lose, 2, ScriptType.TEXT, "sera", "흥, 역시 내 코드가 최고지.", null, "{\"2\":\"sera_거만_crossedarm.png\"}", null, null, null));
+
+        // --- Scene 2-2: Missing_Component - 아픈 도희 ---
+        scripts.add(createScript(s2_2, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_2, 1, ScriptType.THINK, "hero", "반대편 창가 쪽이 허전하다. 그 검은 후드티가 안 보인다.", "classroom.png", null, null, null, null));
+        scripts.add(createScript(s2_2, 2, ScriptType.TEXT, "hero", "저기, 세라 님. 도희 씨 왜 안 나와요?", null, null, null, null, null));
+        scripts.add(createScript(s2_2, 3, ScriptType.TEXT, "sera", "아, 걔? 몸살 났대. 열이 39도라나 뭐라나.", null, "{\"2\":\"sera_staring_monitor.png\"}", null, null, null));
+        scripts.add(createScript(s2_2, 4, ScriptType.TEXT, "sera", "...왜? 연락이라도 해보게?", null, "{\"2\":\"sera_lookingme_monitor.png\"}", null, null, null));
+
+        Script s2_2_5 = createScript(s2_2, 5, ScriptType.THINK, "hero", "센스라는 걸 발휘해 보자", null, null, null, null, null);
+        scripts.add(s2_2_5);
+        // Options 추가 (Scene에 연결)
+        Option opt_dohee_soup = createOption(s2_2, "🍲 죽을 배달시켜 준다", "chapter2_scene2_dohee");
+        options.add(opt_dohee_soup);
+        Option opt_dohee_bad = createOption(s2_2, "📱 \"몸 관리 좀 잘하지 ㅉㅉ\"", "chapter2_scene2_bad");
+        options.add(opt_dohee_bad);
+        Option opt_sera_ignore = createOption(s2_2, "🙅‍♂️ 안 보낸다", "chapter2_scene2_sera");
+        options.add(opt_sera_ignore);
+
+        // --- Scene 2-2 Dohee: 죽 배달 (도희 루트) ---
+        scripts.add(createScript(s2_2_dohee, 1, ScriptType.KAKAO, "hero", "[image]/icon/본죽_기프티콘.png", null, null, null, null, null));
+        scripts.add(createScript(s2_2_dohee, 2, ScriptType.KAKAO, "hero", "아프다 들었어요.", null, null, null, null, null));
+        scripts.add(createScript(s2_2_dohee, 3, ScriptType.KAKAO, "hero", "이거 먹고 얼른 나아요, 프로젝트 펑크 내지 말고.", null, null, null, null, null));
+        scripts.add(createScript(s2_2_dohee, 4, ScriptType.KAKAO, "도희", "...뭐야. 고마워. 잘 먹을게.", null, null, null, null, null));
+        scripts.add(createScript(s2_2_dohee, 5, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_2_dohee, 6, ScriptType.NARRATION, null, "(그 날 저녁, 기숙사 방)", "jisoo_room.png", null, null, null, null));
+        scripts.add(createScript(s2_2_dohee, 7, ScriptType.TEXT, "jisoo", "(도희의 죽 빈 그릇을 보며) 어? 언니, 너 죽 시켰어? 잘했네!", null, "{\"3\":\"jisoo_smile.png\"}", null, null, null));
+        scripts.add(createScript(s2_2_dohee, 8, ScriptType.TEXT, "도희", "아니, 누가 보내줬어. 우리반 안경 걔가.", null, "{\"1\":\"dohee_happy.png\"}", null, null, null));
+        scripts.add(createScript(s2_2_dohee, 9, ScriptType.TEXT, "jisoo", "(표정이 굳으며) ...도훈 오빠가?", null, "{\"3\":\"jisoo_basic.png\"}", null, null, null));
+        scripts.add(createScript(s2_2_dohee, 10, ScriptType.TEXT, "jisoo", "오빠는 나한텐 그런 거 안 보내주던데... 좋겠네 언니는.", null, null, null, null, null));
+        scripts.add(createScript(s2_2_dohee, 11, ScriptType.NARRATION, null, "지수의 표정이 좋지 않다.", null, null, null, null, null));
+        scripts.add(createScript(s2_2_dohee, 12, ScriptType.시스템, null, "[호감도 상승] 도희의 호감도가 상승했습니다.", null, null, null, null, null));
+        scripts.add(createScript(s2_2_dohee, 13, ScriptType.시스템, null, "[호감도 하락] 지수의 호감도가 하락했습니다.", null, null, null, null, null));
+
+        // --- Scene 2-2 Bad: 꼰대 문자 (BAD ENDING) ---
+        scripts.add(createScript(s2_2_bad, 1, ScriptType.KAKAO, "hero", "ㅉㅉ 몸 관리도 실력입니다. 팀원들 민폐 끼치지 말고 푹 쉬세요. [도희]", null, null, null, null, null));
+        scripts.add(createScript(s2_2_bad, 2, ScriptType.KAKAO, "도희", "뭐?", null, null, null, null, null));
+        scripts.add(createScript(s2_2_bad, 3, ScriptType.시스템, null, "🚨 [치명적 오류] 룸메이트 지수가 이 톡을 봤습니다.", null, null, null, null, null));
+        scripts.add(createScript(s2_2_bad, 4, ScriptType.KAKAO, "jisoo", "오빠... 실망이야. 사람이 어떻게 그래? [지수]", null, null, null, null, null));
+        scripts.add(createScript(s2_2_bad, 5, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_2_bad, 6, ScriptType.NARRATION, null, "(다음 날)", "classroom.png", null, null, null, null));
+        scripts.add(createScript(s2_2_bad, 7, ScriptType.NARRATION, null, "모든 분반에 \"2분반 이도훈 인성 터짐\"이라고 소문이 났다. 아무도 나와 팀을 하려 하지 않는다.", null, null, null, null, null));
+        scripts.add(createScript(s2_2_bad, 8, ScriptType.시스템, null, "[GAME OVER] - 사회적 매장 엔딩", null, null, null, null, null));
+
+        // --- Scene 2-2 Sera: 안 보낸다 (세라 루트) ---
+        scripts.add(createScript(s2_2_sera, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_2_sera, 1, ScriptType.TEXT, "hero", "아뇨, 뭐. 알아서 쉬겠죠. 우리 코드나 짭시다.", "lab.png", null, null, null, null));
+        scripts.add(createScript(s2_2_sera, 2, ScriptType.THINK, "hero", "걱정되긴 한데 나중에 연락해야지", null, null, null, null, null));
+        scripts.add(createScript(s2_2_sera, 3, ScriptType.TEXT, "sera", "흐음~ 뭐야? 보낼 듯이 굴더니. 꽤 냉정하네?", null, "{\"2\":\"sera_lean_chin.png\"}", null, null, null));
+        scripts.add(createScript(s2_2_sera, 4, ScriptType.TEXT, "sera", "그래, 집중해. 딴 데 한눈팔지 말고 나만 보라고. 프로젝트 말이야.", null, null, null, null, null));
+        scripts.add(createScript(s2_2_sera, 5, ScriptType.THINK, "hero", "방금 '나만 보라고' 한 거 맞나? 기분 탓인가.", null, null, null, null, null));
+
+        // --- Scene 2-3: Exception_Handling - 오리연못의 비밀 ---
+        scripts.add(createScript(s2_3, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_3, 1, ScriptType.NARRATION, null, "낮의 햇살이 너무 강렬하다. 기숙사로 돌아가는 길, KAIST의 명물 오리연못 앞을 지나가던 도훈.", "kaist_pond.png", null, "morning_ambience", null, null));
+        scripts.add(createScript(s2_3, 2, ScriptType.NARRATION, null, "연못에서 누군가 쭈그려 앉아 있다. 세라다.", null, null, null, null, null));
+        scripts.add(createScript(s2_3, 3, ScriptType.NARRATION, null, "(거위에게 소시지를 떼어주며, 혀 짧은 소리로)", null, "{\"2\":\"sera_pond.png\"}", null, null, null));
+        scripts.add(createScript(s2_3, 4, ScriptType.TEXT, "sera", "\"마이쪄? 우쭈쭈... 마이 먹어라 우리 애기들.\"", null, null, null, null, null));
+        scripts.add(createScript(s2_3, 5, ScriptType.TEXT, "sera", "\"있지, 어떤 눈매 더러운 안경 쓴 남자 오면 확 쪼아버려. 알았지?\"", null, null, null, null, null));
+        scripts.add(createScript(s2_3, 6, ScriptType.TEXT, "sera", "\"감히 내 코드를 싹 다 갈아엎어? 보면 엉덩이를 확 물어버려!\"", null, null, null, null, null));
+        scripts.add(createScript(s2_3, 7, ScriptType.TEXT, "hero", "거위한테 살인 청부라니, 너무한 거 아닙니까?", null, null, null, null, null));
+        scripts.add(createScript(s2_3, 8, ScriptType.TEXT, "sera", "(화들짝 놀라며) 히익?!", null, "{\"2\":\"sera_surprised.png\"}", null, null, null));
+        scripts.add(createScript(s2_3, 9, ScriptType.NARRATION, null, "세라가 놀라서 일어나려다 다리에 쥐가 났다.", null, null, null, null, null));
+        scripts.add(createScript(s2_3, 10, ScriptType.NARRATION, null, "몸이 연못 쪽으로 기우뚱한다.", null, null, null, null, null));
+        scripts.add(createScript(s2_3, 11, ScriptType.TEXT, "hero", "조심해요!", null, null, null, null, null));
+        scripts.add(createScript(s2_3, 12, ScriptType.NARRATION, null, "다행히 넘어지기 전에 가방끈을 낚아챘다.", null, null, null, null, null));
+        scripts.add(createScript(s2_3, 13, ScriptType.TEXT, "sera", "아, 안 넘어지거든?! 그리고 이거 거위한테 주는 거 아니야! 그냥 남아서 버리려던 거야!", null, "{\"2\":\"sera_annoy_shy.png\"}", null, null, null));
+        scripts.add(createScript(s2_3, 14, ScriptType.THINK, null, "손에 든 소시지는 누가 봐도 방금 산 새것이다", null, null, null, null, null));
+
+        Script s2_3_15 = createScript(s2_3, 15, ScriptType.THINK, "hero", "소심한 도훈의 '거리두기'와 대응", null, null, null, null, null);
+        scripts.add(s2_3_15);
+        // Options 추가 (Scene에 연결)
+        Option opt_sera_apologize = createOption(s2_3, "잡고 있던 가방끈을 놓는다", "chapter2_scene3_result1");
+        options.add(opt_sera_apologize);
+        Option opt_sera_fact = createOption(s2_3, "\"버리는 거 치고는... 2+1 스티커가 너무 선명한데요.\"", "chapter2_scene3_result2");
+        options.add(opt_sera_fact);
+        Option opt_sera_direct = createOption(s2_3, "\"다리에 쥐 났다면서요... 혼자 설 수 있을 때까지 잡고 있을게요.\"", "chapter2_scene3_result3");
+        options.add(opt_sera_direct);
+
+        // --- Scene 2-3 Result 1: 선택 1 - 당황/사과 ---
+        scripts.add(createScript(s2_3_result1, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_3_result1, 1, ScriptType.TEXT, "hero", "아, 죄송합니다! 제가 너무 세게 잡아당겼죠? 다리는 괜찮아요?", "kaist_pond.png", null, null, null, null));
+        scripts.add(createScript(s2_3_result1, 2, ScriptType.TEXT, "sera", "(오히려 가방끈을 놓으니까 휘청하며) 야! 갑자기 놓으면 어떡해!", null, "{\"2\":\"sera_surprised.png\"}", null, null, null));
+        scripts.add(createScript(s2_3_result1, 3, ScriptType.TEXT, "hero", "아, 그게... 너무 가까운 것 같아서...", null, null, null, null, null));
+        scripts.add(createScript(s2_3_result1, 4, ScriptType.TEXT, "hero", "저, 그리고 아까 '우쭈쭈' 하시는 거 다 들었는데, 못 들은 걸로 할게요. 제 메모리에서 방금 강제 종료(Kill Process) 시켰습니다.", null, null, null, null, null));
+        scripts.add(createScript(s2_3_result1, 5, ScriptType.TEXT, "sera", "악!! 하지 마! 강제 종료고 뭐고 다 잊어버려!!", null, "{\"2\":\"sera_annoy_shy.png\"}", null, null, null));
+        scripts.add(createScript(s2_3_result1, 6, ScriptType.시스템, null, "💥 [세라]가 당신의 당황한 모습에 오히려 더 부끄러워합니다.", null, null, null, null, null));
+
+        // --- Scene 2-3 Result 2: 선택 2 - 팩트 폭력/어색함 ---
+        scripts.add(createScript(s2_3_result2, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_3_result2, 1, ScriptType.TEXT, "hero", "버리시는 것자치고는... 포장지가 너무 빳빳한데요. 편의점 2+1 스티커도 방금 붙인 것처럼 깨끗하고...", "kaist_pond.png", null, null, null, null));
+        scripts.add(createScript(s2_3_result2, 2, ScriptType.TEXT, "sera", "아, 아니라고! 내가 먹으려다가... 맛없어서 주는 거야!", null, "{\"2\":\"sera_shy_front.png\"}", null, null, null));
+        scripts.add(createScript(s2_3_result2, 3, ScriptType.TEXT, "hero", "거짓말... 세라 님 거짓말할 때 안경 도수가 안 맞는 사람처럼 눈 깜빡임 횟수 늘어나는 거 알아요? 거위 주려고 산 거 맞으면서...", null, null, null, null, null));
+        scripts.add(createScript(s2_3_result2, 4, ScriptType.TEXT, "sera", "...이 씨... 너 진짜 눈치 없는 척하는 거야, 아니면 진짜 성격이 꼬인 거야?!", null, null, null, null, null));
+        scripts.add(createScript(s2_3_result2, 5, ScriptType.TEXT, "hero", "(조금 용기를 내서) ...착한 것 같다고 말하려던 건데... 코드는 사나워도, 사람은... 다정한 것 같아서요.", null, null, null, null, null));
+        scripts.add(createScript(s2_3_result2, 6, ScriptType.시스템, null, "🔍 [세라]가 당신의 뜬금없는 칭찬에 '에러'가 발생했습니다. (Log: Insight +10)", null, "{\"2\":\"sera_shy_facecover.png\"}", null, null, null));
+
+        // --- Scene 2-3 Result 3: 선택 3 - 소심한 직구 ---
+        scripts.add(createScript(s2_3_result3, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_3_result3, 1, ScriptType.TEXT, "hero", "(가방끈을 꽉 쥔 채 고개를 돌리며) 다리에 쥐 났다면서요. 지금 놓으면 연못에 빠질 게 뻔한데... 혼자 제대로 설 수 있을 때까지 그냥 이러고 있을게요.", "kaist_pond.png", null, null, null, null));
+        scripts.add(createScript(s2_3_result3, 2, ScriptType.TEXT, "sera", "(도훈의 뒤통수를 보며) ...너, 팔 안 아파?", null, "{\"2\":\"sera_칭찬부끄.png\"}", null, null, null));
+        scripts.add(createScript(s2_3_result3, 3, ScriptType.TEXT, "hero", "아파요. 근데... 세라 님 연못에 빠지면 제가 건져야 하잖아요. 저 운동 부족이라... 세라 님 무게 감당 못 해서 같이 빠질지도 몰라요. 그러니까... 움직이지 마요.", null, null, null, null, null));
+        scripts.add(createScript(s2_3_result3, 4, ScriptType.TEXT, "sera", "...누가 건져달래? ...그리고, 고마워.", null, "{\"2\":\"sera_shy_front.png\"}", null, null, null));
+        scripts.add(createScript(s2_3_result3, 5, ScriptType.TEXT, "hero", "뭐라고요? 거위 소리 때문에 잘 안 들리는데... 한 번만 더 말해주면 안 돼요?", null, null, null, null, null));
+        scripts.add(createScript(s2_3_result3, 6, ScriptType.TEXT, "sera", "안 해!! 바보야!!", null, "{\"2\":\"sera_shy_facecover.png\"}", null, null, null));
+        scripts.add(createScript(s2_3_result3, 7, ScriptType.시스템, null, "💓 [세라]의 심박수가 임계치를 초과했습니다. (Log: Heartbeat > 120bpm)", null, null, null, null, null));
+
+        // --- Scene 2-4: Deadlock - 발표 3시간 전 ---
+        scripts.add(createScript(s2_4, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_4, 1, ScriptType.THINK, "hero", "발표까지 3시간. 마무리는 거의 다 됐는데, 갑자기 지수가 찾아왔다.", "lab.png", null, "typing_noise", null, null));
+        scripts.add(createScript(s2_4, 2, ScriptType.TEXT, "jisoo", "도훈 오빠... 저 좀 도와줘요 ㅠㅠ", null, "{\"1\":\"jisoo_begging.png\"}", null, null, null));
+        scripts.add(createScript(s2_4, 3, ScriptType.TEXT, "jisoo", "자꾸 NullPointerException이 떠서 앱이 꺼져. 우리 조 팀원들은 다 멘붕이야...", null, null, null, null, null));
+        scripts.add(createScript(s2_4, 4, ScriptType.TEXT, "jisoo", "오빠밖에 없어 제발...", null, null, null, null, null));
+        scripts.add(createScript(s2_4, 5, ScriptType.TEXT, "sera", "(날카로운 눈빛으로) 야, 이도훈. 어디 가?", null, "{\"3\":\"sera_거만_crossedarm.png\"}", null, null, null));
+        scripts.add(createScript(s2_4, 6, ScriptType.TEXT, "sera", "우리 거 PPT 마무리해야지. 지금 남 도와줄 시간 있어? 책임감 무엇?", null, null, null, null, null));
+
+        Script s2_4_7 = createScript(s2_4, 7, ScriptType.THINK, "hero", "누구를 선택하지?", null, null, null, null, null);
+        scripts.add(s2_4_7);
+        // Options 추가 (Scene에 연결)
+        Option opt_help_jisoo = createOption(s2_4, "💻 지수를 도와준다", "chapter2_scene4_jisoo");
+        options.add(opt_help_jisoo);
+        Option opt_finish_sera = createOption(s2_4, "📝 세라와 마무리한다", "chapter2_scene4_sera");
+        options.add(opt_finish_sera);
+
+        // --- Scene 2-4 Jisoo: 지수를 도와준다 ---
+        scripts.add(createScript(s2_4_jisoo, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_4_jisoo, 1, ScriptType.TEXT, "hero", "미안, 금방 갔다 올게. 저거 해결 안 되면 지수네 조 발표 못 해.", "lab.png", null, null, null, null));
+        scripts.add(createScript(s2_4_jisoo, 2, ScriptType.TEXT, "jisoo", "오빠 진짜 최고야! 생명의 은인!", null, "{\"1\":\"jisoo_smile.png\"}", null, null, null));
+        scripts.add(createScript(s2_4_jisoo, 3, ScriptType.TEXT, "sera", "하... 진짜 짜증 나. 맘대로 해!", null, "{\"3\":\"sera_거만_crossedarm.png\"}", null, null, null));
+        scripts.add(createScript(s2_4_jisoo, 4, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_4_jisoo, 5, ScriptType.NARRATION, null, "지수의 코드를 고쳐주고 돌아왔다.", "classroom.png", null, null, null, null));
+        scripts.add(createScript(s2_4_jisoo, 6, ScriptType.TEXT, "sera", "다 했니? 자원봉사자 나셨네. 빨리 앉기나 해.", null, "{\"2\":\"sera_annoy_sitting.png\"}", null, null, null));
+        scripts.add(createScript(s2_4_jisoo, 7, ScriptType.시스템, null, "💔 세라 호감도 하락 / 💚 지수 호감도 대폭 상승", null, null, null, null, null));
+
+        // --- Scene 2-4 Sera: 세라와 마무리한다 (세라 True Route) ---
+        scripts.add(createScript(s2_4_sera, 0, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_4_sera, 1, ScriptType.TEXT, "hero", "미안하다 지수야. 지금은 우리 조가 먼저야. 다른 잘 하는 분한테 여쭤봐.", "classroom.png", null, null, null, null));
+        scripts.add(createScript(s2_4_sera, 2, ScriptType.TEXT, "jisoo", "...알았어. 나 갈게 오빠.", null, "{\"2\":\"jisoo_삐짐.png\"}", null, null, null));
+        scripts.add(createScript(s2_4_sera, 3, ScriptType.THINK, null, "지수가 삐진 듯하다", null, null, null, null, null));
+        scripts.add(createScript(s2_4_sera, 4, ScriptType.TEXT, "sera", "...흥, 당연한 선택이지. 어디 가기만 해 봐.", null, "{\"2\":\"sera_칭찬부끄.png\"}", null, null, null));
+        scripts.add(createScript(s2_4_sera, 5, ScriptType.전환, null, "", null, "{\"all\":\"nobody\"}", null, null, null));
+        scripts.add(createScript(s2_4_sera, 6, ScriptType.NARRATION, null, "(3시간 뒤, 발표 자료 완성)", "lab.png", null, null, null, null));
+        scripts.add(createScript(s2_4_sera, 7, ScriptType.TEXT, "hero", "완벽하네요. 이번 프로젝트, 세라 님이 AI 초안 잘 잡아준 덕분에 퀄리티 높게 나왔습니다.", null, null, null, null, null));
+        scripts.add(createScript(s2_4_sera, 8, ScriptType.TEXT, "hero", "고생 많았어요. 끝까지 잘해봅시다.", null, null, null, null, null));
+        scripts.add(createScript(s2_4_sera, 9, ScriptType.TEXT, "sera", "...너도. 너도 꽤 고생했어.", null, "{\"2\":\"sera_shy_front.png\"}", null, null, null));
+        scripts.add(createScript(s2_4_sera, 10, ScriptType.TEXT, "sera", "나 혼자였으면... 이렇게 못 했을 거야.", null, null, null, null, null));
+        scripts.add(createScript(s2_4_sera, 11, ScriptType.TEXT, "sera", "고마워, 짝궁.", null, null, null, null, null));
+        scripts.add(createScript(s2_4_sera, 12, ScriptType.시스템, null, "💖 [세라]와의 관계에 진전이 생겼습니다.", null, null, null, null, null));
+        scripts.add(createScript(s2_4_sera, 13, ScriptType.시스템, null, "2주차 종료. 3주차로 이어집니다.", null, null, null, null, null));
+
+        // Script 저장
+        scriptRepository.saveAllAndFlush(scripts);
+
+        // Option 저장
+        if (!options.isEmpty()) {
+            optionRepository.saveAllAndFlush(options);
+        }
+
+        sceneRepository.flush();
+
+        System.out.println(">>> Chapter 2 데이터 로딩 완료");
+    }
+
+    // ==========================================
+    // Helper Methods
+    // ==========================================
+
+    private Scene createScene(String id, String chapterId, int seq, String title, String nextId) {
+        return Scene.builder()
+                .id(id)
+                .chapterId(chapterId)
+                .eventSeq(seq)
+                .title(title)
+                .defaultNextSceneId(nextId)
+                .build();
+    }
+
+    private Script createScript(Scene scene, int index, ScriptType type, String speakerId, String content) {
+        return createScript(scene, index, type, speakerId, content, null, null, null, null, null);
+    }
+
+    private Script createScript(Scene scene, int index, ScriptType type, String speakerId, String content,
+                                String backgroundImageId, String characterImageIdJson,
+                                String backgroundSoundId, String effectSoundId, String overlayImageId) {
+        Script script = new Script();
+        script.setId(UUID.randomUUID().toString()); // 고유 ID 생성
+        script.setScene(scene);
+        script.setScriptIndex(index);
+        script.setType(type);
+        script.setSpeakerId(speakerId);
+        script.setContent(content);
+        script.setBackgroundImgId(backgroundImageId); // 엔티티 필드명: backgroundImgId
+        script.setCharacterImgId(characterImageIdJson); // 엔티티 필드명: characterImgId, JSON 문자열로 저장
+        script.setBackgroundSoundId(backgroundSoundId);
+        script.setEffectSoundId(effectSoundId);
+        script.setOverlayImageId(overlayImageId);
+        return script;
+    }
+
+    // Option 생성 헬퍼 메서드
+    // Option은 Scene에 연결되므로, 선택지가 있는 Script가 속한 Scene을 전달해야 합니다.
+    private Option createOption(Scene scene, String text, String nextSceneId) {
+        Option option = Option.builder()
+                .scene(scene)
+                .text(text)
+                .nextSceneId(nextSceneId)
+                .optionScores(new ArrayList<>()) // 빈 리스트로 초기화
+                .build();
+        return option;
+    }
+
+}

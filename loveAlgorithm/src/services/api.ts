@@ -1,6 +1,7 @@
-import type { ApiResponse, AffectionResponse, MiniGameScoresResponse, SaveSlot, GameState } from '../types/game.types';
+import type { ApiResponse, AffectionResponse, MiniGameScoresResponse, GameState } from '../types/game.types';
 
-const API_BASE_URL = 'http://localhost:8081/api';
+// 환경 변수에서 API URL 가져오기 (배포 시 설정 필요)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://lovealgorithmgame.site:8081/api';
 
 const apiClient = async <T>(endpoint: string, options: RequestInit = {}, requireAuth: boolean = true): Promise<ApiResponse<T>> => {
   const token = localStorage.getItem('auth_token');
@@ -8,34 +9,116 @@ const apiClient = async <T>(endpoint: string, options: RequestInit = {}, require
     'Content-Type': 'application/json',
     ...(options.headers as Record<string, string> || {})
   };
+  
+  // requireAuth가 true이고 토큰이 없으면 에러
+  if (requireAuth && !token) {
+    console.error('❌ 인증 토큰이 없습니다. 로그인이 필요합니다.');
+    throw new Error('인증이 필요합니다. 로그인해주세요.');
+  }
+  
   // requireAuth가 false이거나 토큰이 없으면 Authorization 헤더를 보내지 않음
   if (requireAuth && token) {
     headers['Authorization'] = `Bearer ${token}`;
+    console.log(`🔐 API 요청: ${endpoint} (토큰 포함, 길이: ${token.length})`);
+  } else {
+    console.log(`🔓 API 요청: ${endpoint} (인증 없음)`);
   }
   
   const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
   
   try {
-    const response = await fetch(url, { ...options, headers });
+    // redirect: 'follow'로 변경하여 실제 응답 상태 코드 확인
+    const response = await fetch(url, { 
+      ...options, 
+      headers,
+      redirect: 'follow' // 리다이렉트를 따라가서 실제 응답 확인
+    });
     
-    // 리다이렉트 감지 (OAuth2 로그인으로 리다이렉트되는 경우)
+    console.log(`📡 응답 상태: ${response.status} ${response.statusText}`);
+    console.log(`📡 응답 URL: ${response.url}`);
+    console.log(`📡 리다이렉트됨: ${response.redirected}`);
+    
+    // 리다이렉트 응답 감지 (3xx 상태 코드)
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get('Location') || response.url;
+      console.error(`⚠️ 리다이렉트 감지 [${response.status}]:`, location);
+      
+      if (location && (location.includes('/oauth2/authorization') || location.includes('accounts.google.com'))) {
+        console.error('❌ 백엔드가 OAuth2 로그인으로 리다이렉트했습니다.');
+        console.error('❌ 토큰이 유효하지 않거나 만료되었을 수 있습니다.');
+        console.error('❌ 현재 토큰:', token ? `${token.substring(0, 20)}...` : '없음');
+        
+        // 토큰 삭제 및 로그인 필요 알림
+        localStorage.removeItem('auth_token');
+        throw new Error('인증이 만료되었습니다. 다시 로그인해주세요.');
+      }
+      
+      throw new Error(`리다이렉트 응답: ${response.status} - ${location || '알 수 없음'}`);
+    }
+    
+    // 리다이렉트 감지 (response.redirected 속성) - redirect: 'follow' 사용 시
     if (response.redirected && response.url.includes('/oauth2/authorization')) {
-      console.warn('⚠️ 백엔드가 OAuth2 로그인으로 리다이렉트했습니다. 인증이 필요 없는 엔드포인트인지 확인하세요.');
-      throw new Error('백엔드가 인증을 요구합니다. SecurityConfig에서 해당 엔드포인트를 permitAll()로 설정하세요.');
+      console.error('⚠️ 백엔드가 OAuth2 로그인으로 리다이렉트했습니다.');
+      console.error('⚠️ 토큰이 유효하지 않거나 만료되었을 수 있습니다.');
+      console.error('⚠️ 최종 리다이렉트 URL:', response.url);
+      
+      // 토큰 삭제 및 로그인 필요 알림
+      localStorage.removeItem('auth_token');
+      throw new Error('인증이 만료되었습니다. 다시 로그인해주세요.');
     }
     
     if (!response.ok) {
-      const errorText = await response.text();
+      // 401 Unauthorized인 경우 토큰 삭제
+      if (response.status === 401) {
+        console.error('❌ 401 Unauthorized: 인증 토큰이 유효하지 않습니다.');
+        localStorage.removeItem('auth_token');
+        throw new Error('인증이 만료되었습니다. 다시 로그인해주세요.');
+      }
+      
+      let errorText = '';
+      try {
+        errorText = await response.text();
+      } catch (e) {
+        errorText = '응답 본문을 읽을 수 없습니다.';
+      }
+      
       console.error(`API 에러 [${response.status}]:`, errorText);
-      throw new Error(`서버 에러: ${response.status} - ${errorText}`);
+      throw new Error(`서버 에러: ${response.status} - ${errorText || '알 수 없는 에러'}`);
     }
-    return response.json();
-  } catch (error) {
+    
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('application/json')) {
+  return response.json();
+    } else {
+      // JSON이 아닌 경우 빈 객체 반환
+      return { success: true, data: {} as T };
+    }
+  } catch (error: any) {
     // 네트워크 에러나 CORS 에러 처리
     if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
-      console.error('백엔드 서버에 연결할 수 없습니다. localhost:8081이 실행 중인지 확인하세요.');
+      // 에러 메시지에서 리다이렉트 정보 확인
+      const errorMessage = error.message || '';
+      if (errorMessage.includes('oauth2') || errorMessage.includes('accounts.google.com')) {
+        console.error('❌ 백엔드가 OAuth2 로그인으로 리다이렉트했습니다.');
+        console.error('❌ 토큰이 유효하지 않거나 만료되었을 수 있습니다.');
+        localStorage.removeItem('auth_token');
+        throw new Error('인증이 만료되었습니다. 다시 로그인해주세요.');
+      }
+      
+      console.error('❌ 백엔드 서버에 연결할 수 없습니다. lovealgorithmgame.site:8081이 실행 중인지 확인하세요.');
       throw new Error('백엔드 서버에 연결할 수 없습니다. 서버가 실행 중인지 확인하세요.');
     }
+    
+    // 상태 코드 0 에러 처리
+    if (error.message && error.message.includes('상태 코드 0')) {
+      throw error;
+    }
+    
+    // 이미 처리된 에러는 그대로 throw
+    if (error.message && (error.message.includes('인증') || error.message.includes('로그인'))) {
+      throw error;
+    }
+    
     throw error;
   }
 };
@@ -44,7 +127,7 @@ const apiClient = async <T>(endpoint: string, options: RequestInit = {}, require
 export const login = async (credentials: { email: string; password: string }) => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
+    method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
     });
@@ -71,7 +154,7 @@ export const login = async (credentials: { email: string; password: string }) =>
 export const register = async (userData: { email: string; password: string; nickname: string }) => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
-      method: 'POST',
+    method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
     });
@@ -160,7 +243,7 @@ export const loginWithGoogle = async (googleToken: string) => {
       console.error('🔴 네트워크 에러 상세:', {
         message: error.message,
         endpoint: `${API_BASE_URL}/auth/google`,
-        suggestion: '백엔드 서버가 localhost:8081에서 실행 중인지 확인하세요.'
+        suggestion: '백엔드 서버가 lovealgorithmgame.site:8081에서 실행 중인지 확인하세요.'
       });
       throw detailedError;
     }
@@ -450,24 +533,115 @@ export const saveMiniGameScore = async (gameId: string, score: number) => {
 
 // 세이브/로드 관련
 export const saveToSlot = async (slotIndex: number, gameState: GameState, preview: string, heroName: string) => {
-  return await apiClient('/save', {
+  // 백엔드: POST /api/save/slots
+  // 백엔드가 기대하는 형식: snake_case 필드명
+  const requestBody = { 
+    slot_index: slotIndex, 
+    scene_id: gameState.currentSceneId,
+    script_id: gameState.currentSceneId + '_' + gameState.currentDialogueIndex, // 임시 ID 생성
+    dialogue_index: gameState.currentDialogueIndex,
+    game_state: gameState,
+    save_title: preview,
+    in_game_nickname: heroName
+  };
+  
+  console.log('💾 저장 요청 데이터:', JSON.stringify(requestBody, null, 2));
+  
+  try {
+    const result = await apiClient('/save/slots', {
     method: 'POST',
-    body: JSON.stringify({ slotIndex, gameState, preview, heroName })
-  });
+      body: JSON.stringify(requestBody)
+    });
+    console.log('✅ 저장 성공 응답:', result);
+    return result;
+  } catch (error) {
+    console.error('❌ 저장 실패:', error);
+    throw error;
+  }
 };
 
 export const loadFromSlot = async (slotIndex: number) => {
-  const r = await apiClient<GameState>(`/save/${slotIndex}`);
+  // 백엔드: GET /api/save/slots/{slotNumber}
+  const r = await apiClient<any>(`/save/slots/${slotIndex}`);
+  console.log('📥 백엔드 응답 (loadFromSlot):', JSON.stringify(r, null, 2));
+  
+  // 백엔드가 { gameState: {...}, heroName: "..." } 형식으로 반환할 수도 있음
+  if (r.data) {
+    // gameState 필드가 있으면 그것을 사용
+    if (r.data.gameState) {
+      console.log('✅ gameState 필드 발견:', r.data.gameState);
+      return r.data;
+    } 
+    // game_state 필드 (snake_case) 확인
+    else if (r.data.game_state) {
+      console.log('✅ game_state 필드 발견:', r.data.game_state);
+      return { 
+        gameState: r.data.game_state, 
+        heroName: r.data.heroName || r.data.in_game_nickname || r.data.in_game_nickname 
+      };
+    }
+    // GameState 형식인 경우 (직접 GameState 객체)
+    else if (r.data.currentSceneId || r.data.current_scene_id) {
+      console.log('✅ GameState 형식으로 인식');
+      return { 
+        gameState: r.data, 
+        heroName: r.data.heroName || r.data.in_game_nickname 
+      };
+    } 
+    // 백엔드가 다른 형식으로 반환하는 경우 (예: loveDohee, loveJisoo 등)
+    else {
+      console.warn('⚠️ 예상치 못한 응답 형식:', r.data);
+      // 백엔드가 다른 형식으로 반환하는 경우, 빈 GameState 반환
+      return {
+        gameState: {
+          currentSceneId: null,
+          currentDialogueIndex: 0,
+          history: [],
+          affections: {},
+          miniGameScores: {},
+          previousValues: {}
+        },
+        heroName: null
+      };
+    }
+  }
+  
   return r.data;
 };
 
 export const fetchSaveSlots = async () => {
-  const r = await apiClient<SaveSlot[]>('/save/slots');
-  return r.data || [];
+  try {
+    // 백엔드: GET /api/save/slots
+    const r = await apiClient<any>('/save/slots');
+    console.log('📥 백엔드 응답 (fetchSaveSlots):', r);
+    
+    const slots = r.data || [];
+    console.log('📦 저장 슬롯 개수:', slots.length);
+    
+    // 백엔드 응답을 SaveSlot 형식으로 변환
+    const convertedSlots = slots.map((slot: any) => {
+      const converted = {
+        id: slot.id || `slot_${slot.slot_index || slot.slotIndex || slot.slotNumber || 0}`,
+        slotIndex: slot.slot_index !== undefined ? slot.slot_index : (slot.slotIndex !== undefined ? slot.slotIndex : (slot.slotNumber !== undefined ? slot.slotNumber : undefined)),
+        timestamp: slot.timestamp || (slot.saved_at ? new Date(slot.saved_at).getTime() : Date.now()),
+        preview: slot.preview || slot.save_title || '저장 슬롯',
+        gameState: slot.gameState || slot.game_state || {},
+      };
+      console.log('📦 변환된 슬롯:', converted);
+      return converted;
+    });
+    
+    console.log('✅ 변환된 저장 슬롯 목록:', convertedSlots);
+    return convertedSlots;
+  } catch (error) {
+    console.error('❌ 저장 슬롯 불러오기 실패:', error);
+    return [];
+  }
 };
 
 export const deleteSaveSlot = async (slotIndex: number) => {
-  await apiClient(`/save/${slotIndex}`, { method: 'DELETE' });
+  // 백엔드: DELETE /api/save/slots/{slotNumber}
+  await apiClient(`/save/slots/${slotIndex}`, { method: 'DELETE' });
   return true;
 };
 

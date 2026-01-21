@@ -52,6 +52,30 @@ export const characterImageId = {
   dohee_boring: 'dohee_boring.png',
   dohee_drunken: 'dohee_drunken.png',
   dohee_joy: 'dohee_joy',
+  // 3주차 도희 이미지들
+  dohee_no_basic: 'dohee_no_basic.png',
+  dohee_no_angry: 'dohee_no_angry.png',
+  dohee_no_annoyed: 'dohee_no_annoyed.png',
+  dohee_no_cafe: 'dohee_no_cafe.png',
+  dohee_no_cafe_shame: 'dohee_no_cafe_shame.png',
+  dohee_no_lookingup: 'dohee_no_lookingup.png',
+  dohee_no_shy: 'dohee_no_shy.png',
+  dohee_no_smile: 'dohee_no_smile.png',
+  dohee_no_surprised: 'dohee_no_surprised.png',
+  dohee_no_부탁: 'dohee_no_부탁.png',
+  dohee_no_빼꼼: 'dohee_no_빼꼼.png',
+  dohee_no_안아줘요: 'dohee_no_안아줘요.png',
+  dohee_pretty_basic: 'dohee_pretty_basic.png',
+  dohee_pretty_bread: 'dohee_pretty_bread.png',
+  dohee_pretty_bread_shame: 'dohee_pretty_bread_shame.png',
+  dohee_pretty_sad: 'dohee_pretty_sad.png',
+  dohee_pretty_sitting_cry: 'dohee_pretty_sitting_cry.png',
+  // 3주차 지수 이미지들
+  jisoo_disappointed: 'jisoo_disappointed.png',
+  jisoo_laugh_png: 'jisoo_laugh.png',
+  jisoo_running: 'jisoo_running.png',
+  jisoo_running_stand: 'jisoo_running_stand.png',
+  jisoo_신난다: 'jisoo_신난다.png',
   sera_basic: 'sera_basic.png',
   sera_거만_crossedarm: 'sera_거만_crossedarm.png',
   sera_칭찬부끄: 'sera_칭찬부끄.png',
@@ -97,9 +121,18 @@ export const backgroundImageId = {
   lab: 'classroom.png',
   duck_pond: 'krafton_passageway_night.png',
   kaist_pond: 'kaist_pond.png',
+  // 3주차 배경 이미지들
+  auditorium_jpeg: 'auditorium.jpeg',
+  boardgame_cafe: 'boardgame_cafe.png',
+  cafe: 'cafe.jpeg',
+  dohee_alone: 'dohee_alone.jpeg',
+  dohee_alone_background: 'dohee_alone_background.jpeg',
+  kiosk: 'kiosk.jpeg',
+  성심당_앞: '성심당_앞.jpeg',
 } as const;
 
 export const backgroundSoundId = {
+  // 기존 BGM ID들
   alert: 'alert',
   morning_ambience: 'morning_ambience',
   romantic: 'romantic',
@@ -112,14 +145,25 @@ export const backgroundSoundId = {
   typing_noise: 'typing_noise',
   party_noise: 'party_noise',
   keyboard_typing: 'keyboard',
+  // public/sounds/bgm 폴더의 파일들
+  daldal_bgm: 'daldal_bgm',
+  game: 'game',
+  relax: 'relax',
+  select: 'select',
 } as const;
 
+// 기본 BGM 없음 - 각 구간별로 script.ts에서 명시적으로 background_sound_id 지정 필요
+
 export const effectSoundId = {
-  kakao_alert: 'kakao_alert',
+  kakaotalk: 'kakaotalk',
   shock: 'shock',
   keyboard: 'keyboard',
   disappointed: 'disappointed',
   can_open: 'can_open',
+  // public/sounds/sfx 폴더의 파일들
+  computer_keyboard: 'computer-keyboard', // 파일명에 하이픈이 있어서 언더스코어로 변환
+  heartbeat: 'heartbeat',
+  skirr: 'skirr',
 } as const;
 
 // ID 생성 헬퍼 함수

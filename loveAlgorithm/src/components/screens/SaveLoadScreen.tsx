@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from 'styled-components';
 import { useGameStore } from '../../store/gameStore';
 import { ToastManager } from '../ui/ToastManager';
@@ -55,6 +56,12 @@ const SlotCard = styled.div<{ $isEmpty: boolean }>`
       transform: translateY(-5px);
     `}
   }
+  
+  ${(props) =>
+    props.$isEmpty &&
+    `
+    opacity: 0.5;
+  `}
 `;
 
 const SlotPreview = styled.div`
@@ -105,30 +112,80 @@ const EmptySlotText = styled.div`
 `;
 
 export const SaveLoadScreen = () => {
-  const { saveSlots, loadGame, deleteSave, setCurrentScreen, saveGame, showToast, showConfirmModal } = useGameStore();
+  const { saveSlots, loadGame, deleteSave, setCurrentScreen, showToast, showConfirmModal, fetchSaveSlots, setIsAuthenticated, setUser } = useGameStore();
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleLoad = (slotId: string) => {
-    loadGame(slotId);
+  React.useEffect(() => {
+    console.log('📥 SaveLoadScreen: 저장 슬롯 불러오기 시작');
+    const token = localStorage.getItem('auth_token');
+    console.log('🔐 현재 토큰 상태:', token ? '있음' : '없음');
+    
+    if (!token) {
+      console.warn('⚠️ 토큰이 없습니다. 로그인이 필요합니다.');
+      showToast('로그인이 필요합니다.', 'error');
+      setCurrentScreen('login');
+      return;
+    }
+    
+    fetchSaveSlots()
+      .then(() => {
+        console.log('✅ SaveLoadScreen: 저장 슬롯 불러오기 완료, 슬롯 개수:', useGameStore.getState().saveSlots.length);
+      })
+      .catch((error) => {
+        console.error('❌ SaveLoadScreen: 저장 슬롯 불러오기 실패:', error);
+        if (error.message && error.message.includes('인증')) {
+          showToast('인증이 만료되었습니다. 다시 로그인해주세요.', 'error');
+          setIsAuthenticated(false);
+          setUser(null);
+          setCurrentScreen('login');
+        } else {
+          showToast('저장 슬롯을 불러올 수 없습니다.', 'error');
+        }
+      });
+  }, [fetchSaveSlots, showToast, setCurrentScreen, setIsAuthenticated, setUser]);
+
+  const handleLoad = async (slotIndex: number) => {
+    try {
+      setIsLoading(true);
+      await loadGame(slotIndex);
+      showToast('게임을 불러왔습니다.', 'success');
+      setCurrentScreen('game');
+    } catch (error) {
+      showToast('게임 불러오기에 실패했습니다.', 'error');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleDelete = (slotId: string, e: React.MouseEvent) => {
+  const handleDelete = async (slotIndex: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    showConfirmModal('이 저장 슬롯을 삭제하시겠습니까?', () => {
-      deleteSave(slotId);
-      showToast('저장 슬롯이 삭제되었습니다.', 'success');
+    showConfirmModal('이 저장 슬롯을 삭제하시겠습니까?', async () => {
+      try {
+        await deleteSave(slotIndex);
+        showToast('저장 슬롯이 삭제되었습니다.', 'success');
+      } catch (error) {
+        showToast('저장 슬롯 삭제에 실패했습니다.', 'error');
+      }
     });
   };
 
-  const handleSave = (slotIndex: number) => {
-    const slotId = `save_${slotIndex}`;
-    const preview = '새 저장 슬롯';
-    saveGame(slotId, preview);
-    showToast('게임이 저장되었습니다.', 'success');
-  };
-
+  // 슬롯 인덱스로 매핑 (백엔드 API는 slotIndex를 사용)
   const slots = Array.from({ length: 10 }, (_, i) => {
-    const slotId = `save_${i}`;
-    return saveSlots.find((s) => s.id === slotId) || null;
+    // 백엔드에서 받은 슬롯 중 해당 인덱스의 슬롯 찾기
+    return saveSlots.find((s) => {
+      // slotIndex가 있으면 그것으로, 없으면 id에서 추출
+      if (s.slotIndex !== undefined) {
+        return s.slotIndex === i;
+      }
+      // id에서 인덱스 추출 시도
+      if (s.id) {
+        const match = s.id.match(/(\d+)/);
+        if (match) {
+          return parseInt(match[1]) === i;
+        }
+      }
+      return false;
+    }) || null;
   });
 
   return (
@@ -139,7 +196,12 @@ export const SaveLoadScreen = () => {
           <SlotCard
             key={index}
             $isEmpty={!slot}
-            onClick={() => slot && handleLoad(slot.id)}
+            onClick={() => {
+              if (slot) {
+                const slotIndex = slot.slotIndex !== undefined ? slot.slotIndex : parseInt(slot.id?.match(/(\d+)/)?.[1] || '0');
+                handleLoad(slotIndex);
+              }
+            }}
           >
             {slot ? (
               <>
@@ -149,20 +211,26 @@ export const SaveLoadScreen = () => {
                     <span>슬롯 {index + 1}</span>
                     <span>{new Date(slot.timestamp).toLocaleString('ko-KR')}</span>
                   </SlotInfo>
+                  {slot.gameState?.affections && (
+                    <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginTop: '8px' }}>
+                      호감도: {Object.entries(slot.gameState.affections).map(([char, score]) => `${char}: ${score}`).join(', ')}
+                    </div>
+                  )}
                 </div>
                 <ButtonGroup>
-                  <Button onClick={(e) => handleDelete(slot.id, e)}>삭제</Button>
+                  <Button onClick={(e) => {
+                    e.stopPropagation();
+                    handleLoad(slot.slotIndex !== undefined ? slot.slotIndex : parseInt(slot.id?.match(/(\d+)/)?.[1] || '0'));
+                  }} disabled={isLoading}>불러오기</Button>
+                  <Button onClick={(e) => handleDelete(slot.slotIndex !== undefined ? slot.slotIndex : parseInt(slot.id?.match(/(\d+)/)?.[1] || '0'), e)} disabled={isLoading}>삭제</Button>
                 </ButtonGroup>
               </>
             ) : (
               <EmptySlotText>
                 <div>빈 슬롯</div>
-                <Button
-                  onClick={() => handleSave(index)}
-                  style={{ marginTop: '20px', width: '100%' }}
-                >
-                  저장
-                </Button>
+                <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.4)', marginTop: '10px' }}>
+                  저장된 데이터가 없습니다
+                </div>
               </EmptySlotText>
             )}
           </SlotCard>

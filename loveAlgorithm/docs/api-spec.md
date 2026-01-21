@@ -2,7 +2,7 @@
 
 ## 기본 정보
 
-- Base URL: `http://localhost:8080/api`
+- Base URL: `http://lovealgorithmgame.site:8081/api`
 - Content-Type: `application/json`
 - 응답 형식: 모든 응답은 `ApiResponse<T>` 형식을 따릅니다.
 
@@ -388,5 +388,5 @@ public class GameController {
 
 백엔드 연결 후:
 - `.env` 파일에 `VITE_API_MODE=backend` 설정
-- `VITE_API_BASE_URL=http://localhost:8080/api` 설정
+- `VITE_API_BASE_URL=http://lovealgorithmgame.site:8081/api` 설정
 

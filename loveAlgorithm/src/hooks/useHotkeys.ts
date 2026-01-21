@@ -41,7 +41,8 @@ export const useGameHotkeys = (
   onLoad: () => void,
   onSkip: () => void,
   onSettings: () => void,
-  onMainMenu: () => void
+  onMainMenu: () => void,
+  hasChoices?: boolean // 선택지가 있는지 여부
 ) => {
   const { currentScreen } = useGameStore();
 
@@ -49,7 +50,8 @@ export const useGameHotkeys = (
     {
       key: ' ',
       action: () => {
-        if (currentScreen === 'game') {
+        if (currentScreen === 'game' && !hasChoices) {
+          // 선택지가 없을 때만 다음으로 진행
           onNext();
         }
       },

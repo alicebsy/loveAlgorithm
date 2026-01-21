@@ -13,7 +13,7 @@ React + TypeScript + Vite로 구현된 비주얼 노벨 게임입니다.
 VITE_API_MODE=mock
 
 # 백엔드 API 기본 URL (백엔드 모드일 때 사용)
-VITE_API_BASE_URL=http://localhost:8080/api
+VITE_API_BASE_URL=http://lovealgorithmgame.site:8081/api
 ```
 
 ### 모킹 모드 (기본값)
@@ -32,6 +32,16 @@ VITE_API_BASE_URL=http://localhost:8080/api
 npm install
 npm run dev
 ```
+
+## 배포하기
+
+프론트엔드를 배포하려면:
+
+1. **빠른 배포**: `QUICK_DEPLOY.md` 참고 (5분 안에 배포)
+2. **상세 가이드**: `VERCEL_DEPLOY.md` 참고 (Vercel 배포)
+3. **전체 가이드**: `DEPLOYMENT_GUIDE.md` 참고 (다양한 플랫폼)
+
+**가장 쉬운 방법**: Vercel 사용 (무료, 자동 배포)
 
 ## API 명세서
 

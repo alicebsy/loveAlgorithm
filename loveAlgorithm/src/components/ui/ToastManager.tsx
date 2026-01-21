@@ -6,6 +6,6 @@ export const ToastManager = () => {
 
   if (!toast) return null;
 
-  return <Toast message={toast.message} type={toast.type} onClose={hideToast} />;
+  return <Toast message={toast.message} type={toast.type} duration={6000} onClose={hideToast} />;
 };
 

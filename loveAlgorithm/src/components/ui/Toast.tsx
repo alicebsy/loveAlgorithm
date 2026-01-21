@@ -57,7 +57,7 @@ const ToastContainer = styled.div<{ $type: string; $isClosing: boolean }>`
   line-height: 1.5;
 `;
 
-export const Toast = ({ message, type = 'info', duration = 3000, onClose }: ToastProps) => {
+export const Toast = ({ message, type = 'info', duration = 6000, onClose }: ToastProps) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();

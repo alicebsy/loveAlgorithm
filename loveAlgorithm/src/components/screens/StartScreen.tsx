@@ -2,7 +2,6 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useGameStore } from '../../store/gameStore';
 import { InfoModal } from '../ui/InfoModal';
-import { logout } from '../../services/api';
 
 const ScreenContainer = styled.div`
   position: fixed;
@@ -43,24 +42,11 @@ const MenuButton = styled.button`
   cursor: pointer;
   transition: all 0.3s;
   backdrop-filter: blur(10px);
-  
   &:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.5);
     transform: translateX(10px);
   }
-  
-  &:active {
-    transform: translateX(10px) scale(0.98);
-  }
-`;
-
-const VersionInfo = styled.div`
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
 `;
 
 const UserInfo = styled.div`
@@ -71,7 +57,6 @@ const UserInfo = styled.div`
   align-items: center;
   gap: 12px;
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
 `;
 
 const LogoutButton = styled.button`
@@ -80,37 +65,43 @@ const LogoutButton = styled.button`
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 6px;
   color: #fff;
-  font-size: 14px;
   cursor: pointer;
-  transition: all 0.3s;
-
-  &:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
-  }
 `;
 
 export const StartScreen = () => {
-  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, user } = useGameStore();
+  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, setUser, user, gameEvents, loadScript } = useGameStore();
   const [showControls, setShowControls] = useState(false);
 
   const handleLogout = async () => {
-    await logout();
-    setIsAuthenticated(false);
-    setCurrentScreen('login');
+    try {
+      const { logout } = await import('../../services/api');
+      await logout();
+    } catch (e) {
+      console.error('로그아웃 에러:', e);
+    } finally {
+      setIsAuthenticated(false);
+      setUser(null);
+      setCurrentScreen('login');
+    }
   };
 
-  const handleStart = () => {
-    resetGame(); // 게임 상태를 초기화
+  const handleStart = async () => {
+    console.log('🎮 게임 시작 버튼 클릭');
+    // 게임 시작 전 모든 BGM 정지 및 캐시 초기화
+    const { clearSoundCache } = await import('../../services/soundService');
+    clearSoundCache(); // 모든 BGM 캐시 초기화
+    resetGame();
+    
+    // gameEvents가 없으면 로드
+    if (!gameEvents || Object.keys(gameEvents).length === 0) {
+      console.log('📦 gameEvents가 없어 로드 시작...');
+      await loadScript();
+    } else {
+      console.log('✅ gameEvents가 이미 로드되어 있습니다.');
+    }
+    
+    console.log('✅ 게임 화면으로 전환');
     setCurrentScreen('game');
-  };
-
-  const handleLoad = () => {
-    setCurrentScreen('saveLoad');
-  };
-
-  const handleSettings = () => {
-    setCurrentScreen('settings');
   };
 
   return (
@@ -124,20 +115,18 @@ export const StartScreen = () => {
       <Title>Project: Love Algorithm</Title>
       <MenuContainer>
         <MenuButton onClick={handleStart}>시작하기</MenuButton>
-        <MenuButton onClick={handleLoad}>불러오기</MenuButton>
-        <MenuButton onClick={handleSettings}>환경설정</MenuButton>
+        <MenuButton onClick={() => setCurrentScreen('saveLoad')}>불러오기</MenuButton>
+        <MenuButton onClick={() => setCurrentScreen('settings')}>환경설정</MenuButton>
         <MenuButton onClick={() => setShowControls(true)}>조작방법</MenuButton>
+        <MenuButton onClick={() => setCurrentScreen('debug')} style={{background: 'rgba(255, 100, 100, 0.3)'}}>🔍 DB 확인</MenuButton>
       </MenuContainer>
-      <VersionInfo>Version 1.0.0</VersionInfo>
       {showControls && (
         <InfoModal
           title="조작방법"
-          message="Space: 다음 대화\nCtrl+S: 저장\nCtrl+L: 불러오기\nK: 스킵 모드\nESC: 설정\nM: 메인화면"
+          message="Space: 다음 대화\nCtrl+S: 저장\nCtrl+L: 불러오기\nESC: 설정"
           onClose={() => setShowControls(false)}
         />
       )}
     </ScreenContainer>
   );
 };
-
-
