@@ -363,6 +363,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
           previousValues: userData.previous_values || {},
         });
         
+        // userId를 localStorage와 sessionStorage에 저장 (API 호출용)
+        sessionStorage.setItem('current_user_id', userData.user_id.toString());
+        localStorage.setItem('current_user', JSON.stringify(userData));
+        
         // 게임 상태도 복원
         if (userData.current_scene_id) {
           set({

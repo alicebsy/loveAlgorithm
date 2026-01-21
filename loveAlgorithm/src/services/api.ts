@@ -17,13 +17,43 @@ import {
 import { gameEvents, convertEventToScene } from '../data/script';
 
 // API 모드 설정
-const API_MODE = (import.meta.env.VITE_API_MODE as 'mock' | 'backend') || 'backend';
+const API_MODE = (import.meta.env.VITE_API_MODE as 'mock' | 'backend') || 'mock';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://10.249.19.19:8081/api';
+
+// 사용자 ID 가져오기
+const getUserId = (): number | null => {
+  // localStorage에서 user 정보 가져오기
+  try {
+    // gameStore에서 저장한 user 정보 확인
+    const userStr = sessionStorage.getItem('current_user_id');
+    if (userStr) {
+      const userId = parseInt(userStr, 10);
+      if (!isNaN(userId)) {
+        return userId;
+      }
+    }
+    
+    // 또는 fetchCurrentUser로 가져온 정보 확인
+    const currentUserStr = localStorage.getItem('current_user');
+    if (currentUserStr) {
+      const user = JSON.parse(currentUserStr);
+      if (user?.user_id) {
+        return user.user_id;
+      }
+    }
+  } catch (e) {
+    // 파싱 실패 시 무시
+  }
+  
+  // 기본값으로 1 반환 (임시, 실제로는 로그인 후 설정되어야 함)
+  return 1;
+};
 
 // HTTP 클라이언트 래퍼 (인증 토큰 포함)
 const apiClient = async <T>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  addUserId: boolean = false
 ): Promise<ApiResponse<T>> => {
   // 로컬 스토리지에서 토큰 가져오기
   const token = localStorage.getItem('auth_token');
@@ -38,9 +68,18 @@ const apiClient = async <T>(
   }
 
   // API_BASE_URL 끝에 슬래시가 없고, endpoint가 /로 시작하도록 보장
-  const url = API_BASE_URL.endsWith('/') 
+  let url = API_BASE_URL.endsWith('/') 
     ? `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint.slice(1) : endpoint}`
     : `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+  
+  // userId 쿼리 파라미터 추가
+  if (addUserId) {
+    const userId = getUserId();
+    if (userId) {
+      const separator = url.includes('?') ? '&' : '?';
+      url = `${url}${separator}userId=${userId}`;
+    }
+  }
   
   const response = await fetch(url, {
     ...options,
@@ -73,7 +112,7 @@ export const fetchGameScript = async (): Promise<Record<string, Scene>> => {
 
   // 백엔드 모드: 실제 API 호출
   try {
-    const result = await apiClient<Record<string, Scene>>('/script');
+    const result = await apiClient<Record<string, Scene>>('/script', {}, true);
     if (!result.success || !result.data) {
       throw new Error(result.error || 'Failed to fetch script data');
     }
@@ -93,7 +132,7 @@ export const fetchGameEvents = async (): Promise<Record<string, GameEvent>> => {
 
   // 백엔드 모드: 실제 API 호출
   try {
-    const result = await apiClient<Record<string, GameEvent>>('/events');
+    const result = await apiClient<Record<string, GameEvent>>('/events', {}, true);
     if (!result.success || !result.data) {
       throw new Error(result.error || 'Failed to fetch event data');
     }
@@ -112,7 +151,7 @@ export const fetchScene = async (sceneId: string): Promise<Scene | null> => {
   }
 
   try {
-    const result = await apiClient<Scene>(`/script/scene/${sceneId}`);
+    const result = await apiClient<Scene>(`/script/scene/${sceneId}`, {}, true);
     if (!result.success || !result.data) {
       throw new Error(result.error || 'Failed to fetch scene data');
     }

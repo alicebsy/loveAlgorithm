@@ -41,7 +41,7 @@ const TransitionText = styled.div`
 
 export const GameScreen = () => {
   const { currentDialogue, currentScenarioItem, processedImages, proceedToNext, selectChoice, isTyping, handleGameResult } = useGameEngine();
-  const { setCurrentScreen, saveGame, skipMode, setSkipMode, showToast, showConfirmModal, settings, heroName, setHeroName, kakaoTalkHistory, systemHistory } = useGameStore();
+  const { setCurrentScreen, saveGame, skipMode, setSkipMode, showToast, showConfirmModal, settings, heroName, setHeroName, kakaoTalkHistory, systemHistory, gameState } = useGameStore();
 
   const handleSave = () => {
     const slotId = `save_${Date.now()}`;
@@ -180,6 +180,7 @@ export const GameScreen = () => {
           gameConfig={gameConfig}
           onWin={() => handleGameResult('win')}
           onLose={() => handleGameResult('lose')}
+          currentSceneId={gameState.currentSceneId}
         />
       )}
       {overlayImagePath && (

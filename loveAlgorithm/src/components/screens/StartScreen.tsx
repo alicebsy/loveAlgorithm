@@ -91,7 +91,7 @@ const LogoutButton = styled.button`
 `;
 
 export const StartScreen = () => {
-  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, user } = useGameStore();
+  const { setCurrentScreen, resetGame, isAuthenticated, setIsAuthenticated, user, goToScene } = useGameStore();
   const [showControls, setShowControls] = useState(false);
 
   const handleLogout = async () => {
@@ -113,6 +113,20 @@ export const StartScreen = () => {
     setCurrentScreen('settings');
   };
 
+  // 임시: Week 3로 바로 이동
+  const handleWeek3 = () => {
+    resetGame();
+    goToScene('chapter3_scene1');
+    setCurrentScreen('game');
+  };
+
+  // 임시: chapter3_scene5로 바로 이동
+  const handleChapter3Scene5 = () => {
+    resetGame();
+    goToScene('chapter4_scene4_dohee_fail');
+    setCurrentScreen('game');
+  };
+
   return (
     <ScreenContainer>
       {isAuthenticated && (
@@ -127,6 +141,14 @@ export const StartScreen = () => {
         <MenuButton onClick={handleLoad}>불러오기</MenuButton>
         <MenuButton onClick={handleSettings}>환경설정</MenuButton>
         <MenuButton onClick={() => setShowControls(true)}>조작방법</MenuButton>
+        {/* 임시: Week 3 바로가기 */}
+        <MenuButton onClick={handleWeek3} style={{ background: 'rgba(255, 200, 0, 0.2)', borderColor: 'rgba(255, 200, 0, 0.5)' }}>
+          [임시] Week 3 바로가기
+        </MenuButton>
+        {/* 임시: chapter3_scene5 바로가기 */}
+        <MenuButton onClick={handleChapter3Scene5} style={{ background: 'rgba(0, 255, 200, 0.2)', borderColor: 'rgba(0, 255, 200, 0.5)' }}>
+          [임시] Chapter3 Scene5 바로가기
+        </MenuButton>
       </MenuContainer>
       <VersionInfo>Version 1.0.0</VersionInfo>
       {showControls && (

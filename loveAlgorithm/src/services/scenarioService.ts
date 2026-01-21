@@ -1,7 +1,11 @@
 import type { GameEvent, ScenarioItem } from '../types/game.types';
 import { gameEvents } from '../data/script';
+import { fetchGameEvents } from './api';
 import { getBackgroundImagePath, getCharacterImagePath } from './imageService';
 import { playBGM, playSFX } from './soundService';
+
+// API 모드 확인
+const API_MODE = (import.meta.env.VITE_API_MODE as 'mock' | 'backend') || 'mock';
 
 // 이벤트 데이터 캐시
 let eventCache: Record<string, GameEvent> | null = null;
@@ -14,9 +18,21 @@ export const loadEvents = async (): Promise<Record<string, GameEvent>> => {
     return eventCache;
   }
   
-  // TODO: 백엔드에서 로드하는 로직 추가
-  eventCache = gameEvents;
-  return eventCache;
+  try {
+    // fetchGameEvents는 내부에서 모드에 따라 분기 처리
+    eventCache = await fetchGameEvents();
+    return eventCache;
+  } catch (error) {
+    // backend 모드일 때는 에러를 그대로 throw
+    if (API_MODE === 'backend') {
+      console.error('Failed to load events from backend:', error);
+      throw error;
+    }
+    // mock 모드일 때만 로컬 데이터 사용
+    console.error('Failed to load events, falling back to local data:', error);
+    eventCache = gameEvents;
+    return eventCache;
+  }
 };
 
 /**

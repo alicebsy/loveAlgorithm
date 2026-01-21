@@ -2,6 +2,9 @@ import type { Scene, Dialogue } from '../types/game.types';
 import { fetchGameScript } from './api';
 import { gameScript as localScript } from '../data/script';
 
+// API 모드 확인 (api.ts와 동일한 방식)
+const API_MODE = (import.meta.env.VITE_API_MODE as 'mock' | 'backend') || 'mock';
+
 // 스크립트 데이터 캐시
 let scriptCache: Record<string, Scene> | null = null;
 let isLoading = false;
@@ -32,10 +35,15 @@ export const loadScript = async (): Promise<Record<string, Scene>> => {
 
     return scriptCache;
   } catch (error) {
-    console.error('Failed to load script, falling back to local data:', error);
-    // API 실패 시 로컬 데이터로 폴백
-    scriptCache = localScript;
-    return localScript;
+    // mock 모드일 때만 로컬 데이터로 폴백
+    if (API_MODE === 'mock') {
+      console.error('Failed to load script, falling back to local data:', error);
+      scriptCache = localScript;
+      return localScript;
+    }
+    // backend 모드일 때는 에러를 그대로 throw (폴백 없음)
+    console.error('Failed to load script from backend:', error);
+    throw error;
   } finally {
     isLoading = false;
     loadPromise = null;
@@ -95,10 +103,14 @@ export const getNextSceneId = async (currentSceneId: string): Promise<string | n
  */
 export const getCurrentDialogueSync = (sceneId: string, dialogueIndex: number): Dialogue | null => {
   if (!scriptCache) {
-    // 캐시가 없으면 로컬 데이터 사용
-    const scene = localScript[sceneId];
-    if (!scene) return null;
-    return scene.dialogues[dialogueIndex] || null;
+    // mock 모드일 때만 로컬 데이터 사용
+    if (API_MODE === 'mock') {
+      const scene = localScript[sceneId];
+      if (!scene) return null;
+      return scene.dialogues[dialogueIndex] || null;
+    }
+    // backend 모드일 때는 캐시가 없으면 null 반환
+    return null;
   }
   const scene = scriptCache[sceneId];
   if (!scene) return null;
@@ -106,14 +118,14 @@ export const getCurrentDialogueSync = (sceneId: string, dialogueIndex: number): 
 };
 
 export const hasNextDialogueSync = (sceneId: string, dialogueIndex: number): boolean => {
-  const script = scriptCache || localScript;
+  const script = scriptCache || (API_MODE === 'mock' ? localScript : {});
   const scene = script[sceneId];
   if (!scene) return false;
   return dialogueIndex < scene.dialogues.length - 1;
 };
 
 export const getNextSceneIdSync = (currentSceneId: string): string | null => {
-  const script = scriptCache || localScript;
+  const script = scriptCache || (API_MODE === 'mock' ? localScript : {});
   const sceneIds = Object.keys(script);
   const currentIndex = sceneIds.indexOf(currentSceneId);
   if (currentIndex < sceneIds.length - 1) {

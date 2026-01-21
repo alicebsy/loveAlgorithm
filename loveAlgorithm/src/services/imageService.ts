@@ -8,8 +8,8 @@
  */
 export const getBackgroundImagePath = (fileName?: string): string | undefined => {
   if (!fileName) return undefined;
-  // 파일 확장자가 없으면 .jpg 추가
-  const ext = fileName.includes('.') ? '' : '.jpg';
+  // 파일 확장자가 없으면 .png 추가
+  const ext = fileName.includes('.') ? '' : '.png';
   return `/backgrounds/${fileName}${ext}`;
 };
 

@@ -1,11 +1,14 @@
 import { useEffect, useCallback, useState, useRef } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { getCurrentDialogueSync, hasNextDialogueSync, getNextSceneIdSync } from '../services/scriptService';
-import { getCurrentScenarioItem, processScenarioItem, applyChoiceScores } from '../services/scenarioService';
+import { getCurrentScenarioItem, processScenarioItem, applyChoiceScores, loadEvents } from '../services/scenarioService';
 import { getBackgroundImagePath, getCharacterImagePath } from '../services/imageService';
-import { gameEvents } from '../data/script';
 import { characterId } from '../data/constants';
-import type { Dialogue, ScenarioItem } from '../types/game.types';
+import { gameEvents } from '../data/script';
+import type { Dialogue, ScenarioItem, GameEvent } from '../types/game.types';
+
+// API 모드 확인
+const API_MODE = (import.meta.env.VITE_API_MODE as 'mock' | 'backend') || 'mock';
 
 export const useGameEngine = () => {
   const {
@@ -39,6 +42,11 @@ export const useGameEngine = () => {
     characterActionImagePath?: string;
     characterReImagePath?: string;
   }>({});
+  // mock 모드일 때는 즉시 로컬 데이터 사용
+  const [events, setEvents] = useState<Record<string, GameEvent> | null>(
+    API_MODE === 'mock' ? gameEvents : null
+  );
+  const [eventsError, setEventsError] = useState<Error | null>(null);
   
   // 이전 시나리오 아이템의 특정 필드들만 저장 (이어지게 하기 위해)
   // 불러오기 시 storePreviousValues로 초기화
@@ -83,9 +91,9 @@ export const useGameEngine = () => {
       };
     }
 
-    // currentScenarioItem이 없으면 gameEvents에서 직접 가져오기 (초기 로딩 시)
+    // currentScenarioItem이 없으면 events에서 가져오기 (초기 로딩 시)
     const eventId = gameState.currentSceneId;
-    const event = gameEvents[eventId];
+    const event = events?.[eventId];
     if (!event) {
       // 기존 방식으로 폴백
       return getCurrentDialogueSync(gameState.currentSceneId, gameState.currentDialogueIndex);
@@ -115,7 +123,7 @@ export const useGameEngine = () => {
       sfx: rawItem.effect_sound_id,
       choices: rawItem.options,
     };
-  }, [gameState.currentSceneId, gameState.currentDialogueIndex, currentScenarioItem, heroName]);
+  }, [gameState.currentSceneId, gameState.currentDialogueIndex, currentScenarioItem, heroName, events]);
 
   // 다음 대화로 진행
   const proceedToNext = useCallback(() => {
@@ -135,7 +143,7 @@ export const useGameEngine = () => {
 
     // 이벤트 기반 처리
     const eventId = gameState.currentSceneId;
-    const event = gameEvents[eventId];
+    const event = events?.[eventId];
 
     if (event) {
       const hasNext = gameState.currentDialogueIndex < event.scenario.length - 1;
@@ -173,6 +181,7 @@ export const useGameEngine = () => {
     nextDialogue,
     goToScene,
     setIsDialogueTyping,
+    events,
   ]);
 
   // 특정 씬으로 이동
@@ -216,11 +225,38 @@ export const useGameEngine = () => {
     [getCurrentDialogueData, goToScene, nextDialogue, updateAffection, affections, currentScenarioItem]
   );
 
+  // 이벤트 데이터 로드 (mock 모드가 아닐 때만)
+  useEffect(() => {
+    // mock 모드일 때는 이미 로컬 데이터를 사용 중이므로 로드 불필요
+    if (API_MODE === 'mock') {
+      return;
+    }
+    
+    const loadEventsData = async () => {
+      try {
+        const loadedEvents = await loadEvents();
+        setEvents(loadedEvents);
+        setEventsError(null);
+      } catch (error) {
+        console.error('Failed to load events:', error);
+        setEventsError(error instanceof Error ? error : new Error('Failed to load events'));
+        setEvents(null);
+      }
+    };
+    
+    if (!events && !eventsError) {
+      loadEventsData();
+    }
+  }, [events, eventsError]);
+
   // 시나리오 아이템 로드 및 처리
   useEffect(() => {
+    if (!events) {
+      return; // events가 로드되지 않았으면 처리하지 않음
+    }
+    
     // 이벤트 ID 찾기 (현재 씬 ID를 이벤트 ID로 사용)
     const eventId = gameState.currentSceneId;
-    const events = gameEvents;
     const event = events[eventId];
 
     if (event) {
@@ -358,7 +394,7 @@ export const useGameEngine = () => {
         }
       }
     }
-  }, [gameState.currentSceneId, gameState.currentDialogueIndex, settings.bgmVolume, settings.sfxVolume, goToScene, addKakaoTalkMessage, clearKakaoTalkHistory, addSystemMessage, heroName, setPreviousValues]);
+  }, [gameState.currentSceneId, gameState.currentDialogueIndex, settings.bgmVolume, settings.sfxVolume, goToScene, addKakaoTalkMessage, clearKakaoTalkHistory, addSystemMessage, heroName, setPreviousValues, events]);
 
   // 텍스트 타이핑 효과
   useEffect(() => {

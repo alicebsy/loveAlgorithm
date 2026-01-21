@@ -20,14 +20,14 @@ const CharacterContainer = styled.div<{ $location: 1 | 2 | 3 }>`
     if (props.$location === 1) {
       // 왼쪽
       return `
-        left: 15%;
+        left: 25%;
         transform: translateX(-50%);
         justify-content: center;
       `;
     } else if (props.$location === 3) {
       // 오른쪽
       return `
-        right: 15%;
+        right: 25%;
         transform: translateX(50%);
         justify-content: center;
       `;

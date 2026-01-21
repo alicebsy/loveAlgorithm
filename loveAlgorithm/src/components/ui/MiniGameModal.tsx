@@ -2,11 +2,14 @@ import styled from 'styled-components';
 import type { GameConfig } from '../../types/game.types';
 import { CardGame } from './CardGame';
 import { SpaghettiCodeGame } from './SpaghettiCodeGame';
+import { MenuFindGame } from './MenuFindGame';
+import { SungsimdangGame } from './SungsimdangGame';
 
 interface MiniGameModalProps {
   gameConfig: GameConfig;
   onWin: () => void;
   onLose: () => void;
+  currentSceneId?: string;
 }
 
 const Overlay = styled.div`
@@ -94,7 +97,7 @@ const GameButton = styled.button<{ $variant?: 'win' | 'lose' }>`
   }
 `;
 
-export const MiniGameModal = ({ gameConfig, onWin, onLose }: MiniGameModalProps) => {
+export const MiniGameModal = ({ gameConfig, onWin, onLose, currentSceneId }: MiniGameModalProps) => {
   // 카드 게임인 경우 CardGame 컴포넌트 사용
   if (gameConfig.game_id === 'card_game' || gameConfig.game_id === 'drinking_game_card') {
     return <CardGame onWin={onWin} onLose={onLose} timeLimit={60} />;
@@ -103,6 +106,16 @@ export const MiniGameModal = ({ gameConfig, onWin, onLose }: MiniGameModalProps)
   // 스파게티 코드 리팩토링 게임인 경우 SpaghettiCodeGame 컴포넌트 사용
   if (gameConfig.game_id === 'refactor_game') {
     return <SpaghettiCodeGame onWin={onWin} onLose={onLose} timeLimit={60} />;
+  }
+
+  // 틀린 글자 찾기 게임인 경우 MenuFindGame 컴포넌트 사용
+  if (gameConfig.game_id === 'menu_find_game') {
+    return <MenuFindGame onWin={onWin} onLose={onLose} currentSceneId={currentSceneId} timeLimit={120} />;
+  }
+
+  // 성심당 스네이크 게임인 경우 SungsimdangGame 컴포넌트 사용
+  if (gameConfig.game_id === 'sungsimdang_game') {
+    return <SungsimdangGame onWin={onWin} onLose={onLose} />;
   }
 
   // 기존 테스트용 게임 (drinking_game 등)
