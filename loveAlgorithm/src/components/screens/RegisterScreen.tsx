@@ -24,35 +24,16 @@ const float = keyframes`
   }
 `;
 
-const ScreenContainer = styled.div`
+const ScreenContainer = styled.div<{ $bgImage: string }>`
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  background-size: 200% 200%;
-  animation: gradientShift 15s ease infinite;
+  background: url(${(props) => props.$bgImage}) center center / cover no-repeat;
   display: flex; 
   flex-direction: column; 
   justify-content: center; 
   align-items: center;
   color: #fff;
   overflow: hidden;
-
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
-    animation: ${float} 20s ease-in-out infinite;
-    pointer-events: none;
-  }
 `;
 
 const RegisterBox = styled.div`
@@ -197,6 +178,9 @@ export const RegisterScreen = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // 배경 이미지 경로 (한글 파일명 인코딩)
+  const backgroundImagePath = `/backgrounds/${encodeURIComponent('로그인화면.png')}`;
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -246,7 +230,7 @@ export const RegisterScreen = () => {
   };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer $bgImage={backgroundImagePath}>
       <RegisterBox>
         <Title>회원가입</Title>
         <Subtitle>새로운 계정을 만들어보세요</Subtitle>

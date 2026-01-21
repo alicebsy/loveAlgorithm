@@ -25,35 +25,16 @@ const float = keyframes`
   }
 `;
 
-const ScreenContainer = styled.div`
+const ScreenContainer = styled.div<{ $bgImage: string }>`
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  background-size: 200% 200%;
-  animation: gradientShift 15s ease infinite;
+  background: url(${(props) => props.$bgImage}) center center / cover no-repeat;
   display: flex; 
   flex-direction: column; 
   justify-content: center; 
   align-items: center;
   color: #fff;
   overflow: hidden;
-
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-    background-size: 50px 50px;
-    animation: ${float} 20s ease-in-out infinite;
-    pointer-events: none;
-  }
 `;
 
 const LoginBox = styled.div`
@@ -249,6 +230,9 @@ export const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  
+  // 배경 이미지 경로 (한글 파일명 인코딩)
+  const backgroundImagePath = `/backgrounds/${encodeURIComponent('로그인화면.png')}`;
 
   // 구글 클라이언트 ID 확인
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
@@ -384,7 +368,7 @@ export const LoginScreen = () => {
   };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer $bgImage={backgroundImagePath}>
       <LoginBox>
         <Title>로그인</Title>
         <Subtitle>Love Algorithm에 오신 것을 환영합니다</Subtitle>
