@@ -1,0 +1,4638 @@
+import type { GameEvent } from '../types/game.types';
+import { chapterId, characterId, characterImageId, backgroundImageId, backgroundSoundId, effectSoundId } from './constants';
+
+// 새로운 형식의 스크립트 데이터
+export const gameEvents: Record<string, GameEvent> = {
+  // ----------------------------------------------------------------
+  // Scene 1-1: init() - 시작 (도훈의 방)
+  // ----------------------------------------------------------------
+  'chapter1_scene1': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene2',
+    event: 1,
+    scenario: [
+      {
+        script: 'week1: init()',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene1_0',
+        index: 0,
+      },
+      {
+        script: '📧 [합격 메일]이 도착했습니다.', // [시스템] 제거
+        type: 'narration', // 시스템 메시지는 내레이션 처리
+        background_image_id: backgroundImageId.dohoon_room,
+        effect_sound_id: effectSoundId.computer_keyboard, // computer_keyboard 효과음만
+        id: 'chapter1_scene1_1',
+        index: 1,
+      },
+      {
+        script: '모니터 화면에 "제 14회 KAIST 몰입캠프 합격"이라는 글자가 떠 있다.', // [해설]
+        type: 'narration',
+        background_image_id: backgroundImageId.dohoon_room_monitor,
+        effect_sound_id: effectSoundId.computer_keyboard, // computer_keyboard 효과음 (index 2까지)
+        id: 'chapter1_scene1_2',
+        index: 2,
+      },
+      {
+        script: '휴, 다행이다. 이번 방학은 헛되이 보내지 않겠어.', // [도훈의 독백] -> type: think
+        character_id: characterId.hero,
+        type: 'think',
+        background_sound_id: backgroundSoundId.daldal_bgm, // index 3부터 daldal_bgm BGM 시작
+        id: 'chapter1_scene1_3',
+        index: 3,
+      },
+      {
+        script: '내 목표는 오로지 하나. 코딩 실력 향상.',
+        character_id: characterId.hero,
+        type: 'think',
+        background_sound_id: backgroundSoundId.daldal_bgm, // daldal_bgm BGM 유지
+        id: 'chapter1_scene1_4',
+        index: 4,
+      },
+      {
+        script: '연애? 그런 비효율적인 프로세스는 내 메모리에 할당하지 않는다.',
+        character_id: characterId.hero,
+        type: 'think',
+        background_sound_id: backgroundSoundId.daldal_bgm, // daldal_bgm BGM 유지
+        id: 'chapter1_scene1_5',
+        index: 5,
+      },
+      {
+        script: '남들에게 피해 안 주고, 조용히 알고리즘이나 깎다가 오는 거야. 완벽해.',
+        character_id: characterId.hero,
+        type: 'think',
+        background_sound_id: backgroundSoundId.daldal_bgm, // daldal_bgm BGM 유지
+        id: 'chapter1_scene1_6',
+        index: 6,
+      },
+      {
+        script: '카톡이 울린다.', // [카톡]
+        type: 'text',
+        background_sound_id: backgroundSoundId.daldal_bgm, // daldal_bgm BGM 유지
+        effect_sound_id: effectSoundId.kakaotalk,
+        id: 'chapter1_scene1_7',
+        index: 7,
+      },
+      {
+        script: '[message]안녕하세요! 2분반 여러분 환영합니다. 내일 오전 11시까지 카이마루(북측 식당) 앞으로 모여주세요!', // [운영진]
+        character_id: characterId.manager,
+        type: '카톡',
+        background_sound_id: backgroundSoundId.daldal_bgm, // daldal_bgm BGM 유지
+        id: 'chapter1_scene1_8',
+        index: 8,
+      },
+      {
+        script: '내일 11시 집합이라... 일찍 자고 일찍 일어나야 겠다', // [도훈의 독백]
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.dohoon_room,
+        background_sound_id: backgroundSoundId.daldal_bgm, // daldal_bgm BGM 유지 (마지막)
+        id: 'chapter1_scene1_9',
+        index: 9,
+      },
+
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-2: Broadcast Receiver - 착각 (카이마루 앞)
+  // ----------------------------------------------------------------
+  'chapter1_scene2': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene3',
+    event: 2,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene2_0',
+        index: 10,
+      },
+      {
+        script: '11시 집합인데 긴장해서 10시에 와버렸다. TimeLimit 설정을 너무 넉넉하게 잡았나.', // [도훈의 독백]
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.kaimaru_front,
+        id: 'chapter1_scene2_1',
+        index: 1,
+      },
+      {
+        script: '아는 사람 마주치면 피곤한데... 일단 안으로 들어가자.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene2_2',
+        index: 2,
+      },
+      {
+        script: '그때, 뒤에서 누군가 나를 부른다', // (해설 - 괄호 안의 지문)
+        type: 'narration',
+        id: 'chapter1_scene2_3',
+        index: 3,
+      },
+      {
+        script: '저기요! 학생증 떨어뜨리셨어요!', // [지수]
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_hello },
+        type: 'text',
+        id: 'chapter1_scene2_4',
+        index: 4,
+      },
+      {
+        script: '학생증에 적힐 이름을 입력하세요:', // [시스템]
+        type: 'input',
+        id: 'chapter1_scene2_5',
+        index: 5,
+      },
+      {
+        script: '여기요, 이도훈 님? 어! 혹시 몰입캠프 오셨어요?', // [지수]
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_smile },
+        type: 'text',
+        id: 'chapter1_scene2_6',
+        index: 6,
+      },
+      {
+        script: '아... 네, 감사합니다.', // [도훈]
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter1_scene2_7',
+        index: 7,
+      },
+      {
+        script: '와 대박! 저돈데! 전 1분반 한지수예요. 반갑습니당!', // [지수]
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_smile },
+        type: 'text',
+        id: 'chapter1_scene2_8',
+        index: 8,
+      },
+      {
+        script: '근데 몇 살이세요?',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter1_scene2_9',
+        index: 9,
+      },
+      {
+        script: '스물넷입니다.', // [도훈]
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter1_scene2_10',
+        index: 10,
+      },
+      {
+        script: '아, 오빠네! 저 스물하나예요. 말 놔도 되죠? 오빠 안녕!', // [지수]
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_hello },
+        type: 'text',
+        id: 'chapter1_scene2_11',
+        index: 11,
+      },
+      {
+        script: '오... 오빠? 만난 지 1분 만에 반말 모드 활성화라고?', // [도훈의 독백]
+        character_id: characterId.hero,
+        type: 'think',
+        effect_sound_id: effectSoundId.shock,
+        id: 'chapter1_scene2_12',
+        index: 12,
+      },
+      {
+        script: '이 친화력은 뭐지? 혹시... 나한테 관심 있나?',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene2_13',
+        index: 13,
+      },
+      {
+        script: '이성적인 호감이 아니고서야 이렇게 급발진할 리가...',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene2_14',
+        index: 14,
+      },
+      {
+        script: '(깔깔 웃으며) 뭐야, 오빠 왜 이렇게 당황해? 귀엽게 ㅋㅋㅋ', // [지수]
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_smile },
+        type: 'text',
+        id: 'chapter1_scene2_15',
+        index: 15,
+      },
+      {
+        script: "'귀엽다'까지 나왔다. 이건 True다. 내 인생에도 봄날이...", // [도훈의 독백]
+        character_id: characterId.hero,
+        type: 'think',
+        background_sound_id: backgroundSoundId.romantic,
+        id: 'chapter1_scene2_16',
+        index: 16,
+      },
+      {
+        script: '그때, 문이 열리고 다른 학생들이 우르르 들어온다', // (해설 - 괄호 안의 지문)
+        type: 'narration',
+        background_sound_id: backgroundSoundId.noise,
+        id: 'chapter1_scene2_17',
+        index: 17,
+      },
+      {
+        script: '(도훈을 지나쳐 뛰어가며) 어!! 안녕하세요~! 몰입캠프시죠? 여기예요 여기!', // [지수]
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_hello },
+        type: 'text',
+        id: 'chapter1_scene2_18',
+        index: 18,
+      },
+      {
+        script: '와, 짐 무겁죠? 제가 들어드릴까요? 저 1분반 한지수예요! 말 놔도 되죠?!',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter1_scene2_19',
+        index: 19,
+      },
+      {
+        script: '...아. Unicast가 아니라 Broadcast였구나.', // [도훈의 독백]
+        character_id: characterId.hero,
+        type: 'think',
+        background_sound_id: backgroundSoundId.comical_fail,
+        id: 'chapter1_scene2_20',
+        index: 20,
+      },
+      {
+        script: '나한테만 보낸 패킷이 아니었어.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene2_21',
+        index: 21,
+      },
+      {
+        script: '그래, 나랑은 다른 세상 사람이다. 기대하지 말자.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene2_22',
+        index: 22,
+      },
+      {
+        script: 'Expectation = Null',
+        type: '시스템',
+        id: 'chapter1_scene2_23',
+        index: 23,
+      }
+    ],
+  },
+  // ----------------------------------------------------------------
+  // Scene 1-3: Dark_Mode - 짝꿍
+  // ----------------------------------------------------------------
+  'chapter1_scene3': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene4_intro',
+    event: 3,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene3_0',
+        index: 0,
+      },
+      {
+        script: '오후 2시 20분. 강의실에 사람들이 많이 있다.',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.nobody },
+        type: 'think',
+        background_image_id: backgroundImageId.classroom_dohee,
+        background_sound_id: backgroundSoundId.typing_noise,
+        id: 'chapter1_scene3_1',
+        index: 1,
+      },
+      {
+        script: '내 앞자리에 후드티를 푹 눌러쓴 여자가 앉아있다. 주변 온도가 2도는 낮아 보인다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene3_2',
+        index: 2,
+      },
+      {
+        script: '저분은... 포스가 장난 아닌데. 접근 금지(`Access Denied`) 구역이다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene3_3',
+        index: 3,
+      },
+      {
+        script: '어?... [솔의 눈]?',
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.dohee_can_closeup,
+        id: 'chapter1_scene3_4',
+        index: 4,
+      },
+      {
+        script: '(뒤에서 소근소근) 야, 동휘야. 저기 앞자리 여자분 혼자 계시는데 말 걸어볼까? 예쁘실 것 같은데.',
+        character_id: characterId.myeongseong,
+        character_image_id: { 2: characterImageId.dohee_access_denied },
+        type: 'text',
+        background_image_id: backgroundImageId.classroom,
+        id: 'chapter1_scene3_5',
+        index: 5,
+      },
+      {
+        script: '미쳤냐? 딱 봐도 건드리면 문다. 그냥 앞이나 봐.',
+        character_id: characterId.donghwi,
+        type: 'text',
+        id: 'chapter1_scene3_6',
+        index: 6,
+      },
+      {
+        script: '자~ 이제 1주차 짝꿍 배정하겠습니다!',
+        character_id: characterId.manager,
+        character_image_id: { 2: characterImageId.manager },
+        background_image_id: backgroundImageId.classroom_back,
+        type: 'text',
+        id: 'chapter1_scene3_7',
+        index: 7,
+      },
+      {
+        script: '이도훈 님은... 탁한진 님!',
+        character_id: characterId.manager,
+        type: 'text',
+        id: 'chapter1_scene3_8',
+        index: 8,
+      },
+      {
+        script: '휴, 다행이다. 저 앞자리 분이랑만 안 걸리면 돼.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene3_9',
+        index: 9,
+      },
+      {
+        script: '(다크서클 가득한 눈으로) ...안녕하세요. 저희 안드로이드 스튜디오 쓰죠?',
+        character_id: characterId.hanjin,
+        character_image_id: { 2: characterImageId.hanjin },
+        type: 'text',
+        id: 'chapter1_scene3_10',
+        index: 10,
+      },
+      {
+        script: '전 백엔드 짤 테니까 그쪽이 UI 하실래요?',
+        character_id: characterId.hanjin,
+        type: 'text',
+        id: 'chapter1_scene3_11',
+        index: 11,
+      },
+      {
+        script: '아, 네. 일단 기획부터 하시죠',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter1_scene3_12',
+        index: 12,
+      },
+      {
+        script: '그렇게 남자 둘의 칙칙한 코딩이 시작되었다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene3_13',
+        index: 13,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-4 (Part 1): 회식 시작 ~ 편의점 선택지
+  // ----------------------------------------------------------------
+  'chapter1_scene4_intro': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: '',
+    event: 4,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene4_intro_0',
+        index: 14,
+      },
+      {
+        script: '여러분! 코딩하느라 힘드시죠? 오늘 회식입니다! 다들 나오세요!',
+        character_id: characterId.manager,
+        character_image_id: { 2: characterImageId.manager },
+        type: 'text',
+        background_image_id: backgroundImageId.classroom_back,
+        background_sound_id: backgroundSoundId.party_noise,
+        id: 'chapter1_scene4_intro_1',
+        index: 1,
+      },
+      {
+        script: '아... 귀찮은데. `Skip` 버튼 없나. 그냥 대충 먹고 가야겠다.',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.nobody },
+        type: 'think',
+        id: 'chapter1_scene4_intro_2',
+        index: 2,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene4_intro_3',
+        index: 3,
+      },
+      {
+        script: '(시간 경과. 시끌벅적한 술자리)',
+        type: 'narration',
+        background_image_id: backgroundImageId.restaurant_inside,
+        id: 'chapter1_scene4_intro_4',
+        index: 4,
+      },
+      {
+        script: '할 얘기도 다 떨어졌고, 기 빨린다. 슬슬 탈출각을...',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene4_intro_5',
+        index: 5,
+      },
+      {
+        script: '자자! 분위기 전환 겸 자리 한 번 섞겠습니다! 카톡방에서 제비뽑기 확인하세요!',
+        character_id: characterId.manager,
+        type: 'text',
+        id: 'chapter1_scene4_intro_6',
+        index: 6,
+      },
+      {
+        script: '[뽑기_시작]팀 나누기가 시작됐어요',
+        character_id: characterId.manager,
+        type: '카톡',
+        id: 'chapter1_scene4_intro_7',
+        index: 7,
+      },
+      {
+        script: '[뽑기]나의 팀은 4팀입니다.',
+        type: '카톡',
+        character_id: characterId.hero,
+        id: 'chapter1_scene4_intro_8',
+        index: 8,
+      },
+      {
+        script: '[뽑기]나의 팀은 4팀입니다.',
+        type: '카톡',
+        character_id: characterId.dohee,
+        id: 'chapter1_scene4_intro_9',
+        index: 9,
+      },
+      {
+        script: '...망했다. 어제 그 \'솔의 눈\' 그녀다.',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.dohee_access_denied },
+        type: 'think',
+        id: 'chapter1_scene4_intro_10',
+        index: 10,
+      },
+      {
+        script: '모자 벗으니까... 꽤 예쁘네. 아니, 예쁜 정도가 아닌데?',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.dohee_basic },
+        type: 'think',
+        id: 'chapter1_scene4_intro_11',
+        index: 11,
+      },
+      {
+        script: '하지만 표정이 \'말 걸면 죽임\'이다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene4_intro_12',
+        index: 12,
+      },
+      {
+        script: '그래, 없는 사람 취급해 주는 게 최고의 배려다. `Invisible` 모드 유지.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene4_intro_13',
+        index: 13,
+      },
+      {
+        script: '(주변 남자들이 도희에게 몰려든다)',
+        type: 'narration',
+        id: 'chapter1_scene4_intro_14',
+        index: 14,
+      },
+      {
+        script: '도희 님! 술 잘 못하시죠? 여기 초코우유 사 왔어요!',
+        character_id: characterId.myeongseong,
+        character_image_id: { 2: characterImageId.dohee_boring },
+        type: 'text',
+        id: 'chapter1_scene4_intro_15',
+        index: 15,
+      },
+      {
+        script: '여대생들은 이런 거 좋아하신다면서요? 달달한 거 드세요!',
+        character_id: characterId.donghwi,
+        type: 'text',
+        id: 'chapter1_scene4_intro_16',
+        index: 16,
+      },
+      {
+        script: '(작게 한숨을 쉬며) ...아, 네. 감사합니다.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter1_scene4_intro_17',
+        index: 17,
+      },
+      {
+        script: '(초코우유를 구석으로 밀어둔다)',
+        type: 'narration',
+        id: 'chapter1_scene4_intro_18',
+        index: 18,
+      },
+      {
+        script: '엄청 귀찮아 보이네.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene4_intro_19',
+        index: 19,
+      },
+      {
+        script: '표정을 보니 단 건 질색인 눈치인데... 다들 헛다리 짚고 있군.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene4_intro_20',
+        index: 20,
+      },
+      {
+        script: '도희가 자리에서 일어난다',
+        type: 'narration',
+        id: 'chapter1_scene4_intro_21',
+        index: 21,
+      },
+      {
+        script: '화장실 좀 다녀올게요.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter1_scene4_intro_22',
+        index: 22,
+      },
+      {
+        script: '나도 이틈에 바람이나 좀 쐬고 와야겠다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene4_intro_23',
+        index: 23,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene4_intro_24',
+        index: 24,
+      },
+      {
+        script: '저기 편의점에 가야겠다',
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.convenience_store_outside,
+        id: 'chapter1_scene4_intro_25',
+        index: 25,
+      },
+      {
+        script: '...너 도훈이라고 했나?',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_basic },
+        type: 'text',
+        id: 'chapter1_scene4_intro_26',
+        index: 26,
+      },
+      {
+        script: '깜짝이야! 고도희?',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene4_intro_27',
+        index: 27,
+      },
+      {
+        script: '어... 네.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter1_scene4_intro_28',
+        index: 28,
+      },
+      {
+        script: '안 들어가고 뭐 해? 나 편의점 갈 건데 같이 갈래?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter1_scene4_intro_29',
+        index: 29,
+      },
+      {
+        script: '(엉겁결에) 아, 네.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter1_scene4_intro_30',
+        index: 30,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter1_scene4_intro_31',
+        index: 31,
+      },
+      {
+        script: '도희가 계산대 앞에 섰다.',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.dohee_basic },
+        background_image_id: backgroundImageId.convenience_store_inside,
+        type: 'think',
+        id: 'chapter1_scene4_intro_32',
+        index: 32,
+      },
+      {
+        script: '뭔가 하나 건네줘야 할 타이밍인가.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter1_scene4_intro_33',
+        index: 33,
+      },
+      {
+        script: '센스라는 걸 발휘해 보자',
+        character_id: characterId.hero,
+        type: 'think',
+        options: [
+          {
+            id: 'opt_sol',
+            text: '[솔의 눈] "이거 드시던데요."',
+            score_list: [{ id: 'score_dohee_sol', character_id: characterId.dohee, score: 2 }],
+            nextSceneId: 'chapter1_scene4_reaction_sol',
+          },
+          {
+            id: 'opt_drink',
+            text: '[숙취해소제] "술 깨는 데엔 이게 최고죠."',
+            score_list: [{ id: 'score_dohee_drink', character_id: characterId.dohee, score: 1 }],
+            nextSceneId: 'chapter1_scene4_reaction_drink',
+          },
+          {
+            id: 'opt_milk',
+            text: '[초코우유] "여자분들은 단 거 좋아하시잖아요."',
+            score_list: [{ id: 'score_dohee_milk', character_id: characterId.dohee, score: -1 }],
+            nextSceneId: 'chapter1_scene4_reaction_milk',
+          },
+        ],
+        id: 'chapter1_scene4_intro_34',
+        index: 34,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-4 (Branch A): 솔의 눈 선택 (Best)
+  // ----------------------------------------------------------------
+  'chapter1_scene4_reaction_sol': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene4_table', // 테이블 대화로 이동
+    event: 4,
+    scenario: [
+      {
+        script: '(무심하게 솔의 눈을 집어 건넨다) 이거 드시던데요.',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.dohee_basic },
+        type: 'text',
+        id: 'scene4_sol_1',
+        index: 1,
+      },
+      {
+        script: '...어? 뭐야. 너 뭘 좀 아는구나?',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_smile },
+        type: 'text',
+        id: 'scene4_sol_2',
+        index: 2,
+      },
+      {
+        script: '다들 초코우유만 들이밀어서 속 느글거려 죽는 줄 알았는데.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_sol_3',
+        index: 3,
+      },
+      {
+        script: '고마워. 잘 마실게.',
+        character_id: characterId.dohee,
+        type: 'text',
+        background_sound_id: backgroundSoundId.romantic_intro,
+        id: 'scene4_sol_4',
+        index: 4,
+      },
+      {
+        script: '[호감도 대폭 상승] 도희가 당신을 "말이 통하는 사람"으로 인식합니다.',
+        type: '시스템',
+        id: 'scene4_sol_5',
+        index: 5,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-4 (Branch B): 숙취해소제 선택 (Normal)
+  // ----------------------------------------------------------------
+  'chapter1_scene4_reaction_drink': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene4_table', // 테이블 대화로 이동
+    event: 4,
+    scenario: [
+      {
+        script: '술 깨는 데엔 이게 최고죠.',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.dohee_basic },
+        type: 'text',
+        id: 'scene4_drink_1',
+        index: 1,
+      },
+      {
+        script: '오, 현실적이네. 고마워. 내일 코딩하려면 정신 차려야지.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_drink_2',
+        index: 2,
+      },
+      {
+        script: '[호감도 +1] 무난한 선택입니다.',
+        type: '시스템',
+        id: 'scene4_drink_3',
+        index: 3,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-4 (Branch C): 초코우유 선택 (Bad)
+  // ----------------------------------------------------------------
+  'chapter1_scene4_reaction_milk': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene4_table', // 테이블 대화로 이동
+    event: 4,
+    scenario: [
+      {
+        script: '여자분들은 단 거 좋아하시잖아요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene4_milk_1',
+        index: 1,
+      },
+      {
+        script: '(미간을 찌푸리며) ...아. 너도 똑같구나.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_annoyed },
+        type: 'text',
+        effect_sound_id: effectSoundId.disappointed,
+        id: 'scene4_milk_2',
+        index: 2,
+      },
+      {
+        script: '나 단 거 안 좋아해. 마음만 받을게.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_milk_3',
+        index: 3,
+      },
+      {
+        script: '💔 [호감도 감소] 도희가 실망했습니다.',
+        type: '시스템',
+        id: 'scene4_milk_4',
+        index: 4,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-4 (Table): 편의점 앞 테이블 대화
+  // ----------------------------------------------------------------
+  'chapter1_scene4_table': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene4_outro',
+    event: 4,
+    scenario: [
+      {
+        script: '(두 사람은 편의점 앞 플라스틱 테이블에 잠시 걸터앉는다. 캔 따는 소리가 경쾌하게 들린다.)',
+        type: 'narration',
+        character_image_id: { 2: characterImageId.dohee_side_smile },
+        background_image_id: backgroundImageId.convenience_store_outside,
+        effect_sound_id: effectSoundId.can_open,
+        id: 'scene4_table_1',
+        index: 1,
+      },
+      {
+        script: '(캔을 따며) 사실 아까 엄청 고민했어요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene4_table_2',
+        index: 2,
+      },
+      {
+        script: '(음료를 마시다 말고) 뭘?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_table_3',
+        index: 3,
+      },
+      {
+        script: '이게 2+1 행사 상품이더라고요. 하나를 더 가져와서 제가 두 개를 마실지, 아니면 그냥 깔끔하게 하나씩 마실지.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene4_table_4',
+        index: 4,
+      },
+      {
+        script: '(황당하다는 듯) 보통은 남은 하나를 킵해두거나 나한테 더 주지 않아?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_table_5',
+        index: 5,
+      },
+      {
+        script: '에이, 솔의 눈 두 캔은 치사량이죠. 그건 암살 시도나 마찬가지라 참았습니다.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene4_table_6',
+        index: 6,
+      },
+      {
+        script: '(풉, 하고 웃음이 터지며) 뭐야 그게. 나 이거 좋아한다니까?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_table_7',
+        index: 7,
+      },
+      {
+        script: '아... 근데 두 개는 좀 힘들긴 하겠다. 머리 띵해서.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_table_8',
+        index: 8,
+      },
+      {
+        script: '그쵸? 지금 딱 숲속에서 숨 쉬는 기분인데, 두 개 마시면 아마 나무가 됐을지도 몰라요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene4_table_9',
+        index: 9,
+      },
+      {
+        script: '(입가에 미소를 띤 채 도훈을 본다) 너 되게 조용해 보였는데, 은근히 엉뚱한 소리 잘 하네.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_table_10',
+        index: 10,
+      },
+      {
+        script: '술기운 빌려서 하는 거죠, 뭐. 아, 바람 시원하다.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene4_table_11',
+        index: 11,
+      },
+      {
+        script: '(하늘을 보며) 지금 들어가지 말고 그냥 여기서 노상이나 깔까요?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene4_table_12',
+        index: 12,
+      },
+      {
+        script: '(키득거리며) 참나, 객기 부리지 마. 너 얼굴 빨개.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_table_13',
+        index: 13,
+      },
+      {
+        script: '그래도... 바람 쐬니까 좀 살 것 같긴 하다.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_table_14',
+        index: 14,
+      },
+      {
+        script: '(잠시 정적이 흐르지만, 어색하지 않다. 도희가 캔을 가볍게 흔들며 먼저 일어난다.)',
+        type: 'narration',
+        id: 'scene4_table_15',
+        index: 15,
+      },
+      {
+        script: '가자. 너무 오래 비우면 애들이 우리 도망간 줄 알겠다.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene4_table_16',
+        index: 16,
+      },
+      {
+        script: '(따라 일어나며) 오해받으면 억울하니까 가야죠.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene4_table_17',
+        index: 17,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-4 (Outro): 편의점 이후 ~ 2차 분기점
+  // ----------------------------------------------------------------
+  'chapter1_scene4_outro': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: '', // 여기서 다시 갈림
+    event: 4,
+    scenario: [
+      {
+        script: '편의점에 갔다가 다시 자리로 돌아왔다',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.nobody },
+        type: 'think',
+        background_image_id: backgroundImageId.restaurant_inside,
+        id: 'scene4_outro_1',
+        index: 1,
+      },
+      {
+        script: '자, 1차 끝났습니다! 집 갈 사람은 가고, 2차 갈 사람들은 생생맥주로 이동~!',
+        character_id: characterId.manager,
+        character_image_id: { 2: characterImageId.manager },
+        type: 'text',
+        id: 'scene4_outro_2',
+        index: 2,
+      },
+      {
+        script: '(도훈을 쳐다보며) 너는? 갈 거야?',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_basic },
+        type: 'text',
+        options: [
+          {
+            id: 'opt_go_party',
+            text: '간다.',
+            score_list: [{ id: 'score_dohee_party', character_id: characterId.dohee, score: 1 }],
+            nextSceneId: 'chapter1_scene5_party', // 2차 회식 씬으로
+          },
+          {
+            id: 'opt_go_dorm',
+            text: '안 간다.',
+            score_list: [],
+            nextSceneId: 'chapter1_scene5_dorm', // 기숙사 씬으로
+          },
+        ],
+        id: 'scene4_outro_3',
+        index: 3,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-5 (Route A): 2차를 간다 - 파티
+  // ----------------------------------------------------------------
+  'chapter1_scene5_party': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene5_debug',
+    event: 5,
+    scenario: [
+      {
+        script: '안 갈 수가 없었다',
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.second_restaurant_inside,
+        background_sound_id: backgroundSoundId.party_noise,
+        id: 'scene5_party_1',
+        index: 1,
+      },
+      {
+        script: '저렇게 예쁜 분이 물어보는데 안 간다고 할 수 있는 사람이 있을까?',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'scene5_party_2',
+        index: 2,
+      },
+      {
+        script: '우리 다 같이 술 게임이나 할까요? 같은 그림 찾기 어때요?',
+        character_id: characterId.wonyoung,
+        type: 'text',
+        id: 'scene5_party_3',
+        index: 3,
+      },
+      {
+        script: '🎮 미니게임 [카드 게임 - 같은 그림 찾기]이 시작됩니다!',
+        type: '시스템',
+        id: 'scene5_party_4',
+        index: 4,
+      },
+      {
+        script: '성공 시: 술을 적게 마심 / 실패 시: 벌주 원샷',
+        type: '시스템',
+        id: 'scene5_party_5',
+        index: 5,
+      },
+      {
+        script: '🎮 미니게임 [카드 게임 - 같은 그림 찾기]',
+        type: 'game',
+        game: {
+          game_id: 'card_game',
+          game_name: '카드 게임 - 같은 그림 찾기',
+          win_scene_id: 'chapter1_scene5_party_win',
+          lose_scene_id: 'ending_scene1',
+        },
+        id: 'scene5_party_6',
+        index: 6,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-5 (Route A - Win): 미니게임 승리 후
+  // ----------------------------------------------------------------
+  'chapter1_scene5_party_win': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene5_debug',
+    event: 5,
+    scenario: [
+      {
+        script: '미니게임 승리!',
+        type: '시스템',
+        id: 'scene5_party_win_0',
+        index: 0,
+      },
+      {
+        script: '술게임을 잘해버린 탓에 고도희가 많이 마셨다.',
+        type: 'think',
+        id: 'scene5_party_win_1',
+        index: 1,
+      },
+      {
+        script: '(얼굴이 발그레하다) 으... 나 좀 취한 것 같아. 머리 아파.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_drunken },
+        type: 'text',
+        background_image_id: backgroundImageId.second_restaurant_inside,
+        background_sound_id: backgroundSoundId.party_noise,
+        id: 'scene5_party_win_2',
+        index: 2,
+      },
+      {
+        script: '괜찮아요? 기숙사까지 데려다줄게요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene5_party_win_3',
+        index: 3,
+      },
+      {
+        script: '...그래 줄래? 혼자 가는건 힘들 것 같아서.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene5_party_win_4',
+        index: 4,
+      },
+      {
+        script: '밤공기를 맞으며 도희와 나란히 걷는다. 그녀가 묵묵히 걷다가 작게 "고맙다"고 중얼거렸다.',
+        type: 'narration',
+        background_image_id: backgroundImageId.night_street,
+        background_sound_id: backgroundSoundId.romantic,
+        id: 'scene5_party_win_5',
+        index: 5,
+      },
+      {
+        script: '💖 [호감도 대폭 상승]',
+        type: '시스템',
+        id: 'scene5_party_win_6',
+        index: 6,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Ending Scene 1: 미니게임 실패 - BAD ENDING
+  // ----------------------------------------------------------------
+  'ending_scene1': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: '',
+    event: 99,
+    scenario: [
+      {
+        script: '으윽... 세상이 돈다. ',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.nobody },
+        type: 'think',
+        background_image_id: backgroundImageId.second_restaurant_inside,
+        background_sound_id: backgroundSoundId.comical_fail,
+        id: 'ending_scene1_0',
+        index: 0,
+      },
+      {
+        script: 'System.exit(0)',
+        type: '시스템',
+        id: 'ending_scene1_1',
+        index: 1,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'ending_scene1_2',
+        index: 2,
+      },
+      {
+        script: '(다음 날 아침) 눈을 뜨니 기억이 없다. 실수한 것 같다. 퇴소각이다...',
+        type: 'narration',
+        background_image_id: backgroundImageId.dohoon_room,
+        background_sound_id: backgroundSoundId.morning_ambience,
+        id: 'ending_scene1_3',
+        index: 3,
+      },
+      {
+        script: '[BAD ENDING]',
+        type: '시스템',
+        id: 'ending_scene1_4',
+        index: 4,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-5 (Route B): 2차를 안 간다 - 기숙사
+  // ----------------------------------------------------------------
+  'chapter1_scene5_dorm': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene5_debug',
+    event: 5,
+    scenario: [
+      {
+        script: '도희! 넌 가는 거지? 에이~ 2분반 예쁜이가 빠지면 섭섭하지!',
+        character_id: characterId.myeongseong,
+        type: 'text',
+        background_image_id: backgroundImageId.restaurant_inside,
+        id: 'scene5_dorm_1',
+        index: 1,
+      },
+      {
+        script: '전 먼저 들어가 보겠습니다. 내일 봬요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene5_dorm_2',
+        index: 2,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'scene5_dorm_3',
+        index: 3,
+      },
+      {
+        script: '(다음 날 아침)',
+        type: 'narration',
+        background_image_id: backgroundImageId.dohoon_room,
+        background_sound_id: backgroundSoundId.morning_ambience,
+        id: 'scene5_dorm_4',
+        index: 4,
+      },
+      {
+        script: '단톡방에 [인생네컷] 사진이 올라왔습니다.',
+        type: 'narration',
+        id: 'scene5_dorm_5',
+        index: 5,
+      },
+      {
+        script: '[image]/icon/인생네컷.png',
+        type: '카톡',
+        character_id: characterId.myeongseong,
+        id: 'scene5_dorm_6',
+        index: 6,
+      },
+      {
+        script: '[message]오늘 너무 재밌었어요. 조심히 들어가세요! ',
+        type: '카톡',
+        character_id: characterId.hanjin,
+        id: 'scene5_dorm_7',
+        index: 7,
+      },
+      {
+        script: '[message]조심히 들어가세요~~',
+        character_id: characterId.manager,
+        type: '카톡',
+        id: 'scene5_dorm_8',
+        index: 8,
+      },
+      {
+        script: '사진 속 도희가 환하게 웃고 있다.',
+        character_id: characterId.hero,
+        type: 'think',
+        overlay_image_id: '/icon/인생네컷.png',
+        id: 'scene5_dorm_7',
+        index: 9,
+      },
+      {
+        script: '...재밌었나 보네. 표정이 좋네.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'scene5_dorm_8',
+        index: 10,
+      },
+      {
+        script: '갈 걸 그랬나? 조금 아쉽다. Rollback 하고 싶지만 이미 늦었다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'scene5_dorm_9',
+        index: 11,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'scene5_dorm_10',
+        index: 12,
+      }
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-5: Debug - 구세주
+  // ----------------------------------------------------------------
+  'chapter1_scene5_debug': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter1_scene6_commit',
+    event: 5,
+    scenario: [
+      {
+        script: '어제 술 마신 게 아직도 안 깨네. 물이나 마시러 가자.',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.nobody },
+        type: 'think',
+        background_image_id: backgroundImageId.krafton_passageway_day,
+        background_sound_id: backgroundSoundId.morning_ambience,
+        id: 'scene5_debug_1',
+        index: 1,
+      },
+      {
+        script: '(머리를 쥐어뜯으며) 으아아앙... 왜 안 되냐고... 나한테 왜 이래 ㅠㅠ',
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_hard },
+        type: 'text',
+        id: 'scene5_debug_2',
+        index: 2,
+      },
+      {
+        script: '못 본 척 지나가야지',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'scene5_debug_3',
+        index: 3,
+      },
+      {
+        script: '어! 도훈 오빠다! ㅠㅠ 오빠 잘 만났다. 나 좀 살려줘!!',
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_begging },
+        type: 'text',
+        id: 'scene5_debug_4',
+        index: 4,
+      },
+      {
+        script: '저 물 마시러 나온 건데요... 그리고 저 안드로이드 잘 모르는데.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene5_debug_5',
+        index: 5,
+      },
+      {
+        script: '(울먹이며) 거짓말! 오빠 잘하는 거 다 알아. 이거 빨간 줄 좀 봐주라. 응?',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'scene5_debug_6',
+        index: 6,
+      },
+      {
+        script: '안 고쳐지면 나 오늘 밤새워야 해...',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'scene5_debug_7',
+        index: 7,
+      },
+      {
+        script: '(한숨) ...줘 봐요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene5_debug_8',
+        index: 8,
+      },
+      {
+        script: '도훈은 익숙하게 Ctrl + Alt + S를 누르고 로그를 훑어본다.',
+        type: 'narration',
+        id: 'scene5_debug_9',
+        index: 9,
+      },
+      {
+        script: '그냥 안드로이드 스튜디오가 가끔 멍청해질 때가 있어서 그래.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene5_debug_10',
+        index: 10,
+      },
+      {
+        script: '(타닥, 탁. Sync Project with Gradle Files을 클릭한다)',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'scene5_debug_11',
+        index: 11,
+      },
+      {
+        script: '자, 됐죠?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene5_debug_12',
+        index: 12,
+      },
+      {
+        script: '어? 어?? 빨간 줄 다 없어졌다!!',
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_lookingup },
+        type: 'text',
+        id: 'scene5_debug_13',
+        index: 13,
+      },
+      {
+        script: '헐... 오빠 뭐야? 방금 뭐 한 거야? 마법사야?',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'scene5_debug_14',
+        index: 14,
+      },
+      {
+        script: '그냥 싱크 다시 맞춘 거야. 고장 안 났으니까 걱정 말고 해.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene5_debug_15',
+        index: 15,
+      },
+      {
+        script: '그럼 난 이만.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene5_debug_16',
+        index: 16,
+      },
+      {
+        script: '(뒤에서 외치며) 와... 진짜 멋있다... 고마워 오빠!!! 내가 밥 살게!!!',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'scene5_debug_17',
+        index: 17,
+      },
+      {
+        script: '그날 이후, 4일차, 5일차, 6일차... 지수는 틈만 나면 "오빠!" 하고 찾아오기 시작했다.',
+        type: 'narration',
+        character_image_id: { 2: characterImageId.jisoo_hello },
+        id: 'scene5_debug_18',
+        index: 18,
+      },
+      {
+        script: '그리고 그 모습을, 도희가 멀리서 조용히 지켜보고 있었다.',
+        type: 'narration',
+        character_image_id: { 2: characterImageId.dohee_basic },
+        id: 'scene5_debug_19',
+        index: 19,
+      },
+      {
+        script: '. . .',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene5_debug_20',
+        index: 20,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'scene5_debug_21',
+        index: 21,
+      }
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 1-6: Commit - 결과 발표
+  // ----------------------------------------------------------------
+  'chapter1_scene6_commit': {
+    chapter_id: chapterId.chapter1,
+    next_scene_id: 'chapter2_scene1',
+    event: 6,
+    scenario: [
+      {
+        script: '자, 대망의 1주차 금픽 발표가 있겠습니다!',
+        character_id: characterId.manager,
+        character_image_id: { 2: characterImageId.manager },
+        type: 'text',
+        background_image_id: backgroundImageId.classroom_back,
+        id: 'scene6_commit_0',
+        index: 0,
+      },
+      {
+        script: '이번 주 우승 팀은... 고도희, 임유진 조! 이도훈, 탁한진 조!',
+        character_id: characterId.manager,
+        type: 'text',
+        id: 'scene6_commit_1',
+        index: 1,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'scene6_commit_2',
+        index: 2,
+      },
+      {
+        script: '발표가 끝나고 강당을 나오는데 지수가 싱긋 웃으며 다가온다.',
+        type: 'narration',
+        background_image_id: backgroundImageId.krafton_auditorium_entry,
+        id: 'scene6_commit_3',
+        index: 3,
+      },
+      {
+        script: '도훈 오빠! 축하해! 우리 조 오빠 덕분에 금픽 됐어~',
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_smile },
+        type: 'text',
+        id: 'scene6_commit_4',
+        index: 4,
+      },
+      {
+        script: '오빠가 안 도와줬으면 나 완성도 못 했을 거야 ㅠㅠ',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'scene6_commit_5',
+        index: 5,
+      },
+      {
+        script: '(머쓱하게 목을 긁으며) 별말씀을... 네가 잘해서 된 거지.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene6_commit_6',
+        index: 6,
+      },
+      {
+        script: '(지수가 도훈의 옆을 스쳐 지나간다. 은은한 샴푸 향기가 난다)',
+        type: 'narration',
+        id: 'scene6_commit_7',
+        index: 7,
+      },
+      {
+        script: '어... 내가 좋아하는 향이다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'scene6_commit_8',
+        index: 8,
+      },
+      {
+        script: '심박수가 살짝 올라갔다. 위험해.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'scene6_commit_9',
+        index: 9,
+      },
+      {
+        script: '(그때, 뒤에서 팔짱을 낀 도희가 다가온다)',
+        type: 'narration',
+        character_image_id: { 2: characterImageId.dohee_annoyed },
+        id: 'scene6_commit_10',
+        index: 10,
+      },
+      {
+        script: '야. 너 내 룸메랑 어떻게 아는 사이냐?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene6_commit_11',
+        index: 11,
+      },
+      {
+        script: '어? 둘이 룸메였어?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene6_commit_12',
+        index: 12,
+      },
+      {
+        script: '그래. 밤마다 기숙사에서 "2분반 안경 쓴 오빠가 코딩 개잘한다", "손가락이 섹시하다(?)" 어찌나 떠들어대던지.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene6_commit_13',
+        index: 13,
+      },
+      {
+        script: '그게 너였구나? 덕분에 내가 아주 시끄러워서 잠을 못 잤어.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene6_commit_14',
+        index: 14,
+      },
+      {
+        script: '예...? 전 그냥 코드만 봐줬는데요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene6_commit_15',
+        index: 15,
+      },
+      {
+        script: '(한 발짝 다가오며)',
+        type: 'narration',
+        id: 'scene6_commit_16',
+        index: 16,
+      },
+      {
+        script: '그게 문제라고. 이 삭막한 공대에서, 밤새우는 여자애 코드 봐주는 거?',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_annoyed },
+        type: 'text',
+        id: 'scene6_commit_17',
+        index: 17,
+      },
+      {
+        script: '이 바닥에선 그거 플러팅(Flirting)이야. 알고나 있어?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene6_commit_18',
+        index: 18,
+      },
+      {
+        script: '...뭐, 실력은 인정하지만.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_basic },
+        type: 'text',
+        id: 'scene6_commit_19',
+        index: 19,
+      },
+      {
+        script: '아... 죄송합니다? 제가 의도한 건 아닌데...',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene6_commit_20',
+        index: 20,
+      },
+      {
+        script: '(피식 웃으며 주머니에서 [솔의 눈]을 꺼내 도훈의 가슴팍에 툭 친다)',
+        type: 'narration',
+        character_image_id: { 2: characterImageId.dohee_smile },
+        id: 'scene6_commit_21',
+        index: 21,
+      },
+      {
+        script: '사과하지 말고, 이거나 마셔.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene6_commit_22',
+        index: 22,
+      },
+      {
+        script: '지수 더 이상 헷갈리게 하지 말고',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'scene6_commit_23',
+        index: 23,
+      },
+      {
+        script: '(얼떨떨하게 캔을 받아든다)',
+        type: 'narration',
+        id: 'scene6_commit_24',
+        index: 24,
+      },
+      {
+        script: '...이걸 나한테?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'scene6_commit_25',
+        index: 25,
+      },
+      {
+        script: '착각하지 마. 그냥 남아서 주는 거니까.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_smile },
+        type: 'text',
+        id: 'scene6_commit_26',
+        index: 26,
+      },
+      {
+        script: '(도희는 뒤도 안 돌아보고 쿨하게 걸어간다)',
+        character_image_id: { 2: characterImageId.nobody },
+        type: 'narration',
+        id: 'scene6_commit_27',
+        index: 27,
+      },
+      {
+        script: '...뭐지, 이 상황?',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'scene6_commit_28',
+        index: 28,
+      },
+      {
+        script: '손에 쥐어진 솔의 눈이 차갑다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'scene6_commit_29',
+        index: 29,
+      },
+      {
+        script: '하지만 기분은 나쁘지 않다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'scene6_commit_30',
+        index: 30,
+      },
+      {
+        script: '1주차 종료. Save Point에 도달했습니다. 2주차 스토리를 로드하시겠습니까?',
+        type: '시스템',
+        id: 'scene6_commit_31',
+        index: 31,
+      },
+    ],
+  },
+
+  // ============================================================
+  // Week 2: Chapter 2
+  // ============================================================
+
+  // ----------------------------------------------------------------
+  // Scene 2-1: Conflict - 새로운 파트너
+  // ----------------------------------------------------------------
+  'chapter2_scene1': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: 'chapter2_scene2',
+    event: 1,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene1_0',
+        index: 0,
+      },
+      {
+        script: '1주차가 끝나고 팀이 리셋되었다. 이번 2주차 파트너는 포스텍에서 온 \'천세라\'.',
+        type: 'narration',
+        background_image_id: backgroundImageId.classroom,
+        background_sound_id: backgroundSoundId.typing_noise,
+        id: 'chapter2_scene1_1',
+        index: 1,
+      },
+      {
+        script: '소문으로는 성격이 보통이 아니라던데.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter2_scene1_2',
+        index: 2,
+      },
+      {
+        script: '뭐야, 얘 뭔데 나 팔짱 끼고 흝어봐',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.sera_거만_crossedarm },
+        type: 'think',
+        id: 'chapter2_scene1_3',
+        index: 3,
+      },
+      {
+        script: '안녕, 이도훈? 너 개발 좀 한다며?',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene1_4',
+        index: 4,
+      },
+      {
+        script: '1주차 금픽... 뭐 운이 좋았겠지. 이번엔 나한테 묻어가면 되니까, 방해만 하지 마.',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene1_5',
+        index: 5,
+      },
+      {
+        script: '...반갑습니다. 기획부터 잡죠.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene1_6',
+        index: 6,
+      },
+      {
+        script: '(잠시 후, 개발 시작)',
+        type: 'narration',
+        id: 'chapter2_scene1_7',
+        index: 7,
+      },
+      {
+        script: '`git push` 알림이 도착했습니다. (Author: Sera_Chun)',
+        type: 'narration',
+        id: 'chapter2_scene1_8',
+        index: 8,
+      },
+      {
+        script: '벌써 구현을 다 했다고? 속도가 비정상적인데. 코드를 확인해보자.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter2_scene1_9',
+        index: 9,
+      },
+      {
+        script: '...이게 뭐야.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter2_scene1_10',
+        index: 10,
+      },
+      {
+        script: '세라 님, 여기 주석 보이세요?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene1_11',
+        index: 11,
+      },
+      {
+        script: '// 요청하신 \'게임 저장 기능\'에 대한 구현 예시를 아래와 같이 생성하였습니다.',
+        type: 'narration',
+        id: 'chapter2_scene1_12',
+        index: 12,
+      },
+      {
+        script: '이거 지우지도 않고 커밋했어요? 그리고 이 함수는 왜 이 파일에 들어가 있어요?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene1_13',
+        index: 13,
+      },
+      {
+        script: '(움찔하며) 아, 돌아가면 장땡이지! 기능 구현 다 됐잖아!',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_annoy_sitting },
+        type: 'text',
+        id: 'chapter2_scene1_14',
+        index: 14,
+      },
+      {
+        script: '요즘 누가 촌스럽게 한 줄 한 줄 다 짜? AI 써서 생산성 높이는 게 능력이야!',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene1_15',
+        index: 15,
+      },
+      {
+        script: '유지보수는요? 이 코드 나중에 에러 터지면 디버깅 불가능합니다. 비키세요. 제가 엎습니다.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene1_16',
+        index: 16,
+      },
+      {
+        script: '(얼굴이 빨개져서) 야! 왜 바꿔! 내 코드가 어디가 어때서!',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene1_17',
+        index: 17,
+      },
+      {
+        script: '🎮 미니게임 [스파게티 코드 리팩토링]이 시작됩니다!',
+        type: '시스템',
+        background_sound_id: backgroundSoundId.keyboard_typing,
+        id: 'chapter2_scene1_18',
+        index: 18,
+      },
+      {
+        script: '🎮 미니게임 [스파게티 코드 리팩토링]',
+        type: 'game',
+        game: {
+          game_id: 'refactor_game',
+          game_name: '스파게티 코드 리팩토링',
+          win_scene_id: 'chapter2_scene1_win',
+          lose_scene_id: 'chapter2_scene1_lose',
+        },
+        id: 'chapter2_scene1_19',
+        index: 19,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-1 (Win): 리팩토링 성공
+  // ----------------------------------------------------------------
+  'chapter2_scene1_win': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: 'chapter2_scene2',
+    event: 1,
+    scenario: [
+      {
+        script: '(안경을 고쳐 쓰며) 끝났습니다. 기능은 그대로고, 로직만 정리했습니다.',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.nobody },
+        type: 'text',
+        background_image_id: backgroundImageId.lab,
+        id: 'chapter2_scene1_win_1',
+        index: 1,
+      },
+      {
+        script: '(모니터를 보며) ...흥.',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_칭찬부끄 },
+        type: 'text',
+        id: 'chapter2_scene1_win_2',
+        index: 2,
+      },
+      {
+        script: '뭐... 확실히 가독성은 좀 괜찮아지긴 했네. 인정.',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene1_win_3',
+        index: 3,
+      },
+      {
+        script: '그리고, 아까 AI 쓴 거요. 마냥 나쁜 건 아닌 것 같네요. 초안 잡는 속도는 빨랐으니까.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene1_win_4',
+        index: 4,
+      },
+      {
+        script: '덕분에 야근 안 하고 끝난 건 고맙습니다.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene1_win_5',
+        index: 5,
+      },
+      {
+        script: '뭐, 뭐래... 당연한 걸 가지고.',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene1_win_6',
+        index: 6,
+      },
+      {
+        script: '귀끝이 약간 빨개졌다.',
+        type: 'think',
+        id: 'chapter2_scene1_win_7',
+        index: 7,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-1 (Lose): 리팩토링 실패
+  // ----------------------------------------------------------------
+  'chapter2_scene1_lose': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: 'chapter2_scene2',
+    event: 1,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene1_lose_0',
+        index: 0,
+      },
+      {
+        script: '코드가 너무 복잡해서 리팩토링에 실패했다.',
+        type: 'narration',
+        background_image_id: backgroundImageId.lab,
+        id: 'chapter2_scene1_lose_1',
+        index: 1,
+      },
+      {
+        script: '흥, 역시 내 코드가 최고지.',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_거만_crossedarm },
+        type: 'text',
+        id: 'chapter2_scene1_lose_2',
+        index: 2,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-2: Missing_Component - 아픈 도희
+  // ----------------------------------------------------------------
+  'chapter2_scene2': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: '',
+    event: 2,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene2_0',
+        index: 0,
+      },
+      {
+        script: '반대편 창가 쪽이 허전하다. 그 검은 후드티가 안 보인다.',
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.classroom,
+        id: 'chapter2_scene2_1',
+        index: 1,
+      },
+      {
+        script: '저기, 세라 님. 도희 씨 왜 안 나와요?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene2_2',
+        index: 2,
+      },
+      {
+        script: '아, 걔? 몸살 났대. 열이 39도라나 뭐라나.',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_staring_monitor },
+        type: 'text',
+        id: 'chapter2_scene2_3',
+        index: 3,
+      },
+      {
+        script: '...왜? 연락이라도 해보게?',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_lookingme_monitor },
+        type: 'text',
+        id: 'chapter2_scene2_4',
+        index: 4,
+      },
+      {
+        script: '센스라는 걸 발휘해 보자',
+        character_id: characterId.hero,
+        type: 'think',
+        options: [
+          {
+            id: 'opt_dohee_soup',
+            text: '🍲 죽을 배달시켜 준다',
+            score_list: [{ id: 'score_dohee_soup', character_id: characterId.dohee, score: 2 }, { id: 'score_jisoo_jealous', character_id: characterId.jisoo, score: -1 }],
+            nextSceneId: 'chapter2_scene2_dohee',
+          },
+          {
+            id: 'opt_dohee_bad',
+            text: '📱 "몸 관리 좀 잘하지 ㅉㅉ"',
+            score_list: [],
+            nextSceneId: 'chapter2_scene2_bad',
+          },
+          {
+            id: 'opt_sera_ignore',
+            text: '🙅‍♂️ 안 보낸다',
+            score_list: [{ id: 'score_sera_ignore', character_id: characterId.sera, score: 1 }],
+            nextSceneId: 'chapter2_scene2_sera',
+          },
+        ],
+        id: 'chapter2_scene2_5',
+        index: 5,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-2 (Case 1): 죽 배달 (도희 루트)
+  // ----------------------------------------------------------------
+  'chapter2_scene2_dohee': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: 'chapter2_scene3',
+    event: 2,
+    scenario: [
+      {
+        script: '[image]/icon/본죽_기프티콘.png',
+        character_id: characterId.hero,
+        type: '카톡',
+        id: 'chapter2_scene2_dohee_1',
+        index: 1,
+      },
+      {
+        script: '아프다 들었어요.',
+        character_id: characterId.hero,
+        type: '카톡',
+        id: 'chapter2_scene2_dohee_2',
+        index: 2,
+      },
+      {
+        script: '이거 먹고 얼른 나아요, 프로젝트 펑크 내지 말고.',
+        character_id: characterId.hero,
+        type: '카톡',
+        id: 'chapter2_scene2_dohee_3',
+        index: 3,
+      },
+      {
+        script: '...뭐야. 고마워. 잘 먹을게.',
+        character_id: characterId.dohee,
+        type: '카톡',
+        id: 'chapter2_scene2_dohee_4',
+        index: 4,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene2_dohee_5',
+        index: 5,
+      },
+      {
+        script: '(그 날 저녁, 기숙사 방)',
+        type: 'narration',
+        background_image_id: backgroundImageId.jisoo_room,
+        id: 'chapter2_scene2_dohee_6',
+        index: 6,
+      },
+      {
+        script: '(도희의 죽 빈 그릇을 보며) 어? 언니, 너 죽 시켰어? 잘했네!',
+        character_id: characterId.jisoo,
+        character_image_id: { 3: characterImageId.jisoo_smile },
+        type: 'text',
+        id: 'chapter2_scene2_dohee_7',
+        index: 7,
+      },
+      {
+        script: '아니, 누가 보내줬어. 우리반 안경 걔가.',
+        character_id: characterId.dohee,
+        character_image_id: { 1: characterImageId.dohee_happy },
+        type: 'text',
+        id: 'chapter2_scene2_dohee_8',
+        index: 8,
+      },
+      {
+        script: '(표정이 굳으며) ...도훈 오빠가?',
+        character_id: characterId.jisoo,
+        character_image_id: { 3: characterImageId.jisoo_basic },
+        type: 'text',
+        id: 'chapter2_scene2_dohee_9',
+        index: 9,
+      },
+      {
+        script: '오빠는 나한텐 그런 거 안 보내주던데... 좋겠네 언니는.',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter2_scene2_dohee_10',
+        index: 10,
+      },
+      {
+        script: '지수의 표정이 좋지 않다.',
+        type: 'narration',
+        id: 'chapter2_scene2_dohee_11',
+        index: 11,
+      },
+      {
+        script: '[호감도 상승] 도희의 호감도가 상승했습니다.',
+        type: '시스템',
+        id: 'chapter2_scene2_dohee_12',
+        index: 12,
+      },
+      {
+        script: '[호감도 하락] 지수의 호감도가 하락했습니다.',
+        type: '시스템',
+        id: 'chapter2_scene2_dohee_13',
+        index: 13,
+      }
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-2 (Case 2): 꼰대 문자 (BAD ENDING)
+  // ----------------------------------------------------------------
+  'chapter2_scene2_bad': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: '',
+    event: 2,
+    scenario: [
+      {
+        script: 'ㅉㅉ 몸 관리도 실력입니다. 팀원들 민폐 끼치지 말고 푹 쉬세요. [도희]',
+        character_id: characterId.hero,
+        type: '카톡',
+        id: 'chapter2_scene2_bad_1',
+        index: 1,
+      },
+      {
+        script: '뭐?',
+        character_id: characterId.dohee,
+        type: '카톡',
+        id: 'chapter2_scene2_bad_2',
+        index: 2,
+      },
+      {
+        script: '🚨 [치명적 오류] 룸메이트 지수가 이 톡을 봤습니다.',
+        type: '시스템',
+        id: 'chapter2_scene2_bad_3',
+        index: 3,
+      },
+      {
+        script: '오빠... 실망이야. 사람이 어떻게 그래? [지수]',
+        character_id: characterId.jisoo,
+        type: '카톡',
+        id: 'chapter2_scene2_bad_4',
+        index: 4,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene2_bad_5',
+        index: 5,
+      },
+      {
+        script: '(다음 날)',
+        type: 'narration',
+        background_image_id: backgroundImageId.classroom,
+        id: 'chapter2_scene2_bad_6',
+        index: 6,
+      },
+      {
+        script: '모든 분반에 "2분반 이도훈 인성 터짐"이라고 소문이 났다. 아무도 나와 팀을 하려 하지 않는다.',
+        type: 'narration',
+        id: 'chapter2_scene2_bad_7',
+        index: 7,
+      },
+      {
+        script: '[GAME OVER] - 사회적 매장 엔딩',
+        type: '시스템',
+        id: 'chapter2_scene2_bad_8',
+        index: 8,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-2 (Case 3): 안 보낸다 (세라 루트)
+  // ----------------------------------------------------------------
+  'chapter2_scene2_sera': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: 'chapter2_scene3',
+    event: 2,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene2_sera_0',
+        index: 0,
+      },
+      {
+        script: '아뇨, 뭐. 알아서 쉬겠죠. 우리 코드나 짭시다.',
+        character_id: characterId.hero,
+        type: 'text',
+        background_image_id: backgroundImageId.lab,
+        id: 'chapter2_scene2_sera_1',
+        index: 1,
+      },
+      {
+        script: '걱정되긴 한데 나중에 연락해야지',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter2_scene2_sera_2',
+        index: 2,
+      },
+      {
+        script: '흐음~ 뭐야? 보낼 듯이 굴더니. 꽤 냉정하네?',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_lean_chin },
+        type: 'text',
+        id: 'chapter2_scene2_sera_3',
+        index: 3,
+      },
+      {
+        script: '그래, 집중해. 딴 데 한눈팔지 말고 나만 보라고. 프로젝트 말이야.',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene2_sera_4',
+        index: 4,
+      },
+      {
+        script: '방금 \'나만 보라고\' 한 거 맞나? 기분 탓인가.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter2_scene2_sera_5',
+        index: 5,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-3: Exception_Handling - 오리연못의 비밀
+  // ----------------------------------------------------------------
+  'chapter2_scene3': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: 'chapter2_scene4',
+    event: 3,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene3_0',
+        index: 0,
+      },
+      {
+        script: '낮의 햇살이 너무 강렬하다. 기숙사로 돌아가는 길, KAIST의 명물 오리연못 앞을 지나가던 도훈.',
+        type: 'narration',
+        background_image_id: backgroundImageId.kaist_pond,
+        background_sound_id: backgroundSoundId.morning_ambience,
+        id: 'chapter2_scene3_1',
+        index: 1,
+      },
+      {
+        script: '연못에서 누군가 쭈그려 앉아 있다. 세라다.',
+        type: 'narration',
+        id: 'chapter2_scene3_2',
+        index: 2,
+      },
+      {
+        script: '(거위에게 소시지를 떼어주며, 혀 짧은 소리로)',
+        type: 'narration',
+        character_image_id: { 2: characterImageId.sera_pond },
+        id: 'chapter2_scene3_3',
+        index: 3,
+      },
+      {
+        script: '"마이쪄? 우쭈쭈... 마이 먹어라 우리 애기들."',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene3_4',
+        index: 4,
+      },
+      {
+        script: '"있지, 어떤 눈매 더러운 안경 쓴 남자 오면 확 쪼아버려. 알았지?"',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene3_5',
+        index: 5,
+      },
+      {
+        script: '"감히 내 코드를 싹 다 갈아엎어? 보면 엉덩이를 확 물어버려!"',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene3_6',
+        index: 6,
+      },
+      {
+        script: '거위한테 살인 청부라니, 너무한 거 아닙니까?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene3_7',
+        index: 7,
+      },
+      {
+        script: '(화들짝 놀라며) 히익?!',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_surprised },
+        type: 'text',
+        id: 'chapter2_scene3_8',
+        index: 8,
+      },
+      {
+        script: '세라가 놀라서 일어나려다 다리에 쥐가 났다.',
+        type: 'narration',
+        id: 'chapter2_scene3_9',
+        index: 9,
+      },
+      {
+        script: '몸이 연못 쪽으로 기우뚱한다.',
+        type: 'narration',
+        id: 'chapter2_scene3_10',
+        index: 10,
+      },
+      {
+        script: '조심해요!',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene3_11',
+        index: 11,
+      },
+      {
+        script: '다행히 넘어지기 전에 가방끈을 낚아챘다.',
+        type: 'narration',
+        id: 'chapter2_scene3_12',
+        index: 12,
+      },
+      {
+        script: '아, 안 넘어지거든?! 그리고 이거 거위한테 주는 거 아니야! 그냥 남아서 버리려던 거야!',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_annoy_shy },
+        type: 'text',
+        id: 'chapter2_scene3_13',
+        index: 13,
+      },
+      {
+        script: '손에 든 소시지는 누가 봐도 방금 산 새것이다',
+        type: 'think',
+        id: 'chapter2_scene3_14',
+        index: 14,
+      },
+      {
+        script: '소심한 도훈의 \'거리두기\'와 대응',
+        character_id: characterId.hero,
+        type: 'think',
+        options: [
+          {
+            id: 'opt_sera_apologize',
+            text: '잡고 있던 가방끈을 놓는다',
+            score_list: [{ id: 'score_sera_apologize', character_id: characterId.sera, score: 1 }],
+            nextSceneId: 'chapter2_scene3_result1',
+          },
+          {
+            id: 'opt_sera_fact',
+            text: '"버리는 거 치고는... 2+1 스티커가 너무 선명한데요."',
+            score_list: [{ id: 'score_sera_fact', character_id: characterId.sera, score: 2 }],
+            nextSceneId: 'chapter2_scene3_result2',
+          },
+          {
+            id: 'opt_sera_direct',
+            text: '"다리에 쥐 났다면서요... 혼자 설 수 있을 때까지 잡고 있을게요."',
+            score_list: [{ id: 'score_sera_direct', character_id: characterId.sera, score: 3 }],
+            nextSceneId: 'chapter2_scene3_result3',
+          },
+        ],
+        id: 'chapter2_scene3_15',
+        index: 15,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-3 (Result 1): 선택 1 - 당황/사과
+  // ----------------------------------------------------------------
+  'chapter2_scene3_result1': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: 'chapter2_scene4',
+    event: 3,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene3_result1_0',
+        index: 0,
+      },
+      {
+        script: '아, 죄송합니다! 제가 너무 세게 잡아당겼죠? 다리는 괜찮아요?',
+        character_id: characterId.hero,
+        type: 'text',
+        background_image_id: backgroundImageId.kaist_pond,
+        id: 'chapter2_scene3_result1_1',
+        index: 1,
+      },
+      {
+        script: '(오히려 가방끈을 놓으니까 휘청하며) 야! 갑자기 놓으면 어떡해!',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_surprised },
+        type: 'text',
+        id: 'chapter2_scene3_result1_2',
+        index: 2,
+      },
+      {
+        script: '아, 그게... 너무 가까운 것 같아서...',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene3_result1_3',
+        index: 3,
+      },
+      {
+        script: '저, 그리고 아까 \'우쭈쭈\' 하시는 거 다 들었는데, 못 들은 걸로 할게요. 제 메모리에서 방금 강제 종료(Kill Process) 시켰습니다.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene3_result1_4',
+        index: 4,
+      },
+      {
+        script: '악!! 하지 마! 강제 종료고 뭐고 다 잊어버려!!',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_annoy_shy },
+        type: 'text',
+        id: 'chapter2_scene3_result1_5',
+        index: 5,
+      },
+      {
+        script: '💥 [세라]가 당신의 당황한 모습에 오히려 더 부끄러워합니다.',
+        type: '시스템',
+        id: 'chapter2_scene3_result1_6',
+        index: 6,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-3 (Result 2): 선택 2 - 팩트 폭력/어색함
+  // ----------------------------------------------------------------
+  'chapter2_scene3_result2': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: 'chapter2_scene4',
+    event: 3,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene3_result2_0',
+        index: 0,
+      },
+      {
+        script: '버리시는 것자치고는... 포장지가 너무 빳빳한데요. 편의점 2+1 스티커도 방금 붙인 것처럼 깨끗하고...',
+        character_id: characterId.hero,
+        type: 'text',
+        background_image_id: backgroundImageId.kaist_pond,
+        id: 'chapter2_scene3_result2_1',
+        index: 1,
+      },
+      {
+        script: '아, 아니라고! 내가 먹으려다가... 맛없어서 주는 거야!',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_shy_front },
+        type: 'text',
+        id: 'chapter2_scene3_result2_2',
+        index: 2,
+      },
+      {
+        script: '거짓말... 세라 님 거짓말할 때 안경 도수가 안 맞는 사람처럼 눈 깜빡임 횟수 늘어나는 거 알아요? 거위 주려고 산 거 맞으면서...',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene3_result2_3',
+        index: 3,
+      },
+      {
+        script: '...이 씨... 너 진짜 눈치 없는 척하는 거야, 아니면 진짜 성격이 꼬인 거야?!',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene3_result2_4',
+        index: 4,
+      },
+      {
+        script: '(조금 용기를 내서) ...착한 것 같다고 말하려던 건데... 코드는 사나워도, 사람은... 다정한 것 같아서요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene3_result2_5',
+        index: 5,
+      },
+      {
+        script: '🔍 [세라]가 당신의 뜬금없는 칭찬에 \'에러\'가 발생했습니다. (Log: Insight +10)',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_shy_facecover },
+        type: '시스템',
+        id: 'chapter2_scene3_result2_6',
+        index: 6,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-3 (Result 3): 선택 3 - 소심한 직구
+  // ----------------------------------------------------------------
+  'chapter2_scene3_result3': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: 'chapter2_scene4',
+    event: 3,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene3_result3_0',
+        index: 0,
+      },
+      {
+        script: '(가방끈을 꽉 쥔 채 고개를 돌리며) 다리에 쥐 났다면서요. 지금 놓으면 연못에 빠질 게 뻔한데... 혼자 제대로 설 수 있을 때까지 그냥 이러고 있을게요.',
+        character_id: characterId.hero,
+        type: 'text',
+        background_image_id: backgroundImageId.kaist_pond,
+        id: 'chapter2_scene3_result3_1',
+        index: 1,
+      },
+      {
+        script: '(도훈의 뒤통수를 보며) ...너, 팔 안 아파?',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_칭찬부끄 },
+        type: 'text',
+        id: 'chapter2_scene3_result3_2',
+        index: 2,
+      },
+      {
+        script: '아파요. 근데... 세라 님 연못에 빠지면 제가 건져야 하잖아요. 저 운동 부족이라... 세라 님 무게 감당 못 해서 같이 빠질지도 몰라요. 그러니까... 움직이지 마요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene3_result3_3',
+        index: 3,
+      },
+      {
+        script: '...누가 건져달래? ...그리고, 고마워.',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_shy_front },
+        type: 'text',
+        id: 'chapter2_scene3_result3_4',
+        index: 4,
+      },
+      {
+        script: '뭐라고요? 거위 소리 때문에 잘 안 들리는데... 한 번만 더 말해주면 안 돼요?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene3_result3_5',
+        index: 5,
+      },
+      {
+        script: '안 해!! 바보야!!',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_shy_facecover },
+        type: 'text',
+        id: 'chapter2_scene3_result3_6',
+        index: 6,
+      },
+      {
+        script: '💓 [세라]의 심박수가 임계치를 초과했습니다. (Log: Heartbeat > 120bpm)',
+        type: '시스템',
+        id: 'chapter2_scene3_result3_7',
+        index: 7,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-4: Deadlock - 발표 3시간 전
+  // ----------------------------------------------------------------
+  'chapter2_scene4': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: '',
+    event: 4,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene4_0',
+        index: 0,
+      },
+      {
+        script: '발표까지 3시간. 마무리는 거의 다 됐는데, 갑자기 지수가 찾아왔다.',
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.lab,
+        background_sound_id: backgroundSoundId.typing_noise,
+        id: 'chapter2_scene4_1',
+        index: 1,
+      },
+      {
+        script: '도훈 오빠... 저 좀 도와줘요 ㅠㅠ',
+        character_id: characterId.jisoo,
+        character_image_id: { 1: characterImageId.jisoo_begging },
+        type: 'text',
+        id: 'chapter2_scene4_2',
+        index: 2,
+      },
+      {
+        script: '자꾸 NullPointerException이 떠서 앱이 꺼져. 우리 조 팀원들은 다 멘붕이야...',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter2_scene4_3',
+        index: 3,
+      },
+      {
+        script: '오빠밖에 없어 제발...',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter2_scene4_4',
+        index: 4,
+      },
+      {
+        script: '(날카로운 눈빛으로) 야, 이도훈. 어디 가?',
+        character_id: characterId.sera,
+        character_image_id: { 3: characterImageId.sera_거만_crossedarm },
+        type: 'text',
+        id: 'chapter2_scene4_5',
+        index: 5,
+      },
+      {
+        script: '우리 거 PPT 마무리해야지. 지금 남 도와줄 시간 있어? 책임감 무엇?',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene4_6',
+        index: 6,
+      },
+      {
+        script: '누구를 선택하지?',
+        character_id: characterId.hero,
+        type: 'think',
+        options: [
+          {
+            id: 'opt_help_jisoo',
+            text: '💻 지수를 도와준다',
+            score_list: [{ id: 'score_jisoo_help', character_id: characterId.jisoo, score: 3 }, { id: 'score_sera_help_jisoo', character_id: characterId.sera, score: -2 }],
+            nextSceneId: 'chapter2_scene4_jisoo',
+          },
+          {
+            id: 'opt_finish_sera',
+            text: '📝 세라와 마무리한다',
+            score_list: [{ id: 'score_sera_finish', character_id: characterId.sera, score: 3 }, { id: 'score_jisoo_finish', character_id: characterId.jisoo, score: -1 }],
+            nextSceneId: 'chapter2_scene4_sera',
+          },
+        ],
+        id: 'chapter2_scene4_7',
+        index: 7,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-4 (Case 1): 지수를 도와준다
+  // ----------------------------------------------------------------
+  'chapter2_scene4_jisoo': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: '',
+    event: 4,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene4_jisoo_0',
+        index: 0,
+      },
+      {
+        script: '미안, 금방 갔다 올게. 저거 해결 안 되면 지수네 조 발표 못 해.',
+        character_id: characterId.hero,
+        type: 'text',
+        background_image_id: backgroundImageId.lab,
+        id: 'chapter2_scene4_jisoo_1',
+        index: 1,
+      },
+      {
+        script: '오빠 진짜 최고야! 생명의 은인!',
+        character_id: characterId.jisoo,
+        character_image_id: { 1: characterImageId.jisoo_smile },
+        type: 'text',
+        id: 'chapter2_scene4_jisoo_2',
+        index: 2,
+      },
+      {
+        script: '하... 진짜 짜증 나. 맘대로 해!',
+        character_id: characterId.sera,
+        character_image_id: { 3: characterImageId.sera_거만_crossedarm },
+        type: 'text',
+        id: 'chapter2_scene4_jisoo_3',
+        index: 3,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene4_jisoo_4',
+        index: 4,
+      },
+      {
+        script: '지수의 코드를 고쳐주고 돌아왔다.',
+        background_image_id: backgroundImageId.classroom,
+        type: 'narration',
+        id: 'chapter2_scene4_jisoo_5',
+        index: 5,
+      },
+      {
+        script: '다 했니? 자원봉사자 나셨네. 빨리 앉기나 해.',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_annoy_sitting },
+        type: 'text',
+        id: 'chapter2_scene4_jisoo_6',
+        index: 6,
+      },
+      {
+        script: '💔 세라 호감도 하락 / 💚 지수 호감도 대폭 상승',
+        type: '시스템',
+        id: 'chapter2_scene4_jisoo_7',
+        index: 7,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 2-4 (Case 2): 세라와 마무리한다 (세라 True Route)
+  // ----------------------------------------------------------------
+  'chapter2_scene4_sera': {
+    chapter_id: chapterId.chapter2,
+    next_scene_id: 'chapter3_scene1',
+    event: 4,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene4_sera_0',
+        index: 0,
+      },
+      {
+        script: '미안하다 지수야. 지금은 우리 조가 먼저야. 다른 잘 하는 분한테 여쭤봐.',
+        character_id: characterId.hero,
+        type: 'text',
+        background_image_id: backgroundImageId.classroom,
+        id: 'chapter2_scene4_sera_1',
+        index: 1,
+      },
+      {
+        script: '...알았어. 나 갈게 오빠.',
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_삐짐 },
+        type: 'text',
+        id: 'chapter2_scene4_sera_2',
+        index: 2,
+      },
+      {
+        script: '지수가 삐진 듯하다',
+        type: 'think',
+        id: 'chapter2_scene4_sera_3',
+        index: 3,
+      },
+      {
+        script: '...흥, 당연한 선택이지. 어디 가기만 해 봐.',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_칭찬부끄 },
+        type: 'text',
+        id: 'chapter2_scene4_sera_4',
+        index: 4,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter2_scene4_sera_5',
+        index: 5,
+      },
+      {
+        script: '(3시간 뒤, 발표 자료 완성)',
+        type: 'narration',
+        background_image_id: backgroundImageId.lab,
+        id: 'chapter2_scene4_sera_6',
+        index: 6,
+      },
+      {
+        script: '완벽하네요. 이번 프로젝트, 세라 님이 AI 초안 잘 잡아준 덕분에 퀄리티 높게 나왔습니다.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene4_sera_7',
+        index: 7,
+      },
+      {
+        script: '고생 많았어요. 끝까지 잘해봅시다.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter2_scene4_sera_8',
+        index: 8,
+      },
+      {
+        script: '...너도. 너도 꽤 고생했어.',
+        character_id: characterId.sera,
+        character_image_id: { 2: characterImageId.sera_shy_front },
+        type: 'text',
+        id: 'chapter2_scene4_sera_9',
+        index: 9,
+      },
+      {
+        script: '나 혼자였으면... 이렇게 못 했을 거야.',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene4_sera_10',
+        index: 10,
+      },
+      {
+        script: '고마워, 짝궁.',
+        character_id: characterId.sera,
+        type: 'text',
+        id: 'chapter2_scene4_sera_11',
+        index: 11,
+      },
+      {
+        script: '💖 [세라]와의 관계에 진전이 생겼습니다.',
+        type: '시스템',
+        id: 'chapter2_scene4_sera_12',
+        index: 12,
+      },
+      {
+        script: '2주차 종료. 3주차로 이어집니다.',
+        type: '시스템',
+        id: 'chapter2_scene4_sera_13',
+        index: 13,
+      },
+    ],
+  },
+
+  // ============================================================
+  // Week 3: Chapter 3
+  // ============================================================
+
+  // ----------------------------------------------------------------
+  // Scene 3-1: Self_Join - 뜻밖의 제안
+  // ----------------------------------------------------------------
+  'chapter3_scene1': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene2',
+    event: 1,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene1_0',
+        index: 0,
+      },
+      {
+        script: '자~ 3주차 프로젝트 시작합니다!',
+        character_id: characterId.manager,
+        character_image_id: { 2: characterImageId.manager },
+        type: 'text',
+        background_image_id: backgroundImageId.classroom_back,
+        id: 'chapter3_scene1_1',
+        index: 1,
+      },
+      {
+        script: '이번 주차는 자율로 짝꿍 정해서 진행하시면 됩니다. 마음 맞는 분이랑 팀 하세요~',
+        character_id: characterId.manager,
+        type: 'text',
+        id: 'chapter3_scene1_2',
+        index: 2,
+      },
+      {
+        script: '자율이라... 가장 곤란한 방식이다.',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.nobody },
+        type: 'think',
+        id: 'chapter3_scene1_3',
+        index: 3,
+      },
+      {
+        script: '아는 사람이라곤 2주차 때 티격태격했던 세라 님 정도인데, 포스텍 분들이랑 팀 하러 갔겠지.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene1_4',
+        index: 4,
+      },
+      {
+        script: '이번 주는 혼자한다고 말씀드리고 Full-Stack을 뛰어야 하나.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene1_5',
+        index: 5,
+      },
+      {
+        script: '(그때, 누군가 내 책상을 툭 친다)',
+        type: 'narration',
+        id: 'chapter3_scene1_6',
+        index: 6,
+      },
+      {
+        script: '야. 나랑 같이 하자.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_basic },
+        type: 'text',
+        id: 'chapter3_scene1_7',
+        index: 7,
+      },
+      {
+        script: '...네? 저랑요?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene1_8',
+        index: 8,
+      },
+      {
+        script: '그래. 너 말고 누구 있냐? 2주차 때 보니까 딴 여자랑도 잘만 하더만.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene1_9',
+        index: 9,
+      },
+      {
+        script: '나랑도 해. 내가 기획이랑 디자인 다 할게. 넌 백엔드만 파.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene1_10',
+        index: 10,
+      },
+      {
+        script: '아니, 싫다는 게 아니라...',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene1_11',
+        index: 11,
+      },
+      {
+        script: '아 시끄러. 일단 알았다고 해.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene1_12',
+        index: 12,
+      },
+      {
+        script: '[시스템] [도희] 님과 파트너가 되었습니다.',
+        type: '시스템',
+        id: 'chapter3_scene1_13',
+        index: 13,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2: Deadlock - 두 개의 요청
+  // ----------------------------------------------------------------
+  'chapter3_scene2': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: '',
+    event: 2,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_0',
+        index: 0,
+      },
+      {
+        script: '2분반 사람들끼리 보드게임 카페갔다가 끝나고 회식을 하기로 했다. 시끌벅적하다.',
+        type: 'narration',
+        background_image_id: backgroundImageId.boardgame_cafe,
+        background_sound_id: backgroundSoundId.party_noise,
+        id: 'chapter3_scene2_1',
+        index: 1,
+      },
+      {
+        script: '도훈은 잠시 화장실을 가려고 방에서 나왔다.',
+        type: 'narration',
+        id: 'chapter3_scene2_2',
+        index: 2,
+      },
+      {
+        script: '야! 너 기다려봐',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_basic },
+        type: 'text',
+        id: 'chapter3_scene2_3',
+        index: 3,
+      },
+      {
+        script: '너 왜 안 물어봐?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_4',
+        index: 4,
+      },
+      {
+        script: '네? 뭘요?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_5',
+        index: 5,
+      },
+      {
+        script: '내가 왜 너랑 같이 팀 하자고 했는지 안 궁금하냐고.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_6',
+        index: 6,
+      },
+      {
+        script: '보통은 이유를 묻지 않나? 너 진짜 관심 없구나?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_7',
+        index: 7,
+      },
+      {
+        script: '아... 그, 왜 저랑 하자고 하셨습니까? 코딩 노예가 필요하셨나요?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_8',
+        index: 8,
+      },
+      {
+        script: '하... 진짜 답답해.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_9',
+        index: 9,
+      },
+      {
+        script: '...나 회식 시끄러워서 가기 싫어. 너도 그렇잖아.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_10',
+        index: 10,
+      },
+      {
+        script: '나랑 따로 밥 먹자. 그러면 이유 알려줄게.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_11',
+        index: 11,
+      },
+      {
+        script: '엥 이건 무슨 Request 지',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene2_12',
+        index: 12,
+      },
+      {
+        script: '일단 Accept 해야되는 건가',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene2_13',
+        index: 13,
+      },
+      {
+        script: '도훈 오빠!!! 찾았다!',
+        character_id: characterId.jisoo,
+        character_image_id: { 1: characterImageId.jisoo_hello, 2: characterImageId.nobody, 3: characterImageId.dohee_basic },
+        type: 'text',
+        id: 'chapter3_scene2_14',
+        index: 14,
+      },
+      {
+        script: '에? 뭐야',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_15',
+        index: 15,
+      },
+      {
+        script: '어? 지수 니가 여긴 웬일이야?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_16',
+        index: 16,
+      },
+      {
+        script: '(도훈의 팔을 자연스럽게 잡으며)',
+        type: 'narration',
+        id: 'chapter3_scene2_17',
+        index: 17,
+      },
+      {
+        script: '오빠 저번 주에 나 도와줘서 에러 잡았잖아. 내가 너무 고마워서 밥 산다고 했지?',
+        character_id: characterId.jisoo,
+        character_image_id: { 1: characterImageId.jisoo_smile },
+        type: 'text',
+        id: 'chapter3_scene2_18',
+        index: 18,
+      },
+      {
+        script: '지금 먹자! 내가 오빠 좋아하는 마라탕 맛집 알아놨어! 가자!',
+        character_id: characterId.jisoo,
+        character_image_id: { 1: characterImageId.jisoo_lookingup },
+        type: 'text',
+        id: 'chapter3_scene2_19',
+        index: 19,
+      },
+      {
+        script: '나 오빠 찾으러 애들이랑 보드게임카페 온 거란 말야~',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_20',
+        index: 20,
+      },
+      {
+        script: '나도 방금 먹자고 했는데.',
+        character_id: characterId.dohee,
+        character_image_id: { 3: characterImageId.dohee_basic },
+        type: 'text',
+        id: 'chapter3_scene2_21',
+        index: 21,
+      },
+      {
+        script: '어? 언니도? 언니네 회식하는 거 아니었어?',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_22',
+        index: 22,
+      },
+      {
+        script: '빠지려고 했지. 도훈이랑 할 얘기도 있고.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_23',
+        index: 23,
+      },
+      {
+        script: '아~ 그래? 근데 어쩌지? 나 오빠한테 빚진 게 있어서 꼭 갚아야 하는데~',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_24',
+        index: 24,
+      },
+      {
+        script: '오빠, 오늘 나랑 먹으면 안 돼? 응?',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_25',
+        index: 25,
+      },
+      {
+        script: '[System Warning] Exception 발생. Race Condition 감지.',
+        type: '시스템',
+        id: 'chapter3_scene2_26',
+        index: 26,
+      },
+      {
+        script: '두 개의 Request가 동시에 들어왔다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene2_27',
+        index: 27,
+      },
+      {
+        script: '우선순위 큐(Priority Queue)가 꼬였다. 누구를 선택해야 프로세스가 죽지 않을까?',
+        character_id: characterId.hero,
+        type: 'think',
+        options: [
+          {
+            id: 'opt_jisoo_dinner',
+            text: '[지수]와 먹는다. (메뉴: 마라탕)',
+            score_list: [{ id: 'score_jisoo_dinner', character_id: characterId.jisoo, score: 3 }, { id: 'score_dohee_jisoo', character_id: characterId.dohee, score: -2 }],
+            nextSceneId: 'chapter3_scene2_jisoo',
+          },
+          {
+            id: 'opt_dohee_dinner',
+            text: '[도희]와 먹는다. (메뉴: 국밥)',
+            score_list: [{ id: 'score_dohee_dinner', character_id: characterId.dohee, score: 3 }, { id: 'score_jisoo_dohee', character_id: characterId.jisoo, score: -1 }],
+            nextSceneId: 'chapter3_scene2_dohee',
+          },
+          {
+            id: 'opt_together_dinner',
+            text: '(히든) 셋이 같이 먹는다. (병렬 처리 시도)',
+            score_list: [{ id: 'score_dohee_together', character_id: characterId.dohee, score: -3 }, { id: 'score_jisoo_together', character_id: characterId.jisoo, score: 1 }],
+            nextSceneId: 'chapter3_scene2_together',
+          },
+        ],
+        id: 'chapter3_scene2_28',
+        index: 28,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2 (Branch A): 지수와 먹는다
+  // ----------------------------------------------------------------
+  'chapter3_scene2_jisoo': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene2_jisoo_menu',
+    event: 2,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_jisoo_0',
+        index: 0,
+      },
+      {
+        script: '아 밥 산다 했지',
+        character_id: characterId.hero,
+        type: 'text',
+        background_image_id: backgroundImageId.boardgame_cafe,
+        id: 'chapter3_scene2_jisoo_1',
+        index: 1,
+      },
+      {
+        script: '누나 그러면 밥은 다음에 먹어요',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_2',
+        index: 2,
+      },
+      {
+        script: '저 공짜 밥 좀 얻어먹고 올게요',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_3',
+        index: 3,
+      },
+      {
+        script: '와! 신난다! 오빠 얼른 먹으러 가자',
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_신난다 },
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_4',
+        index: 4,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_jisoo_5',
+        index: 5,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2 (Branch A - Menu): 메뉴 주문
+  // ----------------------------------------------------------------
+  'chapter3_scene2_jisoo_menu': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene2_jisoo_after',
+    event: 2,
+    scenario: [
+      {
+        script: '아 배고파 빨리 시켜야지',
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.kiosk,
+        id: 'chapter3_scene2_jisoo_menu_0',
+        index: 0,
+      },
+      {
+        script: '어?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_menu_1',
+        index: 1,
+      },
+      {
+        script: '[시스템] 키오스크가 오류가 나서 메뉴 이름이 섞여 나옵니다.',
+        type: '시스템',
+        id: 'chapter3_scene2_jisoo_menu_2',
+        index: 2,
+      },
+      {
+        script: '정상적인 메뉴를 5초 안에 찾아 클릭하세요!',
+        type: '시스템',
+        id: 'chapter3_scene2_jisoo_menu_3',
+        index: 3,
+      },
+      {
+        script: '🎮 미니게임 [틀린 글자 찾기 - 메뉴 주문]',
+        type: 'game',
+        game: {
+          game_id: 'menu_find_game',
+          game_name: '틀린 글자 찾기 - 메뉴 주문',
+          win_scene_id: 'chapter3_scene2_jisoo_win',
+          lose_scene_id: 'chapter3_scene2_jisoo_lose',
+        },
+        id: 'chapter3_scene2_jisoo_menu_4',
+        index: 4,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2 (Branch A - Win): 미니게임 승리
+  // ----------------------------------------------------------------
+  'chapter3_scene2_jisoo_win': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene2_jisoo_after',
+    event: 2,
+    scenario: [
+      {
+        script: '고르신 메뉴가 성공적으로 주문되었습니다.',
+        type: '시스템',
+        id: 'chapter3_scene2_jisoo_win_0',
+        index: 0,
+      },
+      {
+        script: '꺄! 오빠 키오스크도 고칠 줄 알아? 진짜 멋지다!',
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_신난다 },
+        type: 'text',
+        background_image_id: backgroundImageId.restaurant_inside,
+        id: 'chapter3_scene2_jisoo_win_1',
+        index: 1,
+      },
+      {
+        script: '마라탕 맛있게 먹자!',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_win_2',
+        index: 2,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2 (Branch A - Lose): 미니게임 실패
+  // ----------------------------------------------------------------
+  'chapter3_scene2_jisoo_lose': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene2_jisoo_after',
+    event: 2,
+    scenario: [
+      {
+        script: '주문 오류입니다.',
+        type: '시스템',
+        id: 'chapter3_scene2_jisoo_lose_0',
+        index: 0,
+      },
+      {
+        script: '아,, 주문이 안 되네',
+        character_id: characterId.hero,
+        type: 'text',
+        background_image_id: backgroundImageId.restaurant_inside,
+        id: 'chapter3_scene2_jisoo_lose_1',
+        index: 1,
+      },
+      {
+        script: '옆에 김밥천국 갈래…?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_lose_2',
+        index: 2,
+      },
+      {
+        script: '아 뭐야 ㅠ 마라탕 먹고 싶었는데 ㅠ',
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_disappointed },
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_lose_3',
+        index: 3,
+      },
+      {
+        script: '[시스템] 도훈의 센스 부족이 입증되었습니다..',
+        type: '시스템',
+        id: 'chapter3_scene2_jisoo_lose_4',
+        index: 4,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2 (Branch A - After): 지수와 먹은 후
+  // ----------------------------------------------------------------
+  'chapter3_scene2_jisoo_after': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene5',
+    event: 2,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_jisoo_after_0',
+        index: 0,
+      },
+      {
+        script: '지수와 즐겁게 밥을 먹고 아이스크림을 먹으며 귀가 중.',
+        type: 'narration',
+        background_image_id: backgroundImageId.night_street,
+        background_sound_id: backgroundSoundId.romantic,
+        id: 'chapter3_scene2_jisoo_after_1',
+        index: 1,
+      },
+      {
+        script: '아 진짜? 도훈 오빠 의외로 엉뚱하다~ 완전 웃겨!',
+        character_id: characterId.jisoo,
+        character_image_id: { 2: characterImageId.jisoo_laugh },
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_2',
+        index: 2,
+      },
+      {
+        script: '오늘 같이 밥 먹길 잘했다. 그치?',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_3',
+        index: 3,
+      },
+      {
+        script: '...어? 저기 벤치에 누구 앉아 있지 않아?',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_4',
+        index: 4,
+      },
+      {
+        script: '오리연못 근처 가로등 아래. 어둠의 아우라를 풍기는 누군가가 있다. 도희다.',
+        type: 'narration',
+        id: 'chapter3_scene2_jisoo_after_5',
+        character_image_id: { 2: characterImageId.nobody },
+        background_image_id: backgroundImageId.dohee_alone,
+        index: 5,
+      },
+      {
+        script: '손에는 반쯤 비운 [솔의 눈] 캔이 들려 있고, 표정은 세상 짐을 다 짊어진 듯하다.',
+        type: 'narration',
+        id: 'chapter3_scene2_jisoo_after_6',
+        index: 6,
+      },
+      {
+        script: '시스템 경고. 배터리 잔량 5% 미만의 생명체 발견. 고도희다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene2_jisoo_after_7',
+        index: 7,
+      },
+      {
+        script: '회식에서 탈출 못한 건가.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene2_jisoo_after_8',
+        index: 8,
+      },
+      {
+        script: '도희 씨? 여기서 뭐 하세요?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_9',
+        index: 9,
+      },
+      {
+        script: '(천천히 고개를 들며, 풀린 눈으로)',
+        type: 'narration',
+        background_image_id: backgroundImageId.dohee_alone_background,
+        character_image_id: { 2: characterImageId.dohee_no_annoyed },
+        id: 'chapter3_scene2_jisoo_after_10',
+        index: 10,
+      },
+      {
+        script: '...아. 너네구나.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_11',
+        index: 11,
+      },
+      {
+        script: '언니! 너 안 들어가고 여기서 뭐 해? 회식은?',
+        character_id: characterId.jisoo,
+        character_image_id: { 1: characterImageId.jisoo_smile, 2: characterImageId.nobody, 3: characterImageId.dohee_no_annoyed },
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_12',
+        index: 12,
+      },
+      {
+        script: '(마른세수를 하며)',
+        type: 'narration',
+        id: 'chapter3_scene2_jisoo_after_13',
+        index: 13,
+      },
+      {
+        script: '말도 마... 시끄러워서 고막 터지는 줄 알았어.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_14',
+        index: 14,
+      },
+      {
+        script: '어떤 3분반 남자가 자꾸 족보 준다고 치근덕대질 않나...',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_15',
+        index: 15,
+      },
+      {
+        script: '(나를 빤히 쳐다본다. 원망보다는 서운함이 섞여 있다)',
+        type: 'narration',
+        id: 'chapter3_scene2_jisoo_after_16',
+        index: 16,
+      },
+      {
+        script: '너네는... 좋았나 봐? 얼굴이 폈네.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_17',
+        index: 17,
+      },
+      {
+        script: '저희는 그냥 밥만 먹었습니다. 도희 씨야말로 괜찮습니까? 안색이 Blue Screen 뜬 것 같은데요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_18',
+        index: 18,
+      },
+      {
+        script: '(피식 웃으며 힘없이 손을 뻗는다)',
+        type: 'narration',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_jisoo_after_19',
+        index: 19,
+      },
+      {
+        script: '...나 좀 일으켜줘. 기 빨려서 다리에 힘이 안 들어가.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_안아줘요 },
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_20',
+        index: 20,
+      },
+      {
+        script: '기숙사까지만 좀 부축해 줘.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_21',
+        index: 21,
+      },
+      {
+        script: '어머, 많이 마셨어? 도훈 오빠 얼른 도와줘! 내가 가방 들어줄게!',
+        character_id: characterId.jisoo,
+        character_image_id: { 1: characterImageId.jisoo_smile, 2: characterImageId.nobody, 3: characterImageId.dohee_no_안아줘요 },
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_22',
+        index: 22,
+      },
+      {
+        script: '(도훈의 팔을 잡고 일어나며, 귓가에 작게 속삭인다)',
+        type: 'narration',
+        id: 'chapter3_scene2_jisoo_after_23',
+        index: 23,
+      },
+      {
+        script: '...다음엔 나랑 먹어. 억울해서 안 되겠으니까.',
+        character_image_id: { 1: characterImageId.nobody, 2: characterImageId.dohee_no_shy, 3: characterImageId.nobody },
+        type: 'text',
+        id: 'chapter3_scene2_jisoo_after_24',
+        index: 24,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2 (Branch B): 도희와 먹는다
+  // ----------------------------------------------------------------
+  'chapter3_scene2_dohee': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene2_dohee_after',
+    event: 2,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_dohee_0',
+        index: 0,
+      },
+      {
+        script: '그래도 밥 먹자고 먼저 말한 건 도희 누나니까 오늘은 누나랑 먹을게',
+        character_id: characterId.hero,
+        type: 'text',
+        background_image_id: backgroundImageId.boardgame_cafe,
+        id: 'chapter3_scene2_dohee_1',
+        index: 1,
+      },
+      {
+        script: '빨리 와 멍청아',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_angry },
+        type: 'text',
+        id: 'chapter3_scene2_dohee_2',
+        index: 2,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_dohee_3',
+        index: 3,
+      },
+      {
+        script: '아 배고파 빨리 시켜야지',
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.kiosk,
+        id: 'chapter3_scene2_dohee_4',
+        index: 4,
+      },
+      {
+        script: '어?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_5',
+        index: 5,
+      },
+      {
+        script: '[시스템] 키오스크가 오류가 나서 메뉴 이름이 섞여 나옵니다.',
+        type: '시스템',
+        id: 'chapter3_scene2_dohee_6',
+        index: 6,
+      },
+      {
+        script: '정상적인 메뉴를 5초 안에 찾아 클릭하세요!',
+        type: '시스템',
+        id: 'chapter3_scene2_dohee_7',
+        index: 7,
+      },
+      {
+        script: '🎮 미니게임 [틀린 글자 찾기 - 메뉴 주문]',
+        type: 'game',
+        game: {
+          game_id: 'menu_find_game',
+          game_name: '틀린 글자 찾기 - 메뉴 주문',
+          win_scene_id: 'chapter3_scene2_dohee_win',
+          lose_scene_id: 'chapter3_scene2_dohee_lose',
+        },
+        id: 'chapter3_scene2_dohee_8',
+        index: 8,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2 (Branch B - Win): 미니게임 승리
+  // ----------------------------------------------------------------
+  'chapter3_scene2_dohee_win': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene2_dohee_after',
+    event: 2,
+    scenario: [
+      {
+        script: '고르신 메뉴가 성공적으로 주문되었습니다.',
+        type: '시스템',
+        id: 'chapter3_scene2_dohee_win_0',
+        index: 0,
+      },
+      {
+        script: '뭐야 너 키오스크도 고칠 줄 아냐?',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_surprised },
+        type: 'text',
+        background_image_id: backgroundImageId.restaurant_inside,
+        id: 'chapter3_scene2_dohee_win_1',
+        index: 1,
+      },
+      {
+        script: '좀 치네',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_smile },
+        type: 'text',
+        id: 'chapter3_scene2_dohee_win_2',
+        index: 2,
+      },
+      {
+        script: '국밥 맛있게 먹자',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_win_3',
+        index: 3,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2 (Branch B - Lose): 미니게임 실패
+  // ----------------------------------------------------------------
+  'chapter3_scene2_dohee_lose': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene2_dohee_after',
+    event: 2,
+    scenario: [
+      {
+        script: '주문 오류입니다.',
+        type: '시스템',
+        id: 'chapter3_scene2_dohee_lose_0',
+        index: 0,
+      },
+      {
+        script: '아,, 주문이 안 되네',
+        character_id: characterId.hero,
+        type: 'text',
+        background_image_id: backgroundImageId.restaurant_inside,
+        id: 'chapter3_scene2_dohee_lose_1',
+        index: 1,
+      },
+      {
+        script: '옆에 김밥천국 갈래…?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_lose_2',
+        index: 2,
+      },
+      {
+        script: '아 뭐야 국밥 먹고 싶었는데.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_angry },
+        type: 'text',
+        id: 'chapter3_scene2_dohee_lose_3',
+        index: 3,
+      },
+      {
+        script: '[시스템] 도훈의 센스 부족이 입증되었습니다..',
+        type: '시스템',
+        id: 'chapter3_scene2_dohee_lose_4',
+        index: 4,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2 (Branch B - After): 도희와 먹은 후
+  // ----------------------------------------------------------------
+  'chapter3_scene2_dohee_after': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene5',
+    event: 2,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_dohee_after_0',
+        index: 0,
+      },
+      {
+        script: '조용한 국밥집에서 식사 후, 한적한 산책로를 걷는 중.',
+        type: 'narration',
+        background_image_id: backgroundImageId.dohee_alone_background,
+        background_sound_id: backgroundSoundId.romantic,
+        id: 'chapter3_scene2_dohee_after_1',
+        index: 1,
+      },
+      {
+        script: '...오늘 고마웠어. 회식 갔으면 체했을 거야.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_smile },
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_2',
+        index: 2,
+      },
+      {
+        script: '너랑 먹어서 다행이다. 국밥도 맛있었고.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_3',
+        index: 3,
+      },
+      {
+        script: '저야말로요. 도희 씨가 그렇게 잘 드실 줄 몰랐습니다. 완뚝 하시던데요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_4',
+        index: 4,
+      },
+      {
+        script: '(얼굴 붉히며) 야! 그런 건 기억하지 마!',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_shy },
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_5',
+        index: 5,
+      },
+      {
+        script: '(분위기가 몽글몽글해지려는 찰나...)',
+        type: 'narration',
+        id: 'chapter3_scene2_dohee_after_6',
+        index: 6,
+      },
+      {
+        script: '흡! 흡! 하! 하!',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_7',
+        index: 7,
+      },
+      {
+        script: '뒤에서 규칙적인 숨소리와 함께 빠른 발소리가 들려온다.',
+        type: 'narration',
+        id: 'chapter3_scene2_dohee_after_8',
+        index: 8,
+      },
+      {
+        script: '파란색색 런닝복을 입은 누군가가 바람처럼 달려와 둘 앞에 멈춰 선다. 지수다.',
+        type: 'narration',
+        character_image_id: { 1: characterImageId.dohee_no_basic, 2: characterImageId.nobody, 3: characterImageId.jisoo_running },
+        id: 'chapter3_scene2_dohee_after_9',
+        index: 9,
+      },
+      {
+        script: '(땀에 젖은 머리카락을 쓸어 넘기며)',
+        type: 'narration',
+        id: 'chapter3_scene2_dohee_after_10',
+        index: 10,
+      },
+      {
+        script: '헉... 헉... 어?! 도훈 오빠랑 도희네?!',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_11',
+        index: 11,
+      },
+      {
+        script: '부지런하게 러닝이라니. 에너지가 원자로 수준이다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene2_dohee_after_12',
+        index: 12,
+      },
+      {
+        script: '지수야? 운동하니?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_13',
+        index: 13,
+      },
+      {
+        script: '응! 오늘 맛있는 거 못 먹어서 몸이라도 가볍게 하려고!',
+        character_id: characterId.jisoo,
+        character_image_id: { 3: characterImageId.jisoo_running_stand },
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_15',
+        index: 14,
+      },
+      {
+        script: '둘이 데이트... 아니, 밥 잘 먹고 오는 길이야?',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_16',
+        index: 15,
+      },
+      {
+        script: '(미간을 찌푸리며) ...어. 이제 들어가는 길이야. 넌 더 뛰게?',
+        character_id: characterId.dohee,
+        character_image_id: { 1: characterImageId.dohee_no_annoyed },
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_17',
+        index: 16,
+      },
+      {
+        script: '(싱긋 웃으며 도훈의 반대편 옆에 선다)',
+        type: 'narration',
+        id: 'chapter3_scene2_dohee_after_18',
+        index: 17,
+      },
+      {
+        script: '아니~ 마침 딱 마주쳤는데 같이 들어가야지! 나도 이제 다 뛰었어.',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_19',
+        index: 18,
+      },
+      {
+        script: '오빠, 나 다리 좀 아픈데 천천히 가도 돼?',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_20',
+        index: 19,
+      },
+      {
+        script: '지수에게서 땀 냄새가 아닌 상쾌한 바디워시 향과 열기가 확 느껴진다.',
+        type: 'narration',
+        id: 'chapter3_scene2_dohee_after_21',
+        index: 20,
+      },
+      {
+        script: '도희의 정적인 분위기가 지수의 동적인 에너지에 의해 와장창 깨졌다.',
+        type: 'narration',
+        id: 'chapter3_scene2_dohee_after_22',
+        index: 21,
+      },
+      {
+        script: '오빠, 근데 둘이 뭐 먹었어? 나 배고픈데 편의점 들러서 라면 먹고 갈까? 내가 쏠게!',
+        character_id: characterId.jisoo,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_23',
+        index: 22,
+      },
+      {
+        script: '방금 먹고와서…',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_24',
+        index: 23,
+      },
+      {
+        script: '(작게 한숨) ...하. 쟨 지치지도 않나 봐.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_dohee_after_25',
+        index: 24,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-2 (Branch C): 셋이 같이 먹는다 (히든)
+  // ----------------------------------------------------------------
+  'chapter3_scene2_together': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene2_jisoo_menu',
+    event: 2,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_together_0',
+        index: 0,
+      },
+      {
+        script: '거절은 `Risk`가 크다. 그렇다면...로드 밸런싱이다.',
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.boardgame_cafe,
+        id: 'chapter3_scene2_together_1',
+        index: 1,
+      },
+      {
+        script: '트래픽을 분산 처리한다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene2_together_2',
+        index: 2,
+      },
+      {
+        script: '...그럼, 셋이 같이 먹으러 가죠.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_together_3',
+        index: 3,
+      },
+      {
+        script: '뭐?',
+        character_id: characterId.jisoo,
+        character_image_id: { 1: characterImageId.jisoo_basic },
+        type: 'text',
+        id: 'chapter3_scene2_together_4',
+        index: 4,
+      },
+      {
+        script: '하?',
+        character_id: characterId.dohee,
+        character_image_id: { 3: characterImageId.dohee_no_annoyed },
+        type: 'text',
+        id: 'chapter3_scene2_together_5',
+        index: 5,
+      },
+      {
+        script: '지수도 밥 산다고 했고, 도희 씨랑도 할 얘기가 있으니까.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_together_6',
+        index: 6,
+      },
+      {
+        script: '우리 같은 2분반이랑 1분반 교류도 할 겸. 마라탕 먹으러 가시죠.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_together_7',
+        index: 7,
+      },
+      {
+        script: '도희 씨, 백탕 드시면 되잖아요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene2_together_8',
+        index: 8,
+      },
+      {
+        script: '...와. 너 진짜 T냐? 눈치 밥 말아 먹었어?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene2_together_9',
+        index: 9,
+      },
+      {
+        script: '나 그냥 회식 갈래',
+        character_id: characterId.dohee,
+        character_image_id: { 3: characterImageId.nobody },
+        type: 'text',
+        id: 'chapter3_scene2_together_10',
+        index: 10,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_together_11',
+        index: 11,
+      },
+      {
+        script: '오빠 그래도 둘이 먹게 됐네 너무 좋당~!',
+        character_id: characterId.jisoo,
+        character_image_id: { 1: characterImageId.jisoo_lookingup },
+        type: 'text',
+        background_image_id: backgroundImageId.restaurant_inside,
+        id: 'chapter3_scene2_together_12',
+        index: 12,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene2_together_13',
+        index: 13,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-5: Git Commit - 주석 플러팅
+  // ----------------------------------------------------------------
+  'chapter3_scene5': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene7',
+    event: 5,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene5_0',
+        index: 0,
+      },
+      {
+        script: '3주차 발표 직전 날이다.',
+        character_id: characterId.hero,
+        type: 'think',
+        background_image_id: backgroundImageId.cafe,
+        id: 'chapter3_scene5_1',
+        index: 1,
+      },
+      {
+        script: '내일이면 도희랑도 다른 팀이네. 시간 빠르다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene5_2',
+        index: 2,
+      },
+      {
+        script: '야, 이도훈. 나 지금 프엔 작업한 거 커밋한다?',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_cafe },
+        type: 'text',
+        id: 'chapter3_scene5_3',
+        index: 3,
+      },
+      {
+        script: 'PR 날렸으니까 코드 리뷰하고 Merge 해.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene5_4',
+        index: 4,
+      },
+      {
+        script: '네~ 확인할게요',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene5_5',
+        index: 5,
+      },
+      {
+        script: '[시스템] 💻 [GitHub] 알림: `dohee_ko` 님이 PR을 생성했습니다.',
+        type: 'narration',
+        id: 'chapter3_scene5_6',
+        index: 6,
+      },
+      {
+        script: '기능 구현 코드 깔끔하네. 역시 잘해.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene5_7',
+        index: 7,
+      },
+      {
+        script: '...어? 파일 맨 아래에 주석이 있네.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene5_8',
+        index: 8,
+      },
+      {
+        script: '// 이 기능 구현하느라 당 떨어졌음.\n// P.S. 목요일 오전에 심심한데 성심당 빵 사러 갈 사람 구함 (0/1)\n// Null Check 필수: 안 간다고 하면 에러 낼 거임.',
+        type: 'narration',
+        id: 'chapter3_scene5_9',
+        index: 9,
+      },
+      {
+        script: '...푸핫',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene5_10',
+        index: 10,
+      },
+      {
+        script: '...왜 웃어? 코드 이상해?',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_빼꼼 },
+        type: 'text',
+        id: 'chapter3_scene5_11',
+        index: 11,
+      },
+      {
+        script: '아뇨. 코드가 아주... Readable 하네요. 의도가 명확해서 좋습니다.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene5_12',
+        index: 12,
+      },
+      {
+        script: '바로 Approve 할게요. 파티원 1명 추가해서요. (1/1)',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene5_13',
+        index: 13,
+      },
+      {
+        script: '...흥. 알았으면 빨리 수정하고 push 해.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_cafe_shame },
+        type: 'text',
+        id: 'chapter3_scene5_14',
+        index: 14,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-7: Build Success - 발표 종료
+  // ----------------------------------------------------------------
+  'chapter3_scene7': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter3_scene6',
+    event: 7,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene7_0',
+        index: 0,
+      },
+      {
+        script: '무사히 3주차 발표를 마쳤다. 우리 조의 앱은 완벽하게 돌아갔고, 반응도 뜨거웠다.',
+        type: 'narration',
+        background_image_id: backgroundImageId.auditorium,
+        id: 'chapter3_scene7_1',
+        index: 1,
+      },
+      {
+        script: '수고했어요, 도희 씨. 최고의 파트너였습니다.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene7_2',
+        index: 2,
+      },
+      {
+        script: '...너도. 나쁘지 않았어.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_no_부탁 },
+        type: 'text',
+        id: 'chapter3_scene7_4',
+        index: 3,
+      },
+      {
+        script: '아니... 꽤 좋았어.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene7_5',
+        index: 4,
+      },
+      {
+        script: '다음 주 마지막인데... 그때도 볼 수 있었으면 좋겠네.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene7_6',
+        index: 5,
+      },
+      {
+        script: '네?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene7_7',
+        index: 6,
+      },
+      {
+        script: '아냐! 간다! 내일 성심당 앞에서 10시에 봐!',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene7_8',
+        index: 7,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-6: Run_Game - 성심당 레이스
+  // ----------------------------------------------------------------
+  'chapter3_scene6': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: '',
+    event: 6,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene6_0',
+        index: 0,
+      },
+      {
+        script: '(다음날 성심당 은행동 본점 앞)',
+        type: 'narration',
+        background_image_id: backgroundImageId.성심당_앞,
+        id: 'chapter3_scene6_1',
+        index: 1,
+      },
+      {
+        script: '야 이도훈!',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_2',
+        index: 2,
+      },
+      {
+        script: '..어?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_3',
+        index: 3,
+      },
+      {
+        script: '너무 예쁘다...',
+        type: 'think',
+        character_id: characterId.hero,
+        character_image_id: { 2: characterImageId.dohee_pretty_basic },
+        id: 'chapter3_scene6_4',
+        index: 4,
+      },
+      {
+        script: '..왜. 안 어울려?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_5',
+        index: 5,
+      },
+      {
+        script: '아뇨 개예쁜데요',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene6_6',
+        index: 6,
+      },
+      {
+        script: '라고 할 뻔',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene6_7',
+        index: 7,
+      },
+      {
+        script: 'ㅇ..아니에요 줄이나 빨리 서시죠',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_8',
+        index: 8,
+      },
+      {
+        script: '[시스템] 🎮 미니게임 [성심당 튀소 확보 작전]이 시작됩니다!',
+        type: '시스템',
+        id: 'chapter3_scene6_9',
+        index: 9,
+      },
+      {
+        script: '목표: 엄청난 인파를 피해서 \'튀김소보로\'와 \'명란바게트\'를 쟁반에 담으세요.',
+        type: '시스템',
+        id: 'chapter3_scene6_10',
+        index: 10,
+      },
+      {
+        script: '조작: 방향키로 빵 쟁반에 담기.',
+        type: '시스템',
+        id: 'chapter3_scene6_11',
+        index: 11,
+      },
+      {
+        script: '🎮 미니게임 [성심당 튀소 확보 작전]',
+        type: 'game',
+        game: {
+          game_id: 'sungsimdang_game',
+          game_name: '성심당 튀소 확보 작전',
+          win_scene_id: 'chapter3_scene6_win',
+          lose_scene_id: 'chapter3_scene6_lose',
+        },
+        id: 'chapter3_scene6_12',
+        index: 12,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-6 (Win): 성심당 게임 승리
+  // ----------------------------------------------------------------
+  'chapter3_scene6_win': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter4_scene1',
+    event: 6,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene6_win_0',
+        index: 0,
+      },
+      {
+        script: '(빵 봉투를 품에 안고 행복해하며)',
+        type: 'narration',
+        character_image_id: { 2: characterImageId.dohee_pretty_bread },
+        background_image_id: backgroundImageId.성심당_앞,
+        id: 'chapter3_scene6_win_1',
+        index: 1,
+      },
+      {
+        script: '와... 냄새 미쳤다. 너 좀 잘 뚫는다? 덕분에 샀어.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_win_2',
+        index: 2,
+      },
+      {
+        script: '도희 씨 좋아하는 것만 봐도 배부르네요.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_win_3',
+        index: 3,
+      },
+      {
+        script: '...너 가끔 훅 들어오더라.',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_pretty_bread_shame },
+        type: 'text',
+        id: 'chapter3_scene6_win_4',
+        index: 4,
+      },
+      {
+        script: '[시스템] ❤️ [성공] 성심당 빵과 좋은 멘트를 얻은 도희의 호감도가 상당히 상승하였습니다.',
+        type: '시스템',
+        id: 'chapter3_scene6_win_5',
+        index: 5,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene6_win_6',
+        index: 6,
+      },
+      {
+        script: '[시스템] 3주차 종료.',
+        type: '시스템',
+        id: 'chapter3_scene6_win_7',
+        index: 7,
+      },
+      {
+        script: '[시스템] 마지막 4주차. 최종 프로젝트와 엔딩이 기다리고 있습니다. 계속하시겠습니까?',
+        type: '시스템',
+        id: 'chapter3_scene6_win_8',
+        index: 8,
+      },
+    ],
+  },
+
+  // ----------------------------------------------------------------
+  // Scene 3-6 (Lose): 성심당 게임 실패
+  // ----------------------------------------------------------------
+  'chapter3_scene6_lose': {
+    chapter_id: chapterId.chapter3,
+    next_scene_id: 'chapter4_scene1',
+    event: 6,
+    scenario: [
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene6_lose_0',
+        index: 0,
+      },
+      {
+        script: '[시스템] 💀 [GAME OVER] 인파를 뚫지 못했습니다. `Time Limit Exceeded`.',
+        type: '시스템',
+        background_image_id: backgroundImageId.성심당_앞,
+        id: 'chapter3_scene6_lose_1',
+        index: 1,
+      },
+      {
+        script: '성심당의 줄은 이미 매장 밖까지 세 바퀴를 돌았다.',
+        type: 'narration',
+        id: 'chapter3_scene6_lose_2',
+        index: 2,
+      },
+      {
+        script: '진열대는 텅 비어 있다. 남은 건 식빵 몇 조각뿐.',
+        type: 'narration',
+        id: 'chapter3_scene6_lose_3',
+        index: 3,
+      },
+      {
+        script: '(텅 빈 쟁반을 멍하니 바라보며)',
+        type: 'narration',
+        character_image_id: { 2: characterImageId.dohee_pretty_sad },
+        id: 'chapter3_scene6_lose_4',
+        index: 4,
+      },
+      {
+        script: '...말도 안 돼.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_lose_5',
+        index: 5,
+      },
+      {
+        script: '내 튀소... 내 명란바게트...',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_lose_6',
+        index: 6,
+      },
+      {
+        script: '눈앞에서 `Sold Out` 되는 걸 보다니...',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_lose_7',
+        index: 7,
+      },
+      {
+        script: '(머쓱하게 목을 긁으며)',
+        type: 'narration',
+        id: 'chapter3_scene6_lose_8',
+        index: 8,
+      },
+      {
+        script: '트래픽 초과네요. `DDoS` 공격 수준이라 이건 매장이 못 버팁니다.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_lose_9',
+        index: 9,
+      },
+      {
+        script: '포기하시죠.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_lose_10',
+        index: 10,
+      },
+      {
+        script: '야! 너 줄 잘 뚫는다며! 나 오늘 이거 먹으려고 점심도 굶었는데!',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_pretty_sitting_cry },
+        type: 'text',
+        id: 'chapter3_scene6_lose_11',
+        index: 11,
+      },
+      {
+        script: '아니, 저도 최선을 다했습니다만...',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_lose_12',
+        index: 12,
+      },
+      {
+        script: '음, `Alternative Path`을 탐색해볼게요',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_lose_13',
+        index: 13,
+      },
+      {
+        script: '저기 바로 옆에 파리바게뜨 있던데 거기로 가시죠.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_lose_14',
+        index: 14,
+      },
+      {
+        script: '...',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_lose_15',
+        index: 15,
+      },
+      {
+        script: '...너 제정신이야?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_lose_16',
+        index: 16,
+      },
+      {
+        script: '대전까지 와서 성심당 놔두고 파리바게뜨를 가자고?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_lose_17',
+        index: 17,
+      },
+      {
+        script: '너 지금 나랑 싸우자는 거지?',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_lose_18',
+        index: 18,
+      },
+      {
+        script: '어차피 객체지향 관점에서 보면 둘 다 `Bread` 클래스를 상속받은 인스턴스 아닙니까.',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_lose_19',
+        index: 19,
+      },
+      {
+        script: '맛은 파라미터 차이일 뿐인데...',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_lose_20',
+        index: 20,
+      },
+      {
+        script: '아오, 진짜... 너 컴공 티내지마. 너랑 빵 사러 온 내가 바보다.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_lose_21',
+        index: 21,
+      },
+      {
+        script: '...가.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_lose_22',
+        index: 22,
+      },
+      {
+        script: '네? 파바요?',
+        character_id: characterId.hero,
+        type: 'text',
+        id: 'chapter3_scene6_lose_23',
+        index: 23,
+      },
+      {
+        script: '어! 배고프니까 아무 빵이나 내놓으라고!',
+        character_id: characterId.dohee,
+        character_image_id: { 2: characterImageId.dohee_pretty_sad },
+        type: 'text',
+        id: 'chapter3_scene6_lose_24',
+        index: 24,
+      },
+      {
+        script: '대신 커피는 네가 사. 라떼말고 아이스 아메리카노로.',
+        character_id: characterId.dohee,
+        type: 'text',
+        id: 'chapter3_scene6_lose_25',
+        index: 25,
+      },
+      {
+        script: '빵 못 사서 서운한 것보다, 파리바게뜨 가자고 해서 더 화난 것 같다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene6_lose_26',
+        index: 26,
+      },
+      {
+        script: '도희 씨의 `Exception` 처리 방식은 꽤 난이도가 높다.',
+        character_id: characterId.hero,
+        type: 'think',
+        id: 'chapter3_scene6_lose_27',
+        index: 27,
+      },
+      {
+        script: '[시스템] 💔 [실패] 맛있는 빵은 못 먹었지만, 티격태격하며 조금 더 친해졌습니다. (호감도 소폭 상승)',
+        type: '시스템',
+        id: 'chapter3_scene6_lose_28',
+        index: 28,
+      },
+      {
+        script: '',
+        type: '전환',
+        character_image_id: { all: characterImageId.nobody },
+        id: 'chapter3_scene6_lose_29',
+        index: 29,
+      },
+      {
+        script: '[시스템] 3주차 종료.',
+        type: '시스템',
+        id: 'chapter3_scene6_lose_30',
+        index: 30,
+      },
+      {
+        script: '[시스템] 마지막 4주차. 최종 프로젝트와 엔딩이 기다리고 있습니다. 계속하시겠습니까?',
+        type: '시스템',
+        id: 'chapter3_scene6_lose_31',
+        index: 31,
+      },
+    ],
+  },
+};
+
+// 하위 호환성을 위한 변환 함수 (기존 Scene 형식으로 변환)
+import type { Scene, Dialogue } from '../types/game.types';
+
+export const convertEventToScene = (event: GameEvent): Scene => {
+  const dialogues: Dialogue[] = event.scenario.map((item) => {
+    // character_image_id가 객체 형태이므로 Dialogue의 characterImage는 undefined로 설정
+    // (하위 호환성을 위한 변환이므로 실제로는 사용되지 않음)
+    let characterImage: string | undefined = undefined;
+    if (item.character_image_id) {
+      // 객체 형태인 경우 첫 번째 값 사용 (하위 호환성)
+      if (item.character_image_id[2]) {
+        characterImage = item.character_image_id[2];
+      } else if (item.character_image_id[1]) {
+        characterImage = item.character_image_id[1];
+      } else if (item.character_image_id[3]) {
+        characterImage = item.character_image_id[3];
+      } else if (item.character_image_id.all) {
+        characterImage = item.character_image_id.all;
+      }
+    }
+    
+    return {
+      id: item.id,
+      character: item.character_id,
+      text: item.script,
+      background: item.background_image_id,
+      characterImage,
+      bgm: item.background_sound_id,
+      sfx: item.effect_sound_id,
+      choices: item.options,
+    };
+  });
+
+  return {
+    id: event.next_scene_id,
+    dialogues,
+  };
+};
+
+// 기존 형식의 스크립트 (하위 호환성)
+export const gameScript: Record<string, Scene> = {};
+
+// 이벤트를 씬으로 변환하여 저장
+Object.keys(gameEvents).forEach((eventId) => {
+  const event = gameEvents[eventId];
+  const scene = convertEventToScene(event);
+  gameScript[event.next_scene_id] = scene;
+});

@@ -1,0 +1,55 @@
+# Docker Compose 예시 파일
+# 사용법: docker-compose -f docker-compose.example.yml up -d
+# 실제 사용 시 docker-compose.yml로 이름 변경하고 설정을 수정하세요
+
+version: '3.8'
+
+services:
+  # 프론트엔드 서비스
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_BASE_URL: http://backend:8080/api
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_BASE_URL=http://backend:8080/api
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # 백엔드 서비스
+  backend:
+    build:
+      context: ../backend  # 백엔드 프로젝트 경로로 수정 필요
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=love_algorithm
+      - DB_USERNAME=root
+      - DB_PASSWORD=your_password
+      - JWT_SECRET=your_jwt_secret_key
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  # 데이터베이스 서비스
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=your_password
+      - MYSQL_DATABASE=love_algorithm
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  db_data:
