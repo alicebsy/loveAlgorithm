@@ -82,7 +82,7 @@ export const DebugScreen = () => {
         'Authorization': `Bearer ${token}`
       };
       
-      const response = await fetch('http://lovealgorithmgame.site:8081/api/user/current', { headers });
+      const response = await fetch('http://lovealgorithmgame.site:8081/api/users/me', { headers });
       const data = await response.json();
       setUserData(data.data || data);
     } catch (e: any) {
@@ -145,7 +145,7 @@ fetch('http://lovealgorithmgame.site:8081/api/script')
 
 // 사용자 확인 (토큰 필요)
 const token = localStorage.getItem('auth_token');
-fetch('http://lovealgorithmgame.site:8081/api/user/current', {
+fetch('http://lovealgorithmgame.site:8081/api/users/me', {
   headers: { 'Authorization': \`Bearer \${token}\` }
 })
   .then(r => r.json())

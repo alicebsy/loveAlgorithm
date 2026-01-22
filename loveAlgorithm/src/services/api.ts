@@ -485,17 +485,11 @@ export const fetchGameScript = async (): Promise<Record<string, GameEvent>> => {
 
 export const fetchCurrentUser = async () => {
   try {
-    // API 명세서에 따르면 /user/current 또는 /user/me
-    const r = await apiClient<any>('/user/current');
+    // 백엔드 UserController: /api/users/me
+    const r = await apiClient<any>('/users/me');
     return r.data; 
   } catch {
-    // /user/current가 없으면 /user/me 시도
-    try {
-      const r = await apiClient<any>('/user/me');
-      return r.data;
-    } catch {
-      return null;
-    }
+    return null;
   }
 };
 
@@ -664,7 +658,7 @@ export const deleteSaveSlot = async (slotIndex: number) => {
 };
 
 export const updateUserProgress = async (gameState: GameState, heroName: string) => {
-  await apiClient('/user/progress', {
+  await apiClient('/users/progress', {
     method: 'POST',
     body: JSON.stringify({ gameState, heroName })
   });
