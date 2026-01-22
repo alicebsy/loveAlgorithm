@@ -468,7 +468,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         ...state.gameState,
         previousValues: updatedPreviousValues, // 현재 배경/캐릭터 이미지 정보 포함
         affections: state.affections, // 호감도도 함께 저장
-      }, savePreview, state.heroName);
+      }, savePreview);
       
       // 저장 슬롯 목록 새로고침
       await get().fetchSaveSlots();

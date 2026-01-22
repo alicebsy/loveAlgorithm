@@ -547,17 +547,20 @@ export const saveMiniGameScore = async (gameId: string, score: number) => {
 };
 
 // 세이브/로드 관련
-export const saveToSlot = async (slotIndex: number, gameState: GameState, preview: string, heroName: string) => {
+export const saveToSlot = async (slotIndex: number, gameState: GameState, preview: string) => {
   // 백엔드: POST /api/save/slots
-  // 백엔드가 기대하는 형식: snake_case 필드명
+  // 백엔드 SaveRequestDto 형식: userId, slotNumber, sceneId, previewText
+  // 현재 사용자 정보 가져오기
+  const currentUser = await fetchCurrentUser();
+  if (!currentUser || !currentUser.userId) {
+    throw new Error('사용자 정보를 가져올 수 없습니다. 로그인이 필요합니다.');
+  }
+  
   const requestBody = { 
-    slot_index: slotIndex, 
-    scene_id: gameState.currentSceneId,
-    script_id: gameState.currentSceneId + '_' + gameState.currentDialogueIndex, // 임시 ID 생성
-    dialogue_index: gameState.currentDialogueIndex,
-    game_state: gameState,
-    save_title: preview,
-    in_game_nickname: heroName
+    userId: currentUser.userId,
+    slotNumber: slotIndex,
+    sceneId: gameState.currentSceneId,
+    previewText: preview
   };
   
   console.log('💾 저장 요청 데이터:', JSON.stringify(requestBody, null, 2));
