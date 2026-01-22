@@ -13,7 +13,7 @@ const ScreenContainer = styled.div<{ $bgImage: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: center
   z-index: 100;
   color: #fff;
 `;

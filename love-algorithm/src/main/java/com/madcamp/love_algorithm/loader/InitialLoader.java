@@ -93,7 +93,7 @@ public class InitialLoader implements CommandLineRunner {
         scripts.add(createScript(s1_1, 5, ScriptType.THINK, "hero", "연애? 그런 비효율적인 프로세스는 내 메모리에 할당하지 않는다.", null, null, null, null, null));
         scripts.add(createScript(s1_1, 6, ScriptType.THINK, "hero", "남들에게 피해 안 주고, 조용히 알고리즘이나 깎다가 오는 거야. 완벽해.", null, null, null, null, null));
         scripts.add(createScript(s1_1, 7, ScriptType.TEXT, null, "카톡이 울린다.", null, null, null, "kakao_alert", null));
-        scripts.add(createScript(s1_1, 8, ScriptType.KAKAO, "manager", "[message]안녕하세요! 2분반 여러분 환영합니다. 내일 오전 11시까지 카이마루(북측 식당) 앞으로 모여주세요!", null, null, null, null, null));
+        scripts.add(createScript(s1_1, 8, ScriptType.KAKAO, "manager", "[message]안녕하세요! 2분반 여러분 환영합니다. 내일 오전 11시까지 카이마루(북측 식당) 앞으로 모여주세요![몰입캠프 1분반]", null, null, null, null, null));
         scripts.add(createScript(s1_1, 9, ScriptType.THINK, "hero", "내일 11시 집합이라... 일찍 자고 일찍 일어나야 겠다", "dohoon_room.png", null, null, null, null));
 
         // --- Scene 1-2: 지수와의 만남 ---

@@ -12,7 +12,7 @@ export const gameEvents: Record<string, GameEvent> = {
     event: 1,
     scenario: [
       {
-        script: 'week1: init()',
+        script: 'week 1: Initial Commit',
         type: '전환',
         character_image_id: { all: characterImageId.nobody },
         id: 'chapter1_scene1_0',
@@ -1653,7 +1653,7 @@ export const gameEvents: Record<string, GameEvent> = {
     event: 1,
     scenario: [
       {
-        script: '',
+        script: 'week 2: Merge Conflict  ',
         type: '전환',
         character_image_id: { all: characterImageId.nobody },
         id: 'chapter2_scene1_0',
@@ -2815,7 +2815,7 @@ export const gameEvents: Record<string, GameEvent> = {
     event: 1,
     scenario: [
       {
-        script: '',
+        script: 'week 3: Priority Queue',
         type: '전환',
         character_image_id: { all: characterImageId.nobody },
         id: 'chapter3_scene1_0',
@@ -4621,7 +4621,7 @@ export const gameEvents: Record<string, GameEvent> = {
     event: 1,
     scenario: [
       {
-        script: '',
+        script: ' week 4: Deploy ',
         type: '전환',
         character_image_id: { all: characterImageId.nobody },
         id: 'chapter4_scene1_0',
