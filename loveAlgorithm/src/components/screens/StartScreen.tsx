@@ -19,6 +19,7 @@ const ScreenContainer = styled.div<{ $bgImage: string }>`
 `;
 
 const Title = styled.h1`
+  text-align: center;
   font-size: 58px;
   margin-bottom: 60px;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -28,12 +29,14 @@ const Title = styled.h1`
 const MenuContainer = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
-  min-width: 300px;
 `;
 
 const MenuButton = styled.button`
   padding: 16px 32px;
+  width: auto;
+  min-width: 400px;
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 8px;

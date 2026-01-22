@@ -15,14 +15,14 @@ const fadeIn = keyframes`
   }
 `;
 
-const float = keyframes`
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-`;
+// const float = keyframes`
+//   0%, 100% {
+//     transform: translateY(0px);
+//   }
+//   50% {
+//     transform: translateY(-10px);
+//   }
+// `;
 
 const ScreenContainer = styled.div<{ $bgImage: string }>`
   position: fixed;
